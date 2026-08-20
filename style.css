@@ -1,3 +1,4 @@
+```css
 /* =========================================================
    基础设置
 ========================================================= */
@@ -8,10 +9,18 @@
     box-sizing: border-box;
 }
 
+
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 90px;
+    scroll-padding-top: 80px;
+
+    /*
+       防止移动端浏览器在页面恢复时产生
+       不必要的滚动动画。
+    */
+    overflow-x: hidden;
 }
+
 
 body {
     font-family:
@@ -23,26 +32,47 @@ body {
         sans-serif;
 
     background: #f7f5ef;
+
     color: #2f2a22;
 
     line-height: 1.7;
 
+    /*
+       防止页面横向溢出导致手机端闪动。
+    */
+    width: 100%;
+
+    min-height: 100%;
+
     overflow-x: hidden;
+
+    /*
+       提升文字渲染稳定性。
+    */
+    -webkit-font-smoothing: antialiased;
+
+    text-rendering: optimizeLegibility;
 }
+
 
 img {
     max-width: 100%;
+
     display: block;
 }
 
+
 a {
     text-decoration: none;
+
     color: inherit;
 }
+
 
 button {
     font-family: inherit;
 }
+
 
 
 /* =========================================================
@@ -69,10 +99,12 @@ button {
 
     padding: 14px 6%;
 
-    background: rgba(47, 42, 34, 0.90);
+    background:
+        rgba(47, 42, 34, 0.88);
 
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(12px);
+
+    -webkit-backdrop-filter: blur(12px);
 
     color: #ffffff;
 
@@ -80,8 +112,9 @@ button {
         1px solid rgba(255, 255, 255, 0.12);
 
     box-shadow:
-        0 4px 25px rgba(0, 0, 0, 0.15);
+        0 4px 20px rgba(0, 0, 0, 0.12);
 }
+
 
 
 /* =========================================================
@@ -103,8 +136,9 @@ button {
 }
 
 
+
 /* =========================================================
-   PC 导航
+   导航菜单
 ========================================================= */
 
 .nav {
@@ -121,6 +155,7 @@ button {
     margin-right: 30px;
 }
 
+
 .nav a {
     position: relative;
 
@@ -128,20 +163,20 @@ button {
 
     color: #ffffff;
 
-    opacity: 0.88;
-
-    white-space: nowrap;
+    opacity: 0.9;
 
     transition:
         opacity 0.3s ease,
         color 0.3s ease;
 }
 
+
 .nav a:hover {
     opacity: 1;
 
-    color: #c4a979;
+    color: #ffffff;
 }
+
 
 .nav a::after {
     content: "";
@@ -162,13 +197,15 @@ button {
         width 0.3s ease;
 }
 
+
 .nav a:hover::after {
     width: 100%;
 }
 
 
+
 /* =========================================================
-   导航 CTA
+   导航立即咨询按钮
 ========================================================= */
 
 .header-button {
@@ -186,15 +223,13 @@ button {
 
     border-radius: 30px;
 
-    background: #25d366;
+    background: #25D366;
 
     color: #ffffff;
 
     font-size: 14px;
 
     font-weight: 700;
-
-    white-space: nowrap;
 
     box-shadow:
         0 6px 18px rgba(37, 211, 102, 0.25);
@@ -205,28 +240,32 @@ button {
         box-shadow 0.3s ease;
 }
 
+
 .header-button:hover {
-    background: #128c7e;
+    background: #128C7E;
 
     color: #ffffff;
 
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
 
     box-shadow:
         0 10px 25px rgba(37, 211, 102, 0.35);
 }
 
 
+
 /* =========================================================
-   Hero
+   首页 Hero
 ========================================================= */
 
 .hero {
     position: relative;
 
+    /*
+       桌面端使用固定的最小高度。
+    */
     min-height: 100vh;
-
-    min-height: 100svh;
 
     display: flex;
 
@@ -246,6 +285,7 @@ button {
     color: #ffffff;
 }
 
+
 .hero::before {
     content: "";
 
@@ -256,13 +296,16 @@ button {
     background:
         linear-gradient(
             90deg,
-            rgba(0, 0, 0, 0.64),
-            rgba(0, 0, 0, 0.35),
+            rgba(0, 0, 0, 0.58),
+            rgba(0, 0, 0, 0.28),
             rgba(0, 0, 0, 0.18)
         );
 
     z-index: 1;
+
+    pointer-events: none;
 }
+
 
 .hero-content {
     position: relative;
@@ -280,6 +323,7 @@ button {
     padding-top: 80px;
 }
 
+
 .eyebrow {
     margin-bottom: 18px;
 
@@ -291,10 +335,9 @@ button {
 
     text-transform: uppercase;
 
-    color: #d7c29a;
-
-    opacity: 0.95;
+    opacity: 0.9;
 }
+
 
 .hero h1 {
     margin-bottom: 24px;
@@ -309,6 +352,7 @@ button {
     letter-spacing: 2px;
 }
 
+
 .hero-description {
     max-width: 560px;
 
@@ -318,8 +362,9 @@ button {
 
     line-height: 2;
 
-    color: rgba(255, 255, 255, 0.92);
+    opacity: 0.95;
 }
+
 
 .hero-buttons {
     display: flex;
@@ -328,6 +373,7 @@ button {
 
     flex-wrap: wrap;
 }
+
 
 
 /* =========================================================
@@ -355,6 +401,7 @@ button {
         box-shadow 0.3s ease;
 }
 
+
 .button-outline {
     display: inline-flex;
 
@@ -372,7 +419,7 @@ button {
 
     border-radius: 32px;
 
-    background: #25d366;
+    background: #25D366;
 
     color: #ffffff;
 
@@ -389,8 +436,9 @@ button {
         box-shadow 0.3s ease;
 }
 
+
 .button-outline:hover {
-    background: #128c7e;
+    background: #128C7E;
 
     color: #ffffff;
 
@@ -400,6 +448,7 @@ button {
     box-shadow:
         0 12px 30px rgba(37, 211, 102, 0.40);
 }
+
 
 
 /* =========================================================
@@ -418,6 +467,7 @@ button {
         1px solid #e5e1d8;
 }
 
+
 .feature {
     padding: 45px 30px;
 
@@ -427,9 +477,11 @@ button {
         1px solid #e5e1d8;
 }
 
+
 .feature:last-child {
     border-right: none;
 }
+
 
 .feature-number {
     display: block;
@@ -443,17 +495,20 @@ button {
     color: #8b7655;
 }
 
+
 .feature h3 {
     margin-bottom: 8px;
 
     font-size: 19px;
 }
 
+
 .feature p {
     font-size: 14px;
 
     color: #777064;
 }
+
 
 
 /* =========================================================
@@ -469,6 +524,7 @@ button {
     text-align: center;
 }
 
+
 .section-heading h2 {
     margin-bottom: 20px;
 
@@ -476,15 +532,15 @@ button {
         clamp(32px, 4vw, 48px);
 
     line-height: 1.3;
-
-    color: #2f2a22;
 }
+
 
 .section-heading p {
     color: #716b61;
 
     font-size: 16px;
 }
+
 
 
 /* =========================================================
@@ -496,6 +552,7 @@ button {
 
     background: #f7f5ef;
 }
+
 
 .tree-slider {
     position: relative;
@@ -510,16 +567,36 @@ button {
 
     box-shadow:
         0 15px 40px rgba(0, 0, 0, 0.10);
+
+    /*
+       防止轮播自身造成横向溢出。
+    */
+    contain: layout paint;
 }
+
 
 .tree-track {
     display: flex;
 
     width: 100%;
 
+    /*
+       使用 transform，不使用 left。
+    */
     transition:
         transform 0.5s ease;
+
+    /*
+       提前告诉浏览器这是会变化的元素。
+    */
+    will-change: transform;
+
+    /*
+       GPU 合成层。
+    */
+    transform: translate3d(0, 0, 0);
 }
+
 
 .tree-slide {
     min-width: 100%;
@@ -529,7 +606,13 @@ button {
     overflow: hidden;
 
     background: #e8e3d8;
+
+    /*
+       固定布局尺寸，减少图片加载时页面重排。
+    */
+    contain: layout paint;
 }
+
 
 .tree-slide img {
     width: 100%;
@@ -539,7 +622,20 @@ button {
     object-fit: cover;
 
     display: block;
+
+    /*
+       图片不会因为加载而改变轮播尺寸。
+    */
+    aspect-ratio: 1 / 1;
+
+    /*
+       防止拖动图片。
+    */
+    user-select: none;
+
+    -webkit-user-drag: none;
 }
+
 
 
 /* =========================================================
@@ -578,7 +674,13 @@ button {
     transition:
         background 0.3s ease,
         transform 0.3s ease;
+
+    /*
+       防止按钮点击时出现浏览器默认效果。
+    */
+    -webkit-tap-highlight-color: transparent;
 }
+
 
 .slider-button:hover {
     background: #c4a979;
@@ -589,13 +691,16 @@ button {
         translateY(-50%) scale(1.05);
 }
 
+
 .slider-prev {
     left: 18px;
 }
 
+
 .slider-next {
     right: 18px;
 }
+
 
 
 /* =========================================================
@@ -611,6 +716,7 @@ button {
 
     margin-top: 25px;
 }
+
 
 .slider-dot {
     width: 9px;
@@ -630,7 +736,10 @@ button {
     transition:
         width 0.3s ease,
         background 0.3s ease;
+
+    -webkit-tap-highlight-color: transparent;
 }
+
 
 .slider-dot.active {
     width: 28px;
@@ -639,6 +748,7 @@ button {
 
     background: #8b7655;
 }
+
 
 
 /* =========================================================
@@ -655,6 +765,7 @@ button {
     text-align: center;
 }
 
+
 .video-content {
     max-width: 700px;
 
@@ -662,14 +773,14 @@ button {
         0 auto 40px;
 }
 
+
 .video-content h2 {
     margin-bottom: 18px;
 
     font-size:
         clamp(32px, 4vw, 48px);
-
-    color: #ffffff;
 }
+
 
 .video-placeholder {
     width: 100%;
@@ -682,11 +793,17 @@ button {
 
     border-radius: 14px;
 
-    background: #000000;
+    background: #000;
 
     box-shadow:
         0 15px 40px rgba(0, 0, 0, 0.25);
+
+    /*
+       防止视频加载时造成布局变化。
+    */
+    contain: layout paint;
 }
+
 
 .video-placeholder video {
     width: 100%;
@@ -699,8 +816,14 @@ button {
 
     object-fit: contain;
 
-    background: #000000;
+    background: #000;
+
+    /*
+       视频不参与页面横向溢出。
+    */
+    max-width: 100%;
 }
+
 
 
 /* =========================================================
@@ -712,6 +835,7 @@ button {
 
     background: #ffffff;
 }
+
 
 .product-grid {
     display: grid;
@@ -725,6 +849,7 @@ button {
 
     margin: 0 auto;
 }
+
 
 .product-card {
     position: relative;
@@ -741,7 +866,13 @@ button {
     transition:
         transform 0.35s ease,
         box-shadow 0.35s ease;
+
+    /*
+       防止图片动画影响外部布局。
+    */
+    contain: layout paint;
 }
+
 
 .product-card:hover {
     transform:
@@ -750,6 +881,7 @@ button {
     box-shadow:
         0 15px 35px rgba(0, 0, 0, 0.10);
 }
+
 
 .product-image {
     width: 100%;
@@ -761,6 +893,7 @@ button {
     background: #e8e3d8;
 }
 
+
 .product-image img {
     width: 100%;
 
@@ -768,9 +901,12 @@ button {
 
     object-fit: cover;
 
+    aspect-ratio: 1 / 1;
+
     transition:
         transform 0.6s ease;
 }
+
 
 .product-card:hover
 .product-image img {
@@ -779,8 +915,9 @@ button {
 }
 
 
+
 /* =========================================================
-   客户好评
+   客户反馈
 ========================================================= */
 
 .reviews-section {
@@ -788,6 +925,7 @@ button {
 
     background: #f7f5ef;
 }
+
 
 .review-slider {
     position: relative;
@@ -804,7 +942,10 @@ button {
 
     box-shadow:
         0 15px 40px rgba(0, 0, 0, 0.08);
+
+    contain: layout paint;
 }
+
 
 .review-track {
     display: flex;
@@ -813,7 +954,16 @@ button {
 
     transition:
         transform 0.5s ease;
+
+    /*
+       GPU 加速。
+    */
+    will-change: transform;
+
+    transform:
+        translate3d(0, 0, 0);
 }
+
 
 .review-slide {
     min-width: 100%;
@@ -825,7 +975,10 @@ button {
     align-items: center;
 
     background: #ffffff;
+
+    contain: layout paint;
 }
+
 
 .review-slide img {
     width: 100%;
@@ -835,11 +988,21 @@ button {
     object-fit: contain;
 
     display: block;
+
+    /*
+       防止图片加载导致容器突然变化。
+    */
+    max-width: 100%;
+
+    user-select: none;
+
+    -webkit-user-drag: none;
 }
 
 
+
 /* =========================================================
-   客户好评左右按钮
+   客户反馈左右按钮
 ========================================================= */
 
 .review-button {
@@ -872,7 +1035,10 @@ button {
     transition:
         background 0.3s ease,
         transform 0.3s ease;
+
+    -webkit-tap-highlight-color: transparent;
 }
+
 
 .review-button:hover {
     background: #c4a979;
@@ -883,17 +1049,20 @@ button {
         translateY(-50%) scale(1.05);
 }
 
+
 .review-prev {
     left: 15px;
 }
+
 
 .review-next {
     right: 15px;
 }
 
 
+
 /* =========================================================
-   客户好评圆点
+   客户反馈圆点
 ========================================================= */
 
 .review-dots {
@@ -905,6 +1074,7 @@ button {
 
     margin-top: 22px;
 }
+
 
 .review-dot {
     width: 9px;
@@ -924,7 +1094,10 @@ button {
     transition:
         width 0.3s ease,
         background 0.3s ease;
+
+    -webkit-tap-highlight-color: transparent;
 }
+
 
 .review-dot.active {
     width: 28px;
@@ -933,6 +1106,7 @@ button {
 
     background: #8b7655;
 }
+
 
 
 /* =========================================================
@@ -949,20 +1123,21 @@ button {
     text-align: center;
 }
 
+
 .contact-content {
     max-width: 650px;
 
     margin: 0 auto;
 }
 
+
 .contact-content h2 {
     margin-bottom: 20px;
 
     font-size:
         clamp(34px, 4vw, 52px);
-
-    color: #ffffff;
 }
+
 
 .contact-content p {
     margin-bottom: 35px;
@@ -972,8 +1147,9 @@ button {
 }
 
 
+
 /* =========================================================
-   WhatsApp CTA
+   WhatsApp
 ========================================================= */
 
 .whatsapp-button {
@@ -993,7 +1169,7 @@ button {
 
     border-radius: 36px;
 
-    background: #25d366;
+    background: #25D366;
 
     color: #ffffff;
 
@@ -1012,10 +1188,13 @@ button {
         box-shadow 0.25s ease;
 
     cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
 }
 
+
 .whatsapp-button:hover {
-    background: #128c7e;
+    background: #128C7E;
 
     color: #ffffff;
 
@@ -1026,10 +1205,12 @@ button {
         0 14px 35px rgba(37, 211, 102, 0.40);
 }
 
+
 .whatsapp-button:active {
     transform:
         translateY(0) scale(0.98);
 }
+
 
 
 /* =========================================================
@@ -1047,6 +1228,7 @@ button {
     text-align: center;
 }
 
+
 .footer-logo {
     margin-bottom: 18px;
 
@@ -1056,6 +1238,7 @@ button {
 
     font-weight: 700;
 }
+
 
 .footer-links {
     display: flex;
@@ -1067,6 +1250,7 @@ button {
     margin-bottom: 15px;
 }
 
+
 .footer-links a {
     font-size: 13px;
 
@@ -1074,9 +1258,11 @@ button {
         color 0.3s ease;
 }
 
+
 .footer-links a:hover {
     color: #c4a979;
 }
+
 
 .footer p {
     font-size: 12px;
@@ -1086,26 +1272,31 @@ button {
 }
 
 
+
 /* =========================================================
    平板
 ========================================================= */
 
 @media (max-width: 1000px) {
 
+
     .header {
         padding:
-            13px 4%;
+            14px 4%;
     }
 
+
     .nav {
-        gap: 17px;
+        gap: 18px;
 
         margin-right: 18px;
     }
 
+
     .nav a {
         font-size: 13px;
     }
+
 
     .header-button {
         padding:
@@ -1114,26 +1305,32 @@ button {
         font-size: 13px;
     }
 
+
     .hero-content {
         margin-left: 7%;
 
         margin-right: 7%;
     }
 
+
     .features {
         grid-template-columns:
             repeat(2, 1fr);
     }
 
+
     .feature:nth-child(2) {
         border-right: none;
     }
+
 
     .product-grid {
         grid-template-columns:
             repeat(2, 1fr);
     }
+
 }
+
 
 
 /* =========================================================
@@ -1142,125 +1339,81 @@ button {
 
 @media (max-width: 700px) {
 
+
     /* =====================================================
-       手机固定导航
+       页面基础
+    ===================================================== */
+
+    html {
+        scroll-padding-top: 64px;
+
+        /*
+           手机端取消可能造成视觉跳动的平滑滚动。
+        */
+        scroll-behavior: auto;
+    }
+
+
+    body {
+        width: 100%;
+
+        min-width: 0;
+
+        overflow-x: hidden;
+    }
+
+
+
+    /* =====================================================
+       固定导航
     ===================================================== */
 
     .header {
         min-height: 64px;
 
         padding:
-            9px 12px;
-
-        gap: 10px;
+            10px 4%;
 
         background:
-            rgba(47, 42, 34, 0.96);
+            rgba(47, 42, 34, 0.94);
 
         backdrop-filter:
-            blur(16px);
+            blur(14px);
 
         -webkit-backdrop-filter:
-            blur(16px);
+            blur(14px);
 
         box-shadow:
-            0 4px 20px rgba(0, 0, 0, 0.20);
+            0 4px 18px rgba(0, 0, 0, 0.18);
     }
 
 
-    /* Logo */
-
     .logo {
-        flex-shrink: 0;
-
-        font-size: 16px;
+        font-size: 17px;
 
         letter-spacing: 1px;
     }
 
 
-    /* =====================================================
-       手机端导航
-       不再 display:none
-       改为横向小型导航
-    ===================================================== */
-
     .nav {
-        display: flex;
-
-        align-items: center;
-
-        justify-content: flex-start;
-
-        flex: 1;
-
-        min-width: 0;
-
-        gap: 18px;
-
-        margin:
-            0;
-
-        padding:
-            0 3px;
-
-        overflow-x: auto;
-
-        overflow-y: hidden;
-
-        scrollbar-width: none;
-
-        -ms-overflow-style: none;
-    }
-
-    .nav::-webkit-scrollbar {
         display: none;
     }
 
-    .nav a {
-        flex-shrink: 0;
-
-        font-size: 11px;
-
-        line-height: 1;
-
-        color: rgba(255, 255, 255, 0.82);
-
-        opacity: 1;
-
-        white-space: nowrap;
-    }
-
-    .nav a::after {
-        display: none;
-    }
-
-    .nav a:hover {
-        color: #d7c29a;
-    }
-
-
-    /* =====================================================
-       手机 CTA
-    ===================================================== */
 
     .header-button {
-        flex-shrink: 0;
-
-        min-height: 38px;
+        min-height: 40px;
 
         padding:
-            8px 13px;
+            8px 17px;
 
-        border-radius: 22px;
+        border-radius: 24px;
 
-        font-size: 11px;
-
-        font-weight: 700;
+        font-size: 12px;
 
         box-shadow:
             0 5px 15px rgba(37, 211, 102, 0.25);
     }
+
 
 
     /* =====================================================
@@ -1268,20 +1421,35 @@ button {
     ===================================================== */
 
     .hero {
-        min-height: 100svh;
+
+        /*
+           不再使用 100svh。
+
+           使用固定的最小高度，
+           避免手机浏览器地址栏变化导致
+           首屏高度不断变化。
+        */
+
+        min-height: 720px;
+
+        height: 100svh;
+
+        max-height: 900px;
 
         background-position:
             center center;
     }
 
+
     .hero::before {
         background:
             linear-gradient(
                 90deg,
-                rgba(0, 0, 0, 0.66),
-                rgba(0, 0, 0, 0.40)
+                rgba(0, 0, 0, 0.62),
+                rgba(0, 0, 0, 0.36)
             );
     }
+
 
     .hero-content {
         margin-left: 6%;
@@ -1289,27 +1457,28 @@ button {
         margin-right: 6%;
 
         padding-top: 80px;
-
-        padding-bottom: 40px;
     }
+
 
     .eyebrow {
         margin-bottom: 14px;
 
-        font-size: 10px;
+        font-size: 11px;
 
         letter-spacing: 2px;
     }
 
+
     .hero h1 {
         margin-bottom: 20px;
 
-        font-size: 37px;
+        font-size: 38px;
 
         line-height: 1.25;
 
         letter-spacing: 1px;
     }
+
 
     .hero-description {
         margin-bottom: 28px;
@@ -1317,9 +1486,8 @@ button {
         font-size: 15px;
 
         line-height: 1.8;
-
-        max-width: 90%;
     }
+
 
     .hero-buttons {
         flex-direction: column;
@@ -1328,6 +1496,7 @@ button {
 
         width: 100%;
     }
+
 
     .button-outline {
         width: auto;
@@ -1343,6 +1512,7 @@ button {
     }
 
 
+
     /* =====================================================
        核心特点
     ===================================================== */
@@ -1352,28 +1522,22 @@ button {
             1fr 1fr;
     }
 
+
     .feature {
         padding:
             28px 12px;
     }
 
+
     .feature:nth-child(2) {
         border-right: none;
     }
 
-    .feature:nth-child(3) {
-        border-top:
-            1px solid #e5e1d8;
-    }
-
-    .feature:nth-child(4) {
-        border-top:
-            1px solid #e5e1d8;
-    }
 
     .feature h3 {
         font-size: 16px;
     }
+
 
     .feature p {
         font-size: 12px;
@@ -1381,9 +1545,11 @@ button {
         line-height: 1.6;
     }
 
+
     .feature-number {
-        font-size: 10px;
+        font-size: 11px;
     }
+
 
 
     /* =====================================================
@@ -1398,15 +1564,18 @@ button {
             70px 5%;
     }
 
+
     .section-heading {
         margin-bottom: 40px;
     }
+
 
     .section-heading h2 {
         font-size: 32px;
 
         line-height: 1.3;
     }
+
 
     .section-heading p {
         font-size: 14px;
@@ -1415,13 +1584,30 @@ button {
     }
 
 
+
     /* =====================================================
-       沉香树
+       沉香树轮播
     ===================================================== */
 
     .tree-slider {
         border-radius: 10px;
+
+        /*
+           防止移动端轮播产生横向滚动。
+        */
+        width: 100%;
+
+        max-width: 100%;
     }
+
+
+    .tree-track {
+        transform:
+            translate3d(0, 0, 0);
+
+        will-change: transform;
+    }
+
 
     .slider-button {
         width: 40px;
@@ -1431,17 +1617,21 @@ button {
         font-size: 28px;
     }
 
+
     .slider-prev {
         left: 10px;
     }
+
 
     .slider-next {
         right: 10px;
     }
 
+
     .slider-dots {
         margin-top: 18px;
     }
+
 
 
     /* =====================================================
@@ -1453,29 +1643,38 @@ button {
             70px 5%;
     }
 
+
     .video-content {
         margin-bottom: 30px;
     }
 
+
     .video-content h2 {
         font-size: 32px;
-
-        line-height: 1.3;
     }
+
 
     .video-placeholder {
+        width: 100%;
+
         border-radius: 10px;
     }
+
 
     .video-placeholder video {
         width: 100%;
 
+        height: auto;
+
         max-height: none;
+
+        display: block;
     }
 
 
+
     /* =====================================================
-       产品
+       产品四宫格
     ===================================================== */
 
     .product-grid {
@@ -1487,6 +1686,7 @@ button {
         width: 100%;
     }
 
+
     .product-card {
         border-radius: 10px;
 
@@ -1494,9 +1694,11 @@ button {
             1px solid #e6e0d5;
     }
 
+
     .product-image {
         aspect-ratio: 1 / 1;
     }
+
 
     .product-card:hover {
         transform: none;
@@ -1505,10 +1707,12 @@ button {
             0 8px 20px rgba(0, 0, 0, 0.06);
     }
 
+
     .product-card:hover
     .product-image img {
         transform: none;
     }
+
 
 
     /* =====================================================
@@ -1517,7 +1721,20 @@ button {
 
     .review-slider {
         border-radius: 10px;
+
+        width: 100%;
+
+        max-width: 100%;
     }
+
+
+    .review-track {
+        transform:
+            translate3d(0, 0, 0);
+
+        will-change: transform;
+    }
+
 
     .review-button {
         width: 38px;
@@ -1527,13 +1744,16 @@ button {
         font-size: 26px;
     }
 
+
     .review-prev {
         left: 8px;
     }
 
+
     .review-next {
         right: 8px;
     }
+
 
 
     /* =====================================================
@@ -1545,9 +1765,11 @@ button {
             80px 5%;
     }
 
+
     .contact-content h2 {
         font-size: 36px;
     }
+
 
     .contact-content p {
         font-size: 14px;
@@ -1555,8 +1777,6 @@ button {
         line-height: 1.8;
     }
 
-
-    /* WhatsApp */
 
     .whatsapp-button {
         width: 100%;
@@ -1578,6 +1798,7 @@ button {
     }
 
 
+
     /* =====================================================
        Footer
     ===================================================== */
@@ -1587,12 +1808,14 @@ button {
             30px 5%;
     }
 
+
     .footer-links {
         flex-wrap: wrap;
 
         gap:
             12px 18px;
     }
+
 
     .footer-links a {
         font-size: 12px;
@@ -1601,273 +1824,90 @@ button {
 }
 
 
+
 /* =========================================================
    超小屏手机
 ========================================================= */
 
 @media (max-width: 380px) {
 
-    .header {
-        padding:
-            8px 9px;
+
+    .hero {
+        min-height: 650px;
     }
+
 
     .logo {
-        font-size: 14px;
-
-        letter-spacing: 0.5px;
+        font-size: 15px;
     }
 
-    .nav {
-        gap: 13px;
-    }
-
-    .nav a {
-        font-size: 10px;
-    }
 
     .header-button {
         padding:
-            7px 11px;
+            7px 13px;
 
-        font-size: 10px;
+        font-size: 11px;
     }
+
 
     .hero h1 {
         font-size: 34px;
     }
 
+
     .hero-description {
         font-size: 14px;
     }
+
 
     .feature {
         padding:
             25px 8px;
     }
 
+
     .feature h3 {
         font-size: 15px;
     }
+
 
     .feature p {
         font-size: 11px;
     }
 
+
     .product-grid {
         gap: 8px;
     }
 
-}/* =========================================================
-   政策 / 法律页面
-========================================================= */
-
-.legal-page {
-    min-height: 100vh;
-
-    padding: 150px 7% 100px;
-
-    background: #f7f5ef;
 }
 
-.legal-container {
-    width: 100%;
-
-    max-width: 900px;
-
-    margin: 0 auto;
-
-    padding: 60px 70px;
-
-    background: #ffffff;
-
-    border: 1px solid #e6e0d5;
-
-    border-radius: 16px;
-
-    box-shadow:
-        0 15px 45px rgba(0, 0, 0, 0.08);
-}
-
-.legal-eyebrow {
-    margin-bottom: 14px;
-
-    color: #8b7655;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-    letter-spacing: 3px;
-
-    text-transform: uppercase;
-}
-
-.legal-container h1 {
-    margin-bottom: 25px;
-
-    color: #2f2a22;
-
-    font-size:
-        clamp(36px, 5vw, 56px);
-
-    line-height: 1.25;
-
-    font-weight: 700;
-}
-
-.legal-intro {
-    margin-bottom: 45px;
-
-    padding-bottom: 35px;
-
-    border-bottom:
-        1px solid #e5e1d8;
-
-    color: #716b61;
-
-    font-size: 17px;
-
-    line-height: 1.9;
-}
-
-.legal-content h2 {
-    margin-top: 38px;
-
-    margin-bottom: 12px;
-
-    color: #2f2a22;
-
-    font-size: 21px;
-
-    line-height: 1.5;
-}
-
-.legal-content h2:first-child {
-    margin-top: 0;
-}
-
-.legal-content p {
-    margin-bottom: 20px;
-
-    color: #5f594f;
-
-    font-size: 15px;
-
-    line-height: 2;
-}
-
-.legal-button {
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    min-height: 54px;
-
-    margin-top: 25px;
-
-    padding: 14px 28px;
-
-    border-radius: 30px;
-
-    background: #25D366;
-
-    color: #ffffff;
-
-    font-size: 15px;
-
-    font-weight: 700;
-
-    box-shadow:
-        0 8px 22px rgba(37, 211, 102, 0.25);
-
-    transition:
-        transform 0.3s ease,
-        background 0.3s ease,
-        box-shadow 0.3s ease;
-}
-
-.legal-button:hover {
-    background: #128C7E;
-
-    color: #ffffff;
-
-    transform:
-        translateY(-3px);
-
-    box-shadow:
-        0 12px 28px rgba(37, 211, 102, 0.35);
-}
 
 
 /* =========================================================
-   政策页面手机端
+   减少动画模式
 ========================================================= */
 
-@media (max-width: 700px) {
+@media (prefers-reduced-motion: reduce) {
 
-    .legal-page {
-        min-height: 100vh;
-
-        padding:
-            105px 5% 60px;
+    html {
+        scroll-behavior: auto;
     }
 
-    .legal-container {
-        padding:
-            38px 24px;
 
-        border-radius: 12px;
-    }
+    *,
+    *::before,
+    *::after {
 
-    .legal-eyebrow {
-        font-size: 10px;
+        animation-duration: 0.01ms !important;
 
-        letter-spacing: 2px;
-    }
+        animation-iteration-count: 1 !important;
 
-    .legal-container h1 {
-        margin-bottom: 18px;
+        transition-duration: 0.01ms !important;
 
-        font-size: 34px;
-    }
+        scroll-behavior: auto !important;
 
-    .legal-intro {
-        margin-bottom: 35px;
-
-        padding-bottom: 25px;
-
-        font-size: 14px;
-
-        line-height: 1.8;
-    }
-
-    .legal-content h2 {
-        margin-top: 30px;
-
-        margin-bottom: 10px;
-
-        font-size: 18px;
-    }
-
-    .legal-content p {
-        margin-bottom: 16px;
-
-        font-size: 14px;
-
-        line-height: 1.9;
-    }
-
-    .legal-button {
-        width: 100%;
-
-        min-height: 58px;
-
-        margin-top: 20px;
-
-        font-size: 16px;
     }
 
 }
+```
