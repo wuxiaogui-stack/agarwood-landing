@@ -1,1526 +1,221 @@
 /* =========================================================
-   基础设置
+   为什么选择我们
 ========================================================= */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 80px;
-}
-
-body {
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Microsoft YaHei",
-        Arial,
-        sans-serif;
+.why-us-section {
+    padding: 100px 7%;
 
     background: #f7f5ef;
+
     color: #2f2a22;
-
-    line-height: 1.7;
-}
-
-img {
-    max-width: 100%;
-    display: block;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-button {
-    font-family: inherit;
 }
 
 
-/* =========================================================
-   顶部固定导航
-========================================================= */
+/* 小标题 */
 
-.header {
-    position: fixed;
+.why-us-label {
+    margin-bottom: 12px;
 
-    top: 0;
-    left: 0;
-
-    width: 100%;
-
-    min-height: 76px;
-
-    z-index: 1000;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    padding: 14px 6%;
-
-    background: rgba(47, 42, 34, 0.88);
-
-    backdrop-filter: blur(12px);
-
-    -webkit-backdrop-filter: blur(12px);
-
-    color: #ffffff;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-
-    box-shadow:
-        0 4px 20px rgba(0, 0, 0, 0.12);
-}
-
-
-/* =========================================================
-   Logo
-========================================================= */
-
-.logo {
-    flex-shrink: 0;
-
-    font-size: 22px;
+    font-size: 12px;
 
     font-weight: 700;
-
-    letter-spacing: 2px;
-
-    color: #ffffff;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   导航菜单
-========================================================= */
-
-.nav {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 30px;
-
-    margin-left: auto;
-
-    margin-right: 30px;
-}
-
-.nav a {
-    position: relative;
-
-    font-size: 14px;
-
-    color: #ffffff;
-
-    opacity: 0.9;
-
-    transition:
-        opacity 0.3s ease,
-        color 0.3s ease;
-}
-
-.nav a:hover {
-    opacity: 1;
-
-    color: #ffffff;
-}
-
-.nav a::after {
-    content: "";
-
-    position: absolute;
-
-    left: 0;
-
-    bottom: -7px;
-
-    width: 0;
-
-    height: 2px;
-
-    background: #c4a979;
-
-    transition: width 0.3s ease;
-}
-
-.nav a:hover::after {
-    width: 100%;
-}
-
-
-/* =========================================================
-   导航立即咨询按钮
-========================================================= */
-
-.header-button {
-    flex-shrink: 0;
-
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    min-height: 44px;
-
-    padding: 10px 24px;
-
-    border-radius: 30px;
-
-    background: #25D366;
-
-    color: #ffffff;
-
-    font-size: 14px;
-
-    font-weight: 700;
-
-    box-shadow:
-        0 6px 18px rgba(37, 211, 102, 0.25);
-
-    transition:
-        background 0.3s ease,
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
-}
-
-.header-button:hover {
-    background: #128C7E;
-
-    color: #ffffff;
-
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 10px 25px rgba(37, 211, 102, 0.35);
-}
-
-
-/* =========================================================
-   首页 Hero
-========================================================= */
-
-.hero {
-    position: relative;
-
-    min-height: 100vh;
-
-    display: flex;
-
-    align-items: center;
-
-    overflow: hidden;
-
-    background-image:
-        url("images/hero.jpg");
-
-    background-size: cover;
-
-    background-position: center;
-
-    background-repeat: no-repeat;
-
-    color: #ffffff;
-}
-
-.hero::before {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    background:
-        linear-gradient(
-            90deg,
-            rgba(0, 0, 0, 0.58),
-            rgba(0, 0, 0, 0.28),
-            rgba(0, 0, 0, 0.18)
-        );
-
-    z-index: 1;
-}
-
-.hero-content {
-    position: relative;
-
-    z-index: 2;
-
-    width: 100%;
-
-    max-width: 760px;
-
-    margin-left: 8%;
-
-    margin-right: 8%;
-
-    padding-top: 80px;
-}
-
-.eyebrow {
-    margin-bottom: 18px;
-
-    font-size: 13px;
 
     letter-spacing: 3px;
 
-    font-weight: 600;
+    color: #8b7655;
 
     text-transform: uppercase;
-
-    opacity: 0.9;
-}
-
-.hero h1 {
-    margin-bottom: 24px;
-
-    font-size:
-        clamp(42px, 5vw, 72px);
-
-    line-height: 1.2;
-
-    font-weight: 700;
-
-    letter-spacing: 2px;
-}
-
-.hero-description {
-    max-width: 560px;
-
-    margin-bottom: 34px;
-
-    font-size: 18px;
-
-    line-height: 2;
-
-    opacity: 0.95;
-}
-
-.hero-buttons {
-    display: flex;
-
-    gap: 16px;
-
-    flex-wrap: wrap;
 }
 
 
-/* =========================================================
-   通用按钮
-========================================================= */
+/* 标题说明 */
 
-.button {
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    min-width: 140px;
-
-    padding: 13px 26px;
-
-    border-radius: 30px;
-
-    font-size: 15px;
-
-    transition:
-        transform 0.3s ease,
-        background 0.3s ease,
-        box-shadow 0.3s ease;
+.why-us-section .section-heading {
+    margin-bottom: 55px;
 }
 
 
-/* 首页绿色行动按钮 */
+/* 四宫格 */
 
-.button-outline {
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    min-width: 190px;
-
-    min-height: 60px;
-
-    padding: 15px 34px;
-
-    border: none;
-
-    border-radius: 32px;
-
-    background: #25D366;
-
-    color: #ffffff;
-
-    font-size: 17px;
-
-    font-weight: 700;
-
-    box-shadow:
-        0 8px 25px rgba(37, 211, 102, 0.30);
-
-    transition:
-        transform 0.3s ease,
-        background 0.3s ease,
-        box-shadow 0.3s ease;
-}
-
-.button-outline:hover {
-    background: #128C7E;
-
-    color: #ffffff;
-
-    transform:
-        translateY(-4px) scale(1.02);
-
-    box-shadow:
-        0 12px 30px rgba(37, 211, 102, 0.40);
-}
-
-
-/* =========================================================
-   核心特点
-========================================================= */
-
-.features {
+.why-us-grid {
     display: grid;
 
     grid-template-columns:
         repeat(4, 1fr);
 
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    border-top:
+        1px solid #ddd6c8;
+
+    border-left:
+        1px solid #ddd6c8;
+}
+
+
+/* 单个卡片 */
+
+.why-us-card {
+    min-height: 260px;
+
+    padding: 35px 30px;
+
     background: #ffffff;
 
-    border-bottom:
-        1px solid #e5e1d8;
-}
-
-.feature {
-    padding: 45px 30px;
-
-    text-align: center;
-
     border-right:
-        1px solid #e5e1d8;
+        1px solid #ddd6c8;
+
+    border-bottom:
+        1px solid #ddd6c8;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease;
 }
 
-.feature:last-child {
-    border-right: none;
-}
 
-.feature-number {
-    display: block;
+/* 编号 */
 
-    margin-bottom: 12px;
+.why-us-number {
+    margin-bottom: 35px;
 
     font-size: 13px;
+
+    font-weight: 700;
 
     letter-spacing: 2px;
 
     color: #8b7655;
 }
 
-.feature h3 {
-    margin-bottom: 8px;
 
-    font-size: 19px;
-}
+/* 标题 */
 
-.feature p {
-    font-size: 14px;
-
-    color: #777064;
-}
-
-
-/* =========================================================
-   通用标题
-========================================================= */
-
-.section-heading {
-    max-width: 760px;
-
-    margin:
-        0 auto 55px;
-
-    text-align: center;
-}
-
-.section-heading h2 {
-    margin-bottom: 20px;
-
-    font-size:
-        clamp(32px, 4vw, 48px);
-
-    line-height: 1.3;
-}
-
-.section-heading p {
-    color: #716b61;
-
-    font-size: 16px;
-}
-
-
-/* =========================================================
-   沉香树展示区
-========================================================= */
-
-.trees-section {
-    padding: 100px 7%;
-
-    background: #f7f5ef;
-}
-
-.tree-slider {
-    position: relative;
-
-    max-width: 850px;
-
-    margin: 0 auto;
-
-    overflow: hidden;
-
-    border-radius: 14px;
-
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.10);
-}
-
-.tree-track {
-    display: flex;
-
-    width: 100%;
-
-    transition:
-        transform 0.5s ease;
-}
-
-.tree-slide {
-    min-width: 100%;
-
-    aspect-ratio: 1 / 1;
-
-    overflow: hidden;
-
-    background: #e8e3d8;
-}
-
-.tree-slide img {
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: cover;
-
-    display: block;
-}
-
-
-/* =========================================================
-   沉香树左右按钮
-========================================================= */
-
-.slider-button {
-    position: absolute;
-
-    top: 50%;
-
-    transform:
-        translateY(-50%);
-
-    z-index: 10;
-
-    width: 48px;
-
-    height: 48px;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background:
-        rgba(47, 42, 34, 0.78);
-
-    color: #ffffff;
-
-    font-size: 34px;
-
-    line-height: 40px;
-
-    cursor: pointer;
-
-    transition:
-        background 0.3s ease,
-        transform 0.3s ease;
-}
-
-.slider-button:hover {
-    background: #c4a979;
-
-    color: #28241e;
-
-    transform:
-        translateY(-50%) scale(1.05);
-}
-
-.slider-prev {
-    left: 18px;
-}
-
-.slider-next {
-    right: 18px;
-}
-
-
-/* =========================================================
-   沉香树圆点
-========================================================= */
-
-.slider-dots {
-    display: flex;
-
-    justify-content: center;
-
-    gap: 10px;
-
-    margin-top: 25px;
-}
-
-.slider-dot {
-    width: 9px;
-
-    height: 9px;
-
-    padding: 0;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background: #cfc7b8;
-
-    cursor: pointer;
-
-    transition:
-        width 0.3s ease,
-        background 0.3s ease;
-}
-
-.slider-dot.active {
-    width: 28px;
-
-    border-radius: 10px;
-
-    background: #8b7655;
-}
-
-
-/* =========================================================
-   视频区域
-========================================================= */
-
-.video-section {
-    padding: 100px 7%;
-
-    background: #28241e;
-
-    color: #ffffff;
-
-    text-align: center;
-}
-
-.video-content {
-    max-width: 700px;
-
-    margin:
-        0 auto 40px;
-}
-
-.video-content h2 {
-    margin-bottom: 18px;
-
-    font-size:
-        clamp(32px, 4vw, 48px);
-}
-
-.video-placeholder {
-    width: 100%;
-
-    max-width: 900px;
-
-    margin: 0 auto;
-
-    overflow: hidden;
-
-    border-radius: 14px;
-
-    background: #000;
-
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.25);
-}
-
-.video-placeholder video {
-    width: 100%;
-
-    height: auto;
-
-    max-height: 600px;
-
-    display: block;
-
-    object-fit: contain;
-
-    background: #000;
-}
-
-
-/* =========================================================
-   产品展示
-   四宫格
-========================================================= */
-
-.products-section {
-    padding: 100px 7%;
-
-    background: #ffffff;
-}
-
-
-/* 电脑端 2 × 2 */
-
-.product-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 24px;
-
-    max-width: 1000px;
-
-    margin: 0 auto;
-}
-
-
-/* 产品卡片 */
-
-.product-card {
-    position: relative;
-
-    overflow: hidden;
-
-    background: #f8f6f1;
-
-    border:
-        1px solid #e6e0d5;
-
-    border-radius: 14px;
-
-    transition:
-        transform 0.35s ease,
-        box-shadow 0.35s ease;
-}
-
-.product-card:hover {
-    transform:
-        translateY(-5px);
-
-    box-shadow:
-        0 15px 35px rgba(0, 0, 0, 0.10);
-}
-
-
-/* 产品图片 */
-
-.product-image {
-    width: 100%;
-
-    aspect-ratio: 1 / 1;
-
-    overflow: hidden;
-
-    background: #e8e3d8;
-}
-
-.product-image img {
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: cover;
-
-    transition:
-        transform 0.6s ease;
-}
-
-
-/* 鼠标移动到图片时轻微放大 */
-
-.product-card:hover
-.product-image img {
-    transform:
-        scale(1.05);
-}
-
-
-/*
-   产品区已经取消行动按钮，
-   因此不再显示 product-info。
-*/
-
-
-/* =========================================================
-   客户好评
-========================================================= */
-
-.reviews-section {
-    padding: 100px 7%;
-
-    background: #f7f5ef;
-}
-
-.review-slider {
-    position: relative;
-
-    max-width: 850px;
-
-    margin: 0 auto;
-
-    overflow: hidden;
-
-    border-radius: 14px;
-
-    background: #ffffff;
-
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.08);
-}
-
-.review-track {
-    display: flex;
-
-    width: 100%;
-
-    transition:
-        transform 0.5s ease;
-}
-
-.review-slide {
-    min-width: 100%;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    background: #ffffff;
-}
-
-.review-slide img {
-    width: 100%;
-
-    max-height: 700px;
-
-    object-fit: contain;
-
-    display: block;
-}
-
-
-/* =========================================================
-   客户好评左右按钮
-========================================================= */
-
-.review-button {
-    position: absolute;
-
-    top: 50%;
-
-    transform:
-        translateY(-50%);
-
-    z-index: 10;
-
-    width: 45px;
-
-    height: 45px;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background:
-        rgba(47, 42, 34, 0.78);
-
-    color: #ffffff;
-
-    font-size: 30px;
-
-    cursor: pointer;
-
-    transition:
-        background 0.3s ease,
-        transform 0.3s ease;
-}
-
-.review-button:hover {
-    background: #c4a979;
-
-    color: #28241e;
-
-    transform:
-        translateY(-50%) scale(1.05);
-}
-
-.review-prev {
-    left: 15px;
-}
-
-.review-next {
-    right: 15px;
-}
-
-
-/* =========================================================
-   客户好评圆点
-========================================================= */
-
-.review-dots {
-    display: flex;
-
-    justify-content: center;
-
-    gap: 10px;
-
-    margin-top: 22px;
-}
-
-.review-dot {
-    width: 9px;
-
-    height: 9px;
-
-    border: none;
-
-    padding: 0;
-
-    border-radius: 50%;
-
-    background: #cfc7b8;
-
-    cursor: pointer;
-
-    transition:
-        width 0.3s ease,
-        background 0.3s ease;
-}
-
-.review-dot.active {
-    width: 28px;
-
-    border-radius: 10px;
-
-    background: #8b7655;
-}
-
-
-/* =========================================================
-   联系我们
-========================================================= */
-
-.contact-section {
-    padding: 110px 7%;
-
-    background: #28241e;
-
-    color: #ffffff;
-
-    text-align: center;
-}
-
-.contact-content {
-    max-width: 650px;
-
-    margin: 0 auto;
-}
-
-.contact-content h2 {
-    margin-bottom: 20px;
-
-    font-size:
-        clamp(34px, 4vw, 52px);
-}
-
-.contact-content p {
-    margin-bottom: 35px;
-
-    color:
-        rgba(255, 255, 255, 0.75);
-}
-
-
-/* =========================================================
-   WhatsApp 主行动按钮
-========================================================= */
-
-.whatsapp-button {
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    min-width: 270px;
-
-    min-height: 66px;
-
-    padding: 18px 40px;
-
-    border: none;
-
-    border-radius: 36px;
-
-    background: #25D366;
-
-    color: #ffffff;
-
-    font-size: 19px;
-
-    font-weight: 700;
-
-    letter-spacing: 0.3px;
-
-    box-shadow:
-        0 10px 30px rgba(37, 211, 102, 0.30);
-
-    transition:
-        transform 0.25s ease,
-        background 0.25s ease,
-        box-shadow 0.25s ease;
-
-    cursor: pointer;
-}
-
-.whatsapp-button:hover {
-    background: #128C7E;
-
-    color: #ffffff;
-
-    transform:
-        translateY(-4px) scale(1.02);
-
-    box-shadow:
-        0 14px 35px rgba(37, 211, 102, 0.40);
-}
-
-.whatsapp-button:active {
-    transform:
-        translateY(0) scale(0.98);
-}
-
-
-/* =========================================================
-   Footer
-========================================================= */
-
-.footer {
-    padding: 35px 7%;
-
-    background: #1d1a16;
-
-    color:
-        rgba(255, 255, 255, 0.7);
-
-    text-align: center;
-}
-
-.footer-logo {
-    margin-bottom: 18px;
-
-    color: #ffffff;
+.why-us-card h3 {
+    margin-bottom: 14px;
 
     font-size: 20px;
 
-    font-weight: 700;
+    line-height: 1.4;
+
+    color: #2f2a22;
 }
 
-.footer-links {
-    display: flex;
 
-    justify-content: center;
+/* 描述 */
 
-    gap: 25px;
+.why-us-card p {
+    font-size: 14px;
 
-    margin-bottom: 15px;
+    line-height: 1.9;
+
+    color: #716b61;
 }
 
-.footer-links a {
-    font-size: 13px;
 
-    transition:
-        color 0.3s ease;
-}
+/* 鼠标效果 */
 
-.footer-links a:hover {
-    color: #c4a979;
-}
+.why-us-card:hover {
+    transform:
+        translateY(-5px);
 
-.footer p {
-    font-size: 12px;
+    background: #fffdf8;
 
-    color:
-        rgba(255, 255, 255, 0.45);
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.08);
+
+    position: relative;
+
+    z-index: 2;
 }
 
 
 /* =========================================================
-   平板
+   为什么选择我们 - 平板
 ========================================================= */
 
 @media (max-width: 1000px) {
 
-    .header {
-        padding:
-            14px 4%;
-    }
-
-    .nav {
-        gap: 18px;
-
-        margin-right: 18px;
-    }
-
-    .nav a {
-        font-size: 13px;
-    }
-
-    .header-button {
-        padding:
-            9px 18px;
-
-        font-size: 13px;
-    }
-
-    .hero-content {
-        margin-left: 7%;
-
-        margin-right: 7%;
-    }
-
-    .features {
+    .why-us-grid {
         grid-template-columns:
             repeat(2, 1fr);
     }
 
-    .feature:nth-child(2) {
-        border-right: none;
-    }
-
-    .product-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
-    }
 }
 
 
 /* =========================================================
-   手机端
+   为什么选择我们 - 手机
 ========================================================= */
 
 @media (max-width: 700px) {
 
-    /* ---------------------------------
-       固定导航
-    --------------------------------- */
-
-    .header {
-        min-height: 64px;
-
+    .why-us-section {
         padding:
-            10px 4%;
-
-        background:
-            rgba(47, 42, 34, 0.94);
-
-        backdrop-filter:
-            blur(14px);
-
-        -webkit-backdrop-filter:
-            blur(14px);
-
-        box-shadow:
-            0 4px 18px rgba(0, 0, 0, 0.18);
+            70px 5%;
     }
 
 
-    /* 手机端 Logo */
-
-    .logo {
-        font-size: 17px;
-
-        letter-spacing: 1px;
+    .why-us-section .section-heading {
+        margin-bottom: 40px;
     }
 
 
-    /* 手机端隐藏文字导航 */
-
-    .nav {
-        display: none;
-    }
-
-
-    /* 手机端保留明显 CTA */
-
-    .header-button {
-        min-height: 40px;
-
-        padding:
-            8px 17px;
-
-        border-radius: 24px;
-
-        font-size: 12px;
-
-        box-shadow:
-            0 5px 15px rgba(37, 211, 102, 0.25);
-    }
-
-
-    /* ---------------------------------
-       Hero
-    --------------------------------- */
-
-    .hero {
-        min-height: 100svh;
-
-        background-position:
-            center center;
-    }
-
-    .hero::before {
-        background:
-            linear-gradient(
-                90deg,
-                rgba(0, 0, 0, 0.62),
-                rgba(0, 0, 0, 0.36)
-            );
-    }
-
-    .hero-content {
-        margin-left: 6%;
-
-        margin-right: 6%;
-
-        padding-top: 80px;
-    }
-
-    .eyebrow {
-        margin-bottom: 14px;
-
-        font-size: 11px;
+    .why-us-label {
+        font-size: 10px;
 
         letter-spacing: 2px;
     }
 
-    .hero h1 {
-        margin-bottom: 20px;
 
-        font-size: 38px;
-
-        line-height: 1.25;
-
-        letter-spacing: 1px;
-    }
-
-    .hero-description {
-        margin-bottom: 28px;
-
-        font-size: 15px;
-
-        line-height: 1.8;
-    }
-
-    .hero-buttons {
-        flex-direction: column;
-
-        align-items: flex-start;
-
-        width: 100%;
-    }
-
-    .button-outline {
-        width: auto;
-
-        min-width: 180px;
-
-        min-height: 56px;
-
-        padding:
-            14px 28px;
-
-        font-size: 16px;
-    }
-
-
-    /* ---------------------------------
-       核心特点
-    --------------------------------- */
-
-    .features {
+    .why-us-grid {
         grid-template-columns:
             1fr 1fr;
+
+        border-top:
+            1px solid #ddd6c8;
+
+        border-left:
+            1px solid #ddd6c8;
     }
 
-    .feature {
+
+    .why-us-card {
+        min-height: 230px;
+
         padding:
-            28px 12px;
+            25px 18px;
     }
 
-    .feature:nth-child(2) {
-        border-right: none;
-    }
 
-    .feature h3 {
-        font-size: 16px;
-    }
+    .why-us-number {
+        margin-bottom: 25px;
 
-    .feature p {
-        font-size: 12px;
-
-        line-height: 1.6;
-    }
-
-    .feature-number {
         font-size: 11px;
     }
 
 
-    /* ---------------------------------
-       通用区域
-    --------------------------------- */
+    .why-us-card h3 {
+        font-size: 16px;
 
-    .trees-section,
-    .products-section,
-    .reviews-section {
-
-        padding:
-            70px 5%;
-    }
-
-    .section-heading {
-        margin-bottom: 40px;
-    }
-
-    .section-heading h2 {
-        font-size: 32px;
-
-        line-height: 1.3;
-    }
-
-    .section-heading p {
-        font-size: 14px;
-
-        line-height: 1.8;
+        margin-bottom: 10px;
     }
 
 
-    /* ---------------------------------
-       沉香树轮播
-    --------------------------------- */
-
-    .tree-slider {
-        border-radius: 10px;
-    }
-
-    .slider-button {
-        width: 40px;
-
-        height: 40px;
-
-        font-size: 28px;
-    }
-
-    .slider-prev {
-        left: 10px;
-    }
-
-    .slider-next {
-        right: 10px;
-    }
-
-    .slider-dots {
-        margin-top: 18px;
-    }
-
-
-    /* ---------------------------------
-       视频
-    --------------------------------- */
-
-    .video-section {
-        padding:
-            70px 5%;
-    }
-
-    .video-content {
-        margin-bottom: 30px;
-    }
-
-    .video-content h2 {
-        font-size: 32px;
-    }
-
-    .video-placeholder {
-        border-radius: 10px;
-    }
-
-    .video-placeholder video {
-        width: 100%;
-
-        max-height: none;
-    }
-
-
-    /* ---------------------------------
-       产品四宫格
-    --------------------------------- */
-
-    .product-grid {
-        grid-template-columns:
-            1fr 1fr;
-
-        gap: 12px;
-
-        width: 100%;
-    }
-
-    .product-card {
-        border-radius: 10px;
-
-        border:
-            1px solid #e6e0d5;
-    }
-
-    .product-image {
-        aspect-ratio: 1 / 1;
-    }
-
-    .product-card:hover {
-        transform: none;
-
-        box-shadow:
-            0 8px 20px rgba(0, 0, 0, 0.06);
-    }
-
-    .product-card:hover
-    .product-image img {
-        transform: none;
-    }
-
-
-    /* ---------------------------------
-       客户反馈
-    --------------------------------- */
-
-    .review-slider {
-        border-radius: 10px;
-    }
-
-    .review-button {
-        width: 38px;
-
-        height: 38px;
-
-        font-size: 26px;
-    }
-
-    .review-prev {
-        left: 8px;
-    }
-
-    .review-next {
-        right: 8px;
-    }
-
-
-    /* ---------------------------------
-       联系我们
-    --------------------------------- */
-
-    .contact-section {
-        padding:
-            80px 5%;
-    }
-
-    .contact-content h2 {
-        font-size: 36px;
-    }
-
-    .contact-content p {
-        font-size: 14px;
-
-        line-height: 1.8;
-    }
-
-
-    /* 手机端 WhatsApp */
-
-    .whatsapp-button {
-        width: 100%;
-
-        min-width: 0;
-
-        min-height: 64px;
-
-        padding:
-            17px 25px;
-
-        font-size: 18px;
-
-        border-radius: 34px;
-
-        box-shadow:
-            0 10px 28px
-            rgba(37, 211, 102, 0.30);
-    }
-
-
-    /* ---------------------------------
-       Footer
-    --------------------------------- */
-
-    .footer {
-        padding:
-            30px 5%;
-    }
-
-    .footer-links {
-        flex-wrap: wrap;
-
-        gap:
-            12px 18px;
-    }
-
-    .footer-links a {
+    .why-us-card p {
         font-size: 12px;
+
+        line-height: 1.7;
+    }
+
+
+    .why-us-card:hover {
+        transform: none;
+
+        box-shadow: none;
     }
 
 }
@@ -1532,40 +227,23 @@ button {
 
 @media (max-width: 380px) {
 
-    .logo {
+    .why-us-card {
+        min-height: 220px;
+
+        padding:
+            22px 14px;
+    }
+
+
+    .why-us-card h3 {
         font-size: 15px;
     }
 
-    .header-button {
-        padding:
-            7px 13px;
 
+    .why-us-card p {
         font-size: 11px;
-    }
 
-    .hero h1 {
-        font-size: 34px;
-    }
-
-    .hero-description {
-        font-size: 14px;
-    }
-
-    .feature {
-        padding:
-            25px 8px;
-    }
-
-    .feature h3 {
-        font-size: 15px;
-    }
-
-    .feature p {
-        font-size: 11px;
-    }
-
-    .product-grid {
-        gap: 8px;
+        line-height: 1.65;
     }
 
 }
