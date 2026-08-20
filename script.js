@@ -1,129 +1,174 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    /* =====================================================
-       工具函数
-    ===================================================== */
+    /* =========================
+       手机端导航
+    ========================= */
 
-    function setupInfiniteSlider(options) {
+    const menuToggle = document.getElementById("menuToggle");
+    const mainNav = document.getElementById("mainNav");
 
-        const {
-            track,
-            slides,
-            prevButton,
-            nextButton,
-            dots
-        } = options;
+    function closeMobileMenu() {
 
-        if (!track || !slides.length) {
+        if (!menuToggle || !mainNav) {
+            return;
+        }
+
+        mainNav.classList.remove("mobile-open");
+
+        menuToggle.classList.remove("active");
+
+        menuToggle.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+    }
+
+
+    if (menuToggle && mainNav) {
+
+        menuToggle.addEventListener("click", function (event) {
+
+            event.stopPropagation();
+
+            const isOpen =
+                mainNav.classList.toggle("mobile-open");
+
+            menuToggle.classList.toggle(
+                "active",
+                isOpen
+            );
+
+            menuToggle.setAttribute(
+                "aria-expanded",
+                isOpen ? "true" : "false"
+            );
+        });
+
+
+        mainNav.querySelectorAll("a").forEach(function (link) {
+
+            link.addEventListener("click", function () {
+                closeMobileMenu();
+            });
+
+        });
+
+
+        document.addEventListener("click", function (event) {
+
+            if (
+                !mainNav.contains(event.target) &&
+                !menuToggle.contains(event.target)
+            ) {
+                closeMobileMenu();
+            }
+
+        });
+
+    }
+
+
+    /* =========================
+       无限循环轮播
+    ========================= */
+
+    function createInfiniteSlider(options) {
+
+        const track =
+            document.querySelector(options.track);
+
+        const slides =
+            Array.from(
+                document.querySelectorAll(options.slide)
+            );
+
+        const prevButton =
+            document.querySelector(options.prev);
+
+        const nextButton =
+            document.querySelector(options.next);
+
+        const dots =
+            Array.from(
+                document.querySelectorAll(options.dot)
+            );
+
+
+        if (
+            !track ||
+            slides.length === 0
+        ) {
             return;
         }
 
 
-        /* ---------------------------------------------
-           保存原始数量
-        --------------------------------------------- */
+        /* =========================
+           单张图片
+        ========================= */
 
-        const originalSlides = Array.from(slides);
+        if (slides.length === 1) {
 
-        const originalCount = originalSlides.length;
+            if (prevButton) {
+                prevButton.style.display = "none";
+            }
 
+            if (nextButton) {
+                nextButton.style.display = "none";
+            }
 
-        if (originalCount <= 1) {
+            dots.forEach(function (dot) {
+                dot.style.display = "none";
+            });
+
             return;
         }
 
 
-        /* ---------------------------------------------
-           克隆第一张和最后一张
-           
-           原始：
-           1 2 3
-
-           变成：
-           3 1 2 3 1
-        --------------------------------------------- */
+        /* =========================
+           创建首尾克隆
+        ========================= */
 
         const firstClone =
-            originalSlides[0].cloneNode(true);
+            slides[0].cloneNode(true);
 
         const lastClone =
-            originalSlides[originalCount - 1].cloneNode(true);
+            slides[slides.length - 1].cloneNode(true);
 
 
-        firstClone.classList.add("clone-slide");
+        firstClone.classList.add("slider-clone");
+        lastClone.classList.add("slider-clone");
 
-        lastClone.classList.add("clone-slide");
-
-
-        track.appendChild(firstClone);
 
         track.insertBefore(
             lastClone,
             track.firstChild
         );
 
-
-        const allSlides =
-            track.querySelectorAll(
-                ".tree-slide, .review-slide"
-            );
+        track.appendChild(firstClone);
 
 
-        /* ---------------------------------------------
-           当前索引
+        const total =
+            slides.length;
 
-           真实第一张 = 1
-
-           因为 0 是最后一张克隆
-        --------------------------------------------- */
 
         let currentIndex = 1;
-
 
         let isAnimating = false;
 
 
-        let touchStartX = 0;
+        /* =========================
+           初始位置
+        ========================= */
 
-        let touchStartY = 0;
+        track.style.transition = "none";
 
-        let touchEndX = 0;
-
-        let touchEndY = 0;
-
-
-        /* ---------------------------------------------
-           更新位置
-        --------------------------------------------- */
-
-        function updatePosition(animate = true) {
-
-            if (animate) {
-
-                track.classList.remove(
-                    "no-transition"
-                );
-
-            } else {
-
-                track.classList.add(
-                    "no-transition"
-                );
-
-            }
+        track.style.transform =
+            "translate3d(-100%, 0, 0)";
 
 
-            track.style.transform =
-                `translate3d(-${currentIndex * 100}%, 0, 0)`;
-
-
-            updateDots();
-        }
-
-
-        /* ---------------------------------------------
+        /* =========================
            更新圆点
-        --------------------------------------------- */
+        ========================= */
 
         function updateDots() {
 
@@ -132,17 +177,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             if (realIndex < 0) {
-
-                realIndex =
-                    originalCount - 1;
-
+                realIndex = total - 1;
             }
 
 
-            if (realIndex >= originalCount) {
-
+            if (realIndex >= total) {
                 realIndex = 0;
-
             }
 
 
@@ -158,9 +198,44 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* ---------------------------------------------
+        /* =========================
+           移动
+        ========================= */
+
+        function moveTo(
+            index,
+            animate
+        ) {
+
+            currentIndex = index;
+
+
+            if (animate) {
+
+                track.style.transition =
+                    "transform 0.45s ease";
+
+            } else {
+
+                track.style.transition =
+                    "none";
+
+            }
+
+
+            track.style.transform =
+                "translate3d(-" +
+                (currentIndex * 100) +
+                "%, 0, 0)";
+
+
+            updateDots();
+        }
+
+
+        /* =========================
            下一张
-        --------------------------------------------- */
+        ========================= */
 
         function next() {
 
@@ -168,20 +243,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-
             isAnimating = true;
 
-
-            currentIndex++;
-
-
-            updatePosition(true);
+            moveTo(
+                currentIndex + 1,
+                true
+            );
         }
 
 
-        /* ---------------------------------------------
+        /* =========================
            上一张
-        --------------------------------------------- */
+        ========================= */
 
         function previous() {
 
@@ -189,39 +262,40 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-
             isAnimating = true;
 
-
-            currentIndex--;
-
-
-            updatePosition(true);
+            moveTo(
+                currentIndex - 1,
+                true
+            );
         }
 
 
-        /* ---------------------------------------------
+        /* =========================
            动画结束
-           
-           到达克隆图后瞬间跳回真实图片
-           
-           第3张 → 第1张
-           
-           用户看到的是连续动画
-        --------------------------------------------- */
+        ========================= */
 
         track.addEventListener(
             "transitionend",
-            function () {
+            function (event) {
+
+                if (
+                    event.propertyName !==
+                    "transform"
+                ) {
+                    return;
+                }
+
 
                 if (
                     currentIndex ===
-                    originalCount + 1
+                    total + 1
                 ) {
 
-                    currentIndex = 1;
-
-                    updatePosition(false);
+                    moveTo(
+                        1,
+                        false
+                    );
 
                 }
 
@@ -230,10 +304,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     currentIndex === 0
                 ) {
 
-                    currentIndex =
-                        originalCount;
-
-                    updatePosition(false);
+                    moveTo(
+                        total,
+                        false
+                    );
 
                 }
 
@@ -244,19 +318,15 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /* ---------------------------------------------
+        /* =========================
            左右按钮
-        --------------------------------------------- */
+        ========================= */
 
         if (nextButton) {
 
             nextButton.addEventListener(
                 "click",
-                function () {
-
-                    next();
-
-                }
+                next
             );
 
         }
@@ -266,19 +336,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
             prevButton.addEventListener(
                 "click",
-                function () {
-
-                    previous();
-
-                }
+                previous
             );
 
         }
 
 
-        /* ---------------------------------------------
-           圆点点击
-        --------------------------------------------- */
+        /* =========================
+           圆点
+        ========================= */
 
         dots.forEach(function (dot, index) {
 
@@ -290,12 +356,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         return;
                     }
 
-
-                    currentIndex =
-                        index + 1;
-
-
-                    updatePosition(true);
+                    moveTo(
+                        index + 1,
+                        true
+                    );
 
                 }
             );
@@ -303,25 +367,34 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
 
-        /* ---------------------------------------------
-           手机触摸滑动
-        --------------------------------------------- */
+        /* =========================
+           手机滑动
+        ========================= */
+
+        let startX = 0;
+        let startY = 0;
+        let touching = false;
+
 
         track.addEventListener(
             "touchstart",
             function (event) {
 
-                if (!event.touches.length) {
+                if (
+                    !event.touches ||
+                    event.touches.length === 0
+                ) {
                     return;
                 }
 
 
-                touchStartX =
+                startX =
                     event.touches[0].clientX;
 
-
-                touchStartY =
+                startY =
                     event.touches[0].clientY;
+
+                touching = true;
 
             },
             {
@@ -334,49 +407,46 @@ document.addEventListener("DOMContentLoaded", function () {
             "touchend",
             function (event) {
 
-                if (!event.changedTouches.length) {
+                if (!touching) {
+                    return;
+                }
+
+                touching = false;
+
+
+                if (
+                    !event.changedTouches ||
+                    event.changedTouches.length === 0
+                ) {
                     return;
                 }
 
 
-                touchEndX =
+                const endX =
                     event.changedTouches[0].clientX;
 
-
-                touchEndY =
+                const endY =
                     event.changedTouches[0].clientY;
 
 
-                const distanceX =
-                    touchEndX - touchStartX;
+                const deltaX =
+                    endX - startX;
 
+                const deltaY =
+                    endY - startY;
 
-                const distanceY =
-                    touchEndY - touchStartY;
-
-
-                /* -------------------------------------
-                   防止上下滚动被误判为左右滑动
-                ------------------------------------- */
 
                 if (
-                    Math.abs(distanceX) < 50 ||
-                    Math.abs(distanceX) <
-                    Math.abs(distanceY)
+                    Math.abs(deltaX) > 50 &&
+                    Math.abs(deltaX) >
+                    Math.abs(deltaY)
                 ) {
 
-                    return;
-
-                }
-
-
-                if (distanceX < 0) {
-
-                    next();
-
-                } else {
-
-                    previous();
+                    if (deltaX < 0) {
+                        next();
+                    } else {
+                        previous();
+                    }
 
                 }
 
@@ -387,146 +457,113 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /* ---------------------------------------------
-           防止图片拖拽
-        --------------------------------------------- */
+        updateDots();
 
-        track.addEventListener(
-            "dragstart",
-            function (event) {
+    }
 
-                event.preventDefault();
+
+    /* =========================
+       沉香树轮播
+    ========================= */
+
+    createInfiniteSlider({
+
+        track: ".tree-track",
+
+        slide: ".tree-slide",
+
+        prev: ".slider-prev",
+
+        next: ".slider-next",
+
+        dot: ".slider-dot"
+
+    });
+
+
+    /* =========================
+       客户反馈轮播
+    ========================= */
+
+    createInfiniteSlider({
+
+        track: ".review-track",
+
+        slide: ".review-slide",
+
+        prev: ".review-prev",
+
+        next: ".review-next",
+
+        dot: ".review-dot"
+
+    });
+
+
+    /* =========================
+       产品图片格式兼容
+    ========================= */
+
+    const productImages =
+        document.querySelectorAll(
+            ".product-image img[data-image-base]"
+        );
+
+
+    productImages.forEach(function (image) {
+
+        const base =
+            image.getAttribute(
+                "data-image-base"
+            );
+
+
+        if (!base) {
+            return;
+        }
+
+
+        const extensions = [
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".webp"
+        ];
+
+
+        let current = 0;
+
+
+        image.addEventListener(
+            "error",
+            function () {
+
+                current++;
+
+
+                if (
+                    current <
+                    extensions.length
+                ) {
+
+                    image.src =
+                        base +
+                        extensions[current];
+
+                }
 
             }
         );
 
-
-        /* ---------------------------------------------
-           初始位置
-        --------------------------------------------- */
-
-        track.classList.add(
-            "no-transition"
-        );
-
-
-        currentIndex = 1;
-
-
-        updatePosition(false);
-
-
-        /* ---------------------------------------------
-           下一帧恢复动画
-        --------------------------------------------- */
-
-        requestAnimationFrame(function () {
-
-            requestAnimationFrame(function () {
-
-                track.classList.remove(
-                    "no-transition"
-                );
-
-            });
-
-        });
-
-    }
-
-
-
-    /* =====================================================
-       沉香树无限轮播
-    ===================================================== */
-
-    setupInfiniteSlider({
-
-        track:
-            document.querySelector(
-                ".tree-track"
-            ),
-
-        slides:
-            document.querySelectorAll(
-                ".tree-slide"
-            ),
-
-        prevButton:
-            document.querySelector(
-                ".slider-prev"
-            ),
-
-        nextButton:
-            document.querySelector(
-                ".slider-next"
-            ),
-
-        dots:
-            document.querySelectorAll(
-                ".slider-dot"
-            )
-
     });
 
 
+    /* =========================
+       页面准备完成
+    ========================= */
 
-    /* =====================================================
-       客户反馈无限轮播
-    ===================================================== */
-
-    setupInfiniteSlider({
-
-        track:
-            document.querySelector(
-                ".review-track"
-            ),
-
-        slides:
-            document.querySelectorAll(
-                ".review-slide"
-            ),
-
-        prevButton:
-            document.querySelector(
-                ".review-prev"
-            ),
-
-        nextButton:
-            document.querySelector(
-                ".review-next"
-            ),
-
-        dots:
-            document.querySelectorAll(
-                ".review-dot"
-            )
-
-    });
-
-
-
-    /* =====================================================
-       防止页面刷新后自动跳到锚点
-       
-       例如：
-       agarwood-landing.pages.dev/#contact
-       
-       如果用户重新打开页面，
-       自动回到顶部。
-    ===================================================== */
-
-    if (
-        window.location.hash &&
-        performance.getEntriesByType
-    ) {
-
-        window.scrollTo(
-            0,
-            0
-        );
-
-    }
-
+    document.documentElement.classList.add(
+        "page-ready"
+    );
 
 });

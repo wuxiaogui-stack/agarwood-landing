@@ -1,13 +1,3 @@
-/* =========================================================
-   天然沉香落地页
-   完整纯净版 style.css
-========================================================= */
-
-
-/* =========================================================
-   基础设置
-========================================================= */
-
 * {
     margin: 0;
     padding: 0;
@@ -17,7 +7,6 @@
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 76px;
-    overflow-x: hidden;
 }
 
 body {
@@ -31,7 +20,6 @@ body {
 
     background: #f7f5ef;
     color: #2f2a22;
-
     line-height: 1.7;
 
     overflow-x: hidden;
@@ -55,18 +43,16 @@ button {
 }
 
 
-/* =========================================================
-   顶部导航
-========================================================= */
+/* =========================
+   Header
+========================= */
 
 .header {
     position: fixed;
-
     top: 0;
     left: 0;
 
     width: 100%;
-
     min-height: 76px;
 
     z-index: 1000;
@@ -79,41 +65,27 @@ button {
 
     background: rgba(47, 42, 34, 0.96);
 
-    color: #ffffff;
+    color: #fff;
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
-    box-shadow:
-        0 4px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
-
-
-/* =========================================================
-   Logo
-========================================================= */
 
 .logo {
     flex-shrink: 0;
-
-    color: #ffffff;
 
     font-size: 22px;
     font-weight: 700;
 
     letter-spacing: 2px;
 
-    white-space: nowrap;
+    color: #fff;
 }
-
-
-/* =========================================================
-   桌面端导航
-========================================================= */
 
 .nav {
     display: flex;
     align-items: center;
-    justify-content: center;
 
     gap: 30px;
 
@@ -124,20 +96,20 @@ button {
 .nav a {
     position: relative;
 
-    color: #ffffff;
-
     font-size: 14px;
+
+    color: #fff;
 
     opacity: 0.9;
 
     transition:
-        opacity 0.25s ease,
-        color 0.25s ease;
+        opacity 0.2s ease,
+        color 0.2s ease;
 }
 
 .nav a:hover {
-    color: #ffffff;
     opacity: 1;
+    color: #c4a979;
 }
 
 .nav a::after {
@@ -153,17 +125,12 @@ button {
 
     background: #c4a979;
 
-    transition: width 0.25s ease;
+    transition: width 0.2s ease;
 }
 
 .nav a:hover::after {
     width: 100%;
 }
-
-
-/* =========================================================
-   Header WhatsApp 按钮
-========================================================= */
 
 .header-button {
     flex-shrink: 0;
@@ -180,33 +147,20 @@ button {
 
     background: #25d366;
 
-    color: #ffffff;
+    color: #fff;
 
     font-size: 14px;
     font-weight: 700;
 
-    box-shadow:
-        0 6px 18px rgba(37, 211, 102, 0.25);
-
     transition:
-        transform 0.25s ease,
-        background 0.25s ease,
-        box-shadow 0.25s ease;
+        transform 0.2s ease,
+        background 0.2s ease;
 }
 
 .header-button:hover {
     background: #128c7e;
-
     transform: translateY(-2px);
-
-    box-shadow:
-        0 10px 25px rgba(37, 211, 102, 0.35);
 }
-
-
-/* =========================================================
-   手机菜单按钮
-========================================================= */
 
 .menu-toggle {
     display: none;
@@ -216,7 +170,7 @@ button {
 
     padding: 8px;
 
-    border: none;
+    border: 0;
     border-radius: 8px;
 
     background: transparent;
@@ -238,11 +192,11 @@ button {
 
     border-radius: 2px;
 
-    background: #ffffff;
+    background: #fff;
 
     transition:
-        transform 0.25s ease,
-        opacity 0.25s ease;
+        transform 0.2s ease,
+        opacity 0.2s ease;
 }
 
 .menu-toggle.active span:nth-child(1) {
@@ -258,9 +212,9 @@ button {
 }
 
 
-/* =========================================================
-   Hero 首页
-========================================================= */
+/* =========================
+   Hero
+========================= */
 
 .hero {
     position: relative;
@@ -270,37 +224,34 @@ button {
 
     display: flex;
     align-items: center;
+    justify-content: center;
 
     overflow: hidden;
 
-    background-image:
-        url("images/hero.jpg");
+    background-image: url("images/hero.jpg");
 
     background-size: cover;
-
-    background-position: center center;
-
+    background-position: center;
     background-repeat: no-repeat;
 
-    color: #ffffff;
+    color: #fff;
 }
 
 .hero::before {
     content: "";
 
     position: absolute;
-
     inset: 0;
-
-    z-index: 1;
 
     background:
         linear-gradient(
             90deg,
-            rgba(0, 0, 0, 0.60),
-            rgba(0, 0, 0, 0.30),
-            rgba(0, 0, 0, 0.15)
+            rgba(0, 0, 0, 0.62),
+            rgba(0, 0, 0, 0.34),
+            rgba(0, 0, 0, 0.16)
         );
+
+    z-index: 1;
 }
 
 .hero-content {
@@ -309,13 +260,14 @@ button {
     z-index: 2;
 
     width: 100%;
+    max-width: 900px;
 
-    max-width: 760px;
+    margin: 0 auto;
 
-    margin-left: 8%;
-    margin-right: 8%;
+    padding:
+        100px 6% 60px;
 
-    padding-top: 76px;
+    text-align: left;
 }
 
 .eyebrow {
@@ -323,11 +275,9 @@ button {
 
     font-size: 13px;
 
-    font-weight: 600;
-
     letter-spacing: 3px;
 
-    opacity: 0.9;
+    font-weight: 600;
 }
 
 .hero h1 {
@@ -345,8 +295,6 @@ button {
 .hero-description {
     max-width: 560px;
 
-    margin-bottom: 34px;
-
     font-size: 18px;
 
     line-height: 2;
@@ -354,70 +302,17 @@ button {
     opacity: 0.95;
 }
 
-.hero-buttons {
-    display: flex;
 
-    gap: 16px;
-
-    flex-wrap: wrap;
-}
-
-
-/* =========================================================
-   主按钮
-========================================================= */
-
-.button {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    min-width: 190px;
-    min-height: 60px;
-
-    padding: 15px 34px;
-
-    border-radius: 32px;
-
-    font-size: 17px;
-    font-weight: 700;
-
-    transition:
-        transform 0.25s ease,
-        background 0.25s ease,
-        box-shadow 0.25s ease;
-}
-
-.button-primary {
-    background: #25d366;
-
-    color: #ffffff;
-
-    box-shadow:
-        0 8px 25px rgba(37, 211, 102, 0.30);
-}
-
-.button-primary:hover {
-    background: #128c7e;
-
-    transform: translateY(-3px);
-
-    box-shadow:
-        0 12px 30px rgba(37, 211, 102, 0.40);
-}
-
-
-/* =========================================================
-   核心特点
-========================================================= */
+/* =========================
+   Features
+========================= */
 
 .features {
     display: grid;
 
     grid-template-columns: repeat(4, 1fr);
 
-    background: #ffffff;
+    background: #fff;
 
     border-bottom: 1px solid #e5e1d8;
 }
@@ -431,7 +326,7 @@ button {
 }
 
 .feature:last-child {
-    border-right: none;
+    border-right: 0;
 }
 
 .feature-number {
@@ -439,11 +334,11 @@ button {
 
     margin-bottom: 12px;
 
-    color: #8b7655;
-
     font-size: 13px;
 
     letter-spacing: 2px;
+
+    color: #8b7655;
 }
 
 .feature h3 {
@@ -453,15 +348,15 @@ button {
 }
 
 .feature p {
-    color: #777064;
-
     font-size: 14px;
+
+    color: #777064;
 }
 
 
-/* =========================================================
-   通用标题
-========================================================= */
+/* =========================
+   Section Heading
+========================= */
 
 .section-heading {
     max-width: 760px;
@@ -480,15 +375,15 @@ button {
 }
 
 .section-heading p {
-    color: #716b61;
-
     font-size: 16px;
+
+    color: #716b61;
 }
 
 
-/* =========================================================
-   沉香树
-========================================================= */
+/* =========================
+   Trees
+========================= */
 
 .trees-section {
     padding: 100px 7%;
@@ -510,11 +405,9 @@ button {
     background: #e8e3d8;
 
     box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.10);
+        0 15px 40px rgba(0, 0, 0, 0.1);
 
     touch-action: pan-y;
-
-    transform: translateZ(0);
 }
 
 .tree-track {
@@ -522,10 +415,11 @@ button {
 
     width: 100%;
 
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(-100%, 0, 0);
 
-    transition:
-        transform 0.45s ease;
+    will-change: transform;
+
+    transition: transform 0.45s ease;
 }
 
 .tree-slide {
@@ -538,14 +432,9 @@ button {
     overflow: hidden;
 
     background: #e8e3d8;
-
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
 }
 
 .tree-slide img {
-    display: block;
-
     width: 100%;
     height: 100%;
 
@@ -553,50 +442,47 @@ button {
 }
 
 
-/* =========================================================
-   沉香树轮播按钮
-========================================================= */
+/* =========================
+   Slider Buttons
+========================= */
 
-.slider-button {
+.slider-button,
+.review-button {
     position: absolute;
 
     top: 50%;
 
+    transform: translateY(-50%);
+
     z-index: 10;
 
-    width: 48px;
-    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    padding: 0;
-
-    border: none;
-
+    border: 0;
     border-radius: 50%;
 
     background: rgba(47, 42, 34, 0.78);
 
-    color: #ffffff;
-
-    font-size: 34px;
-
-    line-height: 40px;
+    color: #fff;
 
     cursor: pointer;
 
-    transform: translateY(-50%);
-
-    transition:
-        background 0.25s ease,
-        transform 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.slider-button:hover {
+.slider-button {
+    width: 48px;
+    height: 48px;
+
+    font-size: 34px;
+}
+
+.slider-button:hover,
+.review-button:hover {
     background: #c4a979;
-
     color: #28241e;
-
-    transform:
-        translateY(-50%) scale(1.05);
 }
 
 .slider-prev {
@@ -608,11 +494,12 @@ button {
 }
 
 
-/* =========================================================
-   沉香树圆点
-========================================================= */
+/* =========================
+   Slider Dots
+========================= */
 
-.slider-dots {
+.slider-dots,
+.review-dots {
     display: flex;
 
     justify-content: center;
@@ -622,26 +509,23 @@ button {
     margin-top: 25px;
 }
 
-.slider-dot {
+.slider-dot,
+.review-dot {
     width: 9px;
     height: 9px;
 
     padding: 0;
 
-    border: none;
-
+    border: 0;
     border-radius: 50%;
 
     background: #cfc7b8;
 
     cursor: pointer;
-
-    transition:
-        width 0.25s ease,
-        background 0.25s ease;
 }
 
-.slider-dot.active {
+.slider-dot.active,
+.review-dot.active {
     width: 28px;
 
     border-radius: 10px;
@@ -650,16 +534,16 @@ button {
 }
 
 
-/* =========================================================
-   视频
-========================================================= */
+/* =========================
+   Video
+========================= */
 
 .video-section {
     padding: 100px 7%;
 
     background: #28241e;
 
-    color: #ffffff;
+    color: #fff;
 
     text-align: center;
 }
@@ -694,7 +578,6 @@ button {
 
 .video-placeholder {
     width: 100%;
-
     max-width: 900px;
 
     margin: 0 auto;
@@ -703,7 +586,7 @@ button {
 
     border-radius: 14px;
 
-    background: #000000;
+    background: #000;
 
     box-shadow:
         0 15px 40px rgba(0, 0, 0, 0.25);
@@ -713,25 +596,22 @@ button {
     display: block;
 
     width: 100%;
-
     height: auto;
 
     max-height: 600px;
 
-    object-fit: contain;
-
-    background: #000000;
+    background: #000;
 }
 
 
-/* =========================================================
-   产品
-========================================================= */
+/* =========================
+   Products
+========================= */
 
 .products-section {
     padding: 100px 7%;
 
-    background: #ffffff;
+    background: #fff;
 }
 
 .product-grid {
@@ -747,8 +627,6 @@ button {
 }
 
 .product-card {
-    position: relative;
-
     overflow: hidden;
 
     background: #f8f6f1;
@@ -756,17 +634,6 @@ button {
     border: 1px solid #e6e0d5;
 
     border-radius: 14px;
-
-    transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-
-    box-shadow:
-        0 15px 35px rgba(0, 0, 0, 0.10);
 }
 
 .product-image {
@@ -784,19 +651,7 @@ button {
     height: 100%;
 
     object-fit: cover;
-
-    transition:
-        transform 0.5s ease;
 }
-
-.product-card:hover .product-image img {
-    transform: scale(1.04);
-}
-
-
-/* =========================================================
-   产品 CTA
-========================================================= */
 
 .section-cta {
     display: flex;
@@ -808,7 +663,6 @@ button {
 
 .secondary-cta {
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
 
@@ -820,29 +674,23 @@ button {
 
     background: #25d366;
 
-    color: #ffffff;
+    color: #fff;
 
     font-size: 16px;
     font-weight: 700;
 
     box-shadow:
         0 8px 22px rgba(37, 211, 102, 0.25);
-
-    transition:
-        transform 0.25s ease,
-        background 0.25s ease;
 }
 
 .secondary-cta:hover {
     background: #128c7e;
-
-    transform: translateY(-3px);
 }
 
 
-/* =========================================================
-   客户反馈
-========================================================= */
+/* =========================
+   Reviews
+========================= */
 
 .reviews-section {
     padding: 100px 7%;
@@ -861,14 +709,12 @@ button {
 
     border-radius: 14px;
 
-    background: #ffffff;
+    background: #fff;
 
     box-shadow:
         0 15px 40px rgba(0, 0, 0, 0.08);
 
     touch-action: pan-y;
-
-    transform: translateZ(0);
 }
 
 .review-track {
@@ -876,10 +722,11 @@ button {
 
     width: 100%;
 
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(-100%, 0, 0);
 
-    transition:
-        transform 0.45s ease;
+    will-change: transform;
+
+    transition: transform 0.45s ease;
 }
 
 .review-slide {
@@ -889,13 +736,10 @@ button {
 
     display: flex;
 
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
-    background: #ffffff;
-
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    background: #fff;
 }
 
 .review-slide img {
@@ -908,49 +752,11 @@ button {
     object-fit: contain;
 }
 
-
-/* =========================================================
-   客户反馈按钮
-========================================================= */
-
 .review-button {
-    position: absolute;
-
-    top: 50%;
-
-    z-index: 10;
-
     width: 45px;
     height: 45px;
 
-    padding: 0;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background: rgba(47, 42, 34, 0.78);
-
-    color: #ffffff;
-
     font-size: 30px;
-
-    cursor: pointer;
-
-    transform: translateY(-50%);
-
-    transition:
-        background 0.25s ease,
-        transform 0.25s ease;
-}
-
-.review-button:hover {
-    background: #c4a979;
-
-    color: #28241e;
-
-    transform:
-        translateY(-50%) scale(1.05);
 }
 
 .review-prev {
@@ -962,58 +768,16 @@ button {
 }
 
 
-/* =========================================================
-   客户反馈圆点
-========================================================= */
-
-.review-dots {
-    display: flex;
-
-    justify-content: center;
-
-    gap: 10px;
-
-    margin-top: 22px;
-}
-
-.review-dot {
-    width: 9px;
-    height: 9px;
-
-    padding: 0;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background: #cfc7b8;
-
-    cursor: pointer;
-
-    transition:
-        width 0.25s ease,
-        background 0.25s ease;
-}
-
-.review-dot.active {
-    width: 28px;
-
-    border-radius: 10px;
-
-    background: #8b7655;
-}
-
-
-/* =========================================================
-   联系我们
-========================================================= */
+/* =========================
+   Contact
+========================= */
 
 .contact-section {
     padding: 110px 7%;
 
     background: #28241e;
 
-    color: #ffffff;
+    color: #fff;
 
     text-align: center;
 }
@@ -1046,14 +810,8 @@ button {
     color: rgba(255, 255, 255, 0.75);
 }
 
-
-/* =========================================================
-   WhatsApp 按钮
-========================================================= */
-
 .whatsapp-button {
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
 
@@ -1066,40 +824,30 @@ button {
 
     background: #25d366;
 
-    color: #ffffff;
+    color: #fff;
 
     font-size: 19px;
     font-weight: 700;
 
     box-shadow:
-        0 10px 30px rgba(37, 211, 102, 0.30);
-
-    transition:
-        transform 0.25s ease,
-        background 0.25s ease,
-        box-shadow 0.25s ease;
+        0 10px 30px rgba(37, 211, 102, 0.3);
 }
 
 .whatsapp-button:hover {
     background: #128c7e;
-
-    transform: translateY(-4px);
-
-    box-shadow:
-        0 14px 35px rgba(37, 211, 102, 0.40);
 }
 
 
-/* =========================================================
+/* =========================
    Footer
-========================================================= */
+========================= */
 
 .footer {
     padding: 35px 7%;
 
     background: #1d1a16;
 
-    color: rgba(255, 255, 255, 0.70);
+    color: rgba(255, 255, 255, 0.7);
 
     text-align: center;
 }
@@ -1107,7 +855,7 @@ button {
 .footer-logo {
     margin-bottom: 18px;
 
-    color: #ffffff;
+    color: #fff;
 
     font-size: 20px;
     font-weight: 700;
@@ -1118,6 +866,8 @@ button {
 
     justify-content: center;
 
+    flex-wrap: wrap;
+
     gap: 25px;
 
     margin-bottom: 15px;
@@ -1125,9 +875,6 @@ button {
 
 .footer-links a {
     font-size: 13px;
-
-    transition:
-        color 0.25s ease;
 }
 
 .footer-links a:hover {
@@ -1135,15 +882,15 @@ button {
 }
 
 .footer p {
-    color: rgba(255, 255, 255, 0.45);
-
     font-size: 12px;
+
+    color: rgba(255, 255, 255, 0.45);
 }
 
 
-/* =========================================================
-   平板
-========================================================= */
+/* =========================
+   Tablet
+========================= */
 
 @media (max-width: 1000px) {
 
@@ -1153,7 +900,6 @@ button {
 
     .nav {
         gap: 18px;
-
         margin-right: 18px;
     }
 
@@ -1163,13 +909,7 @@ button {
 
     .header-button {
         padding: 9px 18px;
-
         font-size: 13px;
-    }
-
-    .hero-content {
-        margin-left: 7%;
-        margin-right: 7%;
     }
 
     .features {
@@ -1177,61 +917,37 @@ button {
     }
 
     .feature:nth-child(2) {
-        border-right: none;
-    }
-
-    .product-grid {
-        grid-template-columns: repeat(2, 1fr);
+        border-right: 0;
     }
 }
 
 
-/* =========================================================
-   手机端
-========================================================= */
+/* =========================
+   Mobile
+========================= */
 
 @media (max-width: 700px) {
 
     html {
         scroll-padding-top: 64px;
-
-        overflow-x: hidden;
-        overflow-y: auto;
     }
 
     body {
-        overflow-x: hidden;
-        overflow-y: visible;
-
-        -webkit-overflow-scrolling: touch;
+        width: 100%;
     }
-
-
-    /* =====================================================
-       手机顶部导航
-    ===================================================== */
 
     .header {
         min-height: 64px;
 
         padding: 10px 4%;
 
-        background: rgba(47, 42, 34, 0.97);
-
-        box-shadow:
-            0 3px 15px rgba(0, 0, 0, 0.12);
+        background: rgba(47, 42, 34, 0.98);
     }
 
     .logo {
         font-size: 17px;
-
         letter-spacing: 1px;
     }
-
-
-    /* =====================================================
-       手机导航菜单
-    ===================================================== */
 
     .nav {
         position: absolute;
@@ -1253,7 +969,7 @@ button {
 
         padding: 8px 0;
 
-        background: rgba(47, 42, 34, 0.99);
+        background: #2f2a22;
 
         border-top:
             1px solid rgba(255, 255, 255, 0.08);
@@ -1270,9 +986,9 @@ button {
         pointer-events: none;
 
         transition:
-            opacity 0.2s ease,
-            transform 0.2s ease,
-            visibility 0.2s ease;
+            opacity 0.18s ease,
+            transform 0.18s ease,
+            visibility 0.18s ease;
     }
 
     .nav.mobile-open {
@@ -1299,17 +1015,12 @@ button {
     }
 
     .nav a:last-child {
-        border-bottom: none;
+        border-bottom: 0;
     }
 
     .nav a::after {
         display: none;
     }
-
-
-    /* =====================================================
-       手机 Header CTA
-    ===================================================== */
 
     .header-button {
         min-height: 40px;
@@ -1321,11 +1032,6 @@ button {
         font-size: 12px;
     }
 
-
-    /* =====================================================
-       手机汉堡按钮
-    ===================================================== */
-
     .menu-toggle {
         display: flex;
 
@@ -1333,13 +1039,14 @@ button {
     }
 
 
-    /* =====================================================
-       手机 Hero
-    ===================================================== */
+    /* Hero */
 
     .hero {
         min-height: 100vh;
         min-height: 100svh;
+
+        align-items: center;
+        justify-content: center;
 
         background-position: center center;
     }
@@ -1347,17 +1054,23 @@ button {
     .hero::before {
         background:
             linear-gradient(
-                90deg,
-                rgba(0, 0, 0, 0.64),
-                rgba(0, 0, 0, 0.38)
+                180deg,
+                rgba(0, 0, 0, 0.34),
+                rgba(0, 0, 0, 0.62)
             );
     }
 
     .hero-content {
-        margin-left: 6%;
-        margin-right: 6%;
+        width: 100%;
 
-        padding-top: 76px;
+        max-width: 700px;
+
+        margin: 0 auto;
+
+        padding:
+            90px 6% 50px;
+
+        text-align: center;
     }
 
     .eyebrow {
@@ -1371,43 +1084,25 @@ button {
     .hero h1 {
         margin-bottom: 20px;
 
-        font-size: 38px;
+        font-size: 36px;
 
-        line-height: 1.25;
+        line-height: 1.3;
 
         letter-spacing: 1px;
     }
 
     .hero-description {
-        margin-bottom: 28px;
+        max-width: 500px;
+
+        margin: 0 auto;
 
         font-size: 15px;
 
         line-height: 1.8;
     }
 
-    .hero-buttons {
-        flex-direction: column;
 
-        align-items: flex-start;
-
-        width: 100%;
-    }
-
-    .button {
-        min-width: 180px;
-
-        min-height: 56px;
-
-        padding: 14px 28px;
-
-        font-size: 16px;
-    }
-
-
-    /* =====================================================
-       手机核心特点
-    ===================================================== */
+    /* Features */
 
     .features {
         grid-template-columns: 1fr 1fr;
@@ -1418,13 +1113,12 @@ button {
     }
 
     .feature:nth-child(2) {
-        border-right: none;
+        border-right: 0;
     }
 
     .feature:nth-child(3),
     .feature:nth-child(4) {
-        border-top:
-            1px solid #e5e1d8;
+        border-top: 1px solid #e5e1d8;
     }
 
     .feature h3 {
@@ -1433,7 +1127,6 @@ button {
 
     .feature p {
         font-size: 12px;
-
         line-height: 1.6;
     }
 
@@ -1442,9 +1135,7 @@ button {
     }
 
 
-    /* =====================================================
-       手机通用区域
-    ===================================================== */
+    /* Sections */
 
     .trees-section,
     .products-section,
@@ -1458,30 +1149,18 @@ button {
 
     .section-heading h2 {
         font-size: 32px;
-
-        line-height: 1.3;
     }
 
     .section-heading p {
         font-size: 14px;
-
         line-height: 1.8;
     }
 
 
-    /* =====================================================
-       手机沉香树轮播
-    ===================================================== */
+    /* Tree */
 
     .tree-slider {
         border-radius: 10px;
-
-        transform: translateZ(0);
-    }
-
-    .tree-track {
-        transition:
-            transform 0.45s ease;
     }
 
     .slider-button {
@@ -1504,9 +1183,7 @@ button {
     }
 
 
-    /* =====================================================
-       手机视频
-    ===================================================== */
+    /* Video */
 
     .video-section {
         padding: 70px 5%;
@@ -1522,7 +1199,6 @@ button {
 
     .video-content p:last-child {
         font-size: 14px;
-
         line-height: 1.8;
     }
 
@@ -1532,14 +1208,11 @@ button {
 
     .video-placeholder video {
         width: 100%;
-
         max-height: none;
     }
 
 
-    /* =====================================================
-       手机产品
-    ===================================================== */
+    /* Products */
 
     .product-grid {
         grid-template-columns: 1fr 1fr;
@@ -1551,17 +1224,6 @@ button {
 
     .product-card {
         border-radius: 10px;
-    }
-
-    .product-card:hover {
-        transform: none;
-
-        box-shadow:
-            0 8px 20px rgba(0, 0, 0, 0.06);
-    }
-
-    .product-card:hover .product-image img {
-        transform: none;
     }
 
     .section-cta {
@@ -1577,19 +1239,10 @@ button {
     }
 
 
-    /* =====================================================
-       手机客户反馈
-    ===================================================== */
+    /* Reviews */
 
     .review-slider {
         border-radius: 10px;
-
-        transform: translateZ(0);
-    }
-
-    .review-track {
-        transition:
-            transform 0.45s ease;
     }
 
     .review-button {
@@ -1608,9 +1261,7 @@ button {
     }
 
 
-    /* =====================================================
-       手机联系我们
-    ===================================================== */
+    /* Contact */
 
     .contact-section {
         padding: 80px 5%;
@@ -1622,7 +1273,6 @@ button {
 
     .contact-content p {
         font-size: 14px;
-
         line-height: 1.8;
     }
 
@@ -1636,58 +1286,28 @@ button {
         padding: 17px 25px;
 
         font-size: 18px;
-
-        border-radius: 34px;
     }
 
 
-    /* =====================================================
-       手机 Footer
-    ===================================================== */
+    /* Footer */
 
     .footer {
         padding: 30px 5%;
     }
 
     .footer-links {
-        flex-wrap: wrap;
-
         gap: 12px 18px;
     }
 
     .footer-links a {
         font-size: 12px;
     }
-
-
-    /* =====================================================
-       手机滚动稳定性
-    ===================================================== */
-
-    .header {
-        backdrop-filter: none !important;
-
-        -webkit-backdrop-filter: none !important;
-    }
-
-    .tree-track,
-    .review-track {
-        will-change: auto;
-    }
-
-    .tree-slide,
-    .review-slide {
-        backface-visibility: hidden;
-
-        -webkit-backface-visibility: hidden;
-    }
-
 }
 
 
-/* =========================================================
-   超小屏幕
-========================================================= */
+/* =========================
+   Small Mobile
+========================= */
 
 @media (max-width: 380px) {
 
@@ -1697,12 +1317,11 @@ button {
 
     .header-button {
         padding: 7px 12px;
-
         font-size: 11px;
     }
 
     .hero h1 {
-        font-size: 34px;
+        font-size: 32px;
     }
 
     .hero-description {
@@ -1724,13 +1343,12 @@ button {
     .product-grid {
         gap: 8px;
     }
-
 }
 
 
-/* =========================================================
-   减少动画
-========================================================= */
+/* =========================
+   Reduced Motion
+========================= */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -1742,12 +1360,8 @@ button {
     *::before,
     *::after {
         animation-duration: 0.01ms !important;
-
         animation-iteration-count: 1 !important;
-
         transition-duration: 0.01ms !important;
-
         scroll-behavior: auto !important;
     }
-
 }
