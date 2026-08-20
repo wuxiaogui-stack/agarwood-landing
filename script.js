@@ -1,446 +1,530 @@
 ```javascript
-/* =========================================================
-   网站交互脚本
-   优化目标：
-   1. 防止手机端页面加载闪动
-   2. 防止浏览器自动恢复滚动位置
-   3. 优化沉香树轮播
-   4. 优化客户反馈轮播
-   5. 使用 translate3d 提升移动端流畅度
-========================================================= */
+document.addEventListener("DOMContentLoaded", function () {
 
+    /* =========================================================
+       通用触摸滑动参数
+    ========================================================= */
 
-(function () {
-
-    "use strict";
+    const SWIPE_DISTANCE = 50;
 
 
     /* =========================================================
-       页面初始化
+       沉香树轮播
     ========================================================= */
 
-    document.addEventListener("DOMContentLoaded", function () {
+    const treeTrack = document.querySelector(".tree-track");
+    const treeSlides = document.querySelectorAll(".tree-slide");
+    const treePrev = document.querySelector(".slider-prev");
+    const treeNext = document.querySelector(".slider-next");
+    const treeDots = document.querySelectorAll(".slider-dot");
 
+    let currentTreeSlide = 0;
+    let treeTouchStartX = 0;
+    let treeTouchStartY = 0;
+    let treeIsAnimating = false;
 
-        /* -----------------------------------------------------
-           防止浏览器自动恢复上次滚动位置
-        ----------------------------------------------------- */
 
-        if ("scrollRestoration" in history) {
+    function updateTreeDots() {
 
-            history.scrollRestoration = "manual";
+        treeDots.forEach((dot, index) => {
 
-        }
-
-
-        /* -----------------------------------------------------
-           页面没有锚点时，从顶部开始
-           
-           注意：
-           如果 URL 是 #products / #contact 等，
-           不强制回到顶部。
-        ----------------------------------------------------- */
-
-        if (!window.location.hash) {
-
-            window.scrollTo(0, 0);
-
-        }
-
-
-
-        /* =====================================================
-           沉香树轮播
-        ===================================================== */
-
-        const treeTrack =
-            document.querySelector(".tree-track");
-
-        const treeSlides =
-            document.querySelectorAll(".tree-slide");
-
-        const treePrev =
-            document.querySelector(".slider-prev");
-
-        const treeNext =
-            document.querySelector(".slider-next");
-
-        const treeDots =
-            document.querySelectorAll(".slider-dot");
-
-
-        let currentTreeSlide = 0;
-
-
-
-        /* -----------------------------------------------------
-           显示沉香树图片
-        ----------------------------------------------------- */
-
-        function showTreeSlide(index, animate = true) {
-
-
-            if (!treeTrack || treeSlides.length === 0) {
-
-                return;
-
-            }
-
-
-            /* 循环切换 */
-
-            if (index < 0) {
-
-                currentTreeSlide =
-                    treeSlides.length - 1;
-
-            }
-
-            else if (index >= treeSlides.length) {
-
-                currentTreeSlide = 0;
-
-            }
-
-            else {
-
-                currentTreeSlide = index;
-
-            }
-
-
-            /* -------------------------------------------------
-               初始化时关闭动画
-
-               防止页面第一次打开时
-               从第一张图片滑动到第一张图片。
-            ------------------------------------------------- */
-
-            if (!animate) {
-
-                treeTrack.style.transition = "none";
-
-            }
-
-            else {
-
-                treeTrack.style.transition = "";
-
-            }
-
-
-            /* -------------------------------------------------
-               使用 translate3d
-
-               对手机 GPU 更友好。
-            ------------------------------------------------- */
-
-            treeTrack.style.transform =
-                "translate3d(-" +
-                (currentTreeSlide * 100) +
-                "%, 0, 0)";
-
-
-            /* 更新圆点 */
-
-            treeDots.forEach(function (dot, i) {
-
-                dot.classList.toggle(
-                    "active",
-                    i === currentTreeSlide
-                );
-
-            });
-
-
-            /* -------------------------------------------------
-               初始化结束后恢复动画
-            ------------------------------------------------- */
-
-            if (!animate) {
-
-                requestAnimationFrame(function () {
-
-                    requestAnimationFrame(function () {
-
-                        if (treeTrack) {
-
-                            treeTrack.style.transition = "";
-
-                        }
-
-                    });
-
-                });
-
-            }
-
-        }
-
-
-
-        /* -----------------------------------------------------
-           下一张
-        ----------------------------------------------------- */
-
-        if (treeNext) {
-
-            treeNext.addEventListener(
-                "click",
-                function () {
-
-                    showTreeSlide(
-                        currentTreeSlide + 1,
-                        true
-                    );
-
-                }
-            );
-
-        }
-
-
-
-        /* -----------------------------------------------------
-           上一张
-        ----------------------------------------------------- */
-
-        if (treePrev) {
-
-            treePrev.addEventListener(
-                "click",
-                function () {
-
-                    showTreeSlide(
-                        currentTreeSlide - 1,
-                        true
-                    );
-
-                }
-            );
-
-        }
-
-
-
-        /* -----------------------------------------------------
-           圆点切换
-        ----------------------------------------------------- */
-
-        treeDots.forEach(function (dot, index) {
-
-            dot.addEventListener(
-                "click",
-                function () {
-
-                    showTreeSlide(
-                        index,
-                        true
-                    );
-
-                }
+            dot.classList.toggle(
+                "active",
+                index === currentTreeSlide
             );
 
         });
 
+    }
 
 
-        /* =====================================================
-           客户反馈轮播
-        ===================================================== */
+    function showTreeSlide(index, direction = "next") {
 
-        const reviewTrack =
-            document.querySelector(".review-track");
+        if (!treeTrack || treeSlides.length === 0) {
+            return;
+        }
 
-        const reviewSlides =
-            document.querySelectorAll(".review-slide");
+        if (treeIsAnimating) {
+            return;
+        }
 
-        const reviewPrev =
-            document.querySelector(".review-prev");
-
-        const reviewNext =
-            document.querySelector(".review-next");
-
-        const reviewDots =
-            document.querySelectorAll(".review-dot");
+        treeIsAnimating = true;
 
 
-        let currentReview = 0;
+        /* -----------------------------------------
+           计算下一张
+        ----------------------------------------- */
 
+        if (index < 0) {
 
+            currentTreeSlide = treeSlides.length - 1;
 
-        /* -----------------------------------------------------
-           显示客户反馈
-        ----------------------------------------------------- */
+        } else if (index >= treeSlides.length) {
 
-        function showReview(index, animate = true) {
+            currentTreeSlide = 0;
 
+        } else {
 
-            if (!reviewTrack || reviewSlides.length === 0) {
-
-                return;
-
-            }
-
-
-            /* 循环切换 */
-
-            if (index < 0) {
-
-                currentReview =
-                    reviewSlides.length - 1;
-
-            }
-
-            else if (index >= reviewSlides.length) {
-
-                currentReview = 0;
-
-            }
-
-            else {
-
-                currentReview = index;
-
-            }
-
-
-            /* 初始化关闭动画 */
-
-            if (!animate) {
-
-                reviewTrack.style.transition = "none";
-
-            }
-
-            else {
-
-                reviewTrack.style.transition = "";
-
-            }
-
-
-            /* 使用 GPU 加速 */
-
-            reviewTrack.style.transform =
-                "translate3d(-" +
-                (currentReview * 100) +
-                "%, 0, 0)";
-
-
-            /* 更新圆点 */
-
-            reviewDots.forEach(function (dot, i) {
-
-                dot.classList.toggle(
-                    "active",
-                    i === currentReview
-                );
-
-            });
-
-
-            /* 初始化完成后恢复动画 */
-
-            if (!animate) {
-
-                requestAnimationFrame(function () {
-
-                    requestAnimationFrame(function () {
-
-                        if (reviewTrack) {
-
-                            reviewTrack.style.transition = "";
-
-                        }
-
-                    });
-
-                });
-
-            }
+            currentTreeSlide = index;
 
         }
 
 
-
-        /* -----------------------------------------------------
-           下一条反馈
-        ----------------------------------------------------- */
-
-        if (reviewNext) {
-
-            reviewNext.addEventListener(
-                "click",
-                function () {
-
-                    showReview(
-                        currentReview + 1,
-                        true
-                    );
-
-                }
-            );
-
-        }
+        updateTreeDots();
 
 
+        /* -----------------------------------------
+           正常轮播
+        ----------------------------------------- */
 
-        /* -----------------------------------------------------
-           上一条反馈
-        ----------------------------------------------------- */
+        treeTrack.style.transition =
+            "transform 0.45s ease";
 
-        if (reviewPrev) {
-
-            reviewPrev.addEventListener(
-                "click",
-                function () {
-
-                    showReview(
-                        currentReview - 1,
-                        true
-                    );
-
-                }
-            );
-
-        }
+        treeTrack.style.transform =
+            `translateX(-${currentTreeSlide * 100}%)`;
 
 
+        setTimeout(function () {
 
-        /* -----------------------------------------------------
-           客户反馈圆点
-        ----------------------------------------------------- */
+            treeIsAnimating = false;
 
-        reviewDots.forEach(function (dot, index) {
+        }, 480);
 
-            dot.addEventListener(
-                "click",
-                function () {
+    }
 
-                    showReview(
-                        index,
-                        true
-                    );
 
-                }
+    /* -----------------------------------------
+       左按钮
+    ----------------------------------------- */
+
+    if (treePrev) {
+
+        treePrev.addEventListener("click", function () {
+
+            showTreeSlide(
+                currentTreeSlide - 1,
+                "prev"
             );
 
         });
 
+    }
 
 
-        /* =====================================================
-           初始化轮播
-        ===================================================== */
+    /* -----------------------------------------
+       右按钮
+    ----------------------------------------- */
 
-        showTreeSlide(0, false);
+    if (treeNext) {
 
-        showReview(0, false);
+        treeNext.addEventListener("click", function () {
 
+            showTreeSlide(
+                currentTreeSlide + 1,
+                "next"
+            );
+
+        });
+
+    }
+
+
+    /* -----------------------------------------
+       圆点
+    ----------------------------------------- */
+
+    treeDots.forEach(function (dot, index) {
+
+        dot.addEventListener("click", function () {
+
+            if (index > currentTreeSlide) {
+
+                showTreeSlide(index, "next");
+
+            } else {
+
+                showTreeSlide(index, "prev");
+
+            }
+
+        });
 
     });
 
 
-})();
+    /* -----------------------------------------
+       手机触摸开始
+    ----------------------------------------- */
+
+    if (treeTrack) {
+
+        treeTrack.addEventListener(
+            "touchstart",
+            function (event) {
+
+                const touch = event.touches[0];
+
+                treeTouchStartX = touch.clientX;
+
+                treeTouchStartY = touch.clientY;
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        /* -----------------------------------------
+           手机触摸结束
+        ----------------------------------------- */
+
+        treeTrack.addEventListener(
+            "touchend",
+            function (event) {
+
+                const touch = event.changedTouches[0];
+
+                const endX = touch.clientX;
+                const endY = touch.clientY;
+
+                const distanceX =
+                    endX - treeTouchStartX;
+
+                const distanceY =
+                    endY - treeTouchStartY;
+
+
+                /* 防止上下滚动被误认为左右滑 */
+
+                if (
+                    Math.abs(distanceX) <
+                    Math.abs(distanceY)
+                ) {
+                    return;
+                }
+
+
+                /* 左滑 */
+
+                if (distanceX < -SWIPE_DISTANCE) {
+
+                    showTreeSlide(
+                        currentTreeSlide + 1,
+                        "next"
+                    );
+
+                }
+
+
+                /* 右滑 */
+
+                else if (
+                    distanceX > SWIPE_DISTANCE
+                ) {
+
+                    showTreeSlide(
+                        currentTreeSlide - 1,
+                        "prev"
+                    );
+
+                }
+
+            },
+            {
+                passive: true
+            }
+        );
+
+    }
+
+
+
+    /* =========================================================
+       客户反馈轮播
+    ========================================================= */
+
+    const reviewTrack =
+        document.querySelector(".review-track");
+
+    const reviewSlides =
+        document.querySelectorAll(".review-slide");
+
+    const reviewPrev =
+        document.querySelector(".review-prev");
+
+    const reviewNext =
+        document.querySelector(".review-next");
+
+    const reviewDots =
+        document.querySelectorAll(".review-dot");
+
+    let currentReview = 0;
+
+    let reviewTouchStartX = 0;
+    let reviewTouchStartY = 0;
+
+    let reviewIsAnimating = false;
+
+
+    function updateReviewDots() {
+
+        reviewDots.forEach(function (dot, index) {
+
+            dot.classList.toggle(
+                "active",
+                index === currentReview
+            );
+
+        });
+
+    }
+
+
+    function showReview(index, direction = "next") {
+
+        if (
+            !reviewTrack ||
+            reviewSlides.length === 0
+        ) {
+            return;
+        }
+
+        if (reviewIsAnimating) {
+            return;
+        }
+
+        reviewIsAnimating = true;
+
+
+        /* -----------------------------------------
+           计算下一张
+        ----------------------------------------- */
+
+        if (index < 0) {
+
+            currentReview =
+                reviewSlides.length - 1;
+
+        } else if (
+            index >= reviewSlides.length
+        ) {
+
+            currentReview = 0;
+
+        } else {
+
+            currentReview = index;
+
+        }
+
+
+        updateReviewDots();
+
+
+        /* -----------------------------------------
+           正常轮播动画
+        ----------------------------------------- */
+
+        reviewTrack.style.transition =
+            "transform 0.45s ease";
+
+        reviewTrack.style.transform =
+            `translateX(-${currentReview * 100}%)`;
+
+
+        setTimeout(function () {
+
+            reviewIsAnimating = false;
+
+        }, 480);
+
+    }
+
+
+    /* -----------------------------------------
+       左按钮
+    ----------------------------------------- */
+
+    if (reviewPrev) {
+
+        reviewPrev.addEventListener(
+            "click",
+            function () {
+
+                showReview(
+                    currentReview - 1,
+                    "prev"
+                );
+
+            }
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       右按钮
+    ----------------------------------------- */
+
+    if (reviewNext) {
+
+        reviewNext.addEventListener(
+            "click",
+            function () {
+
+                showReview(
+                    currentReview + 1,
+                    "next"
+                );
+
+            }
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       客户反馈圆点
+    ----------------------------------------- */
+
+    reviewDots.forEach(function (dot, index) {
+
+        dot.addEventListener(
+            "click",
+            function () {
+
+                if (index > currentReview) {
+
+                    showReview(
+                        index,
+                        "next"
+                    );
+
+                } else {
+
+                    showReview(
+                        index,
+                        "prev"
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+
+    /* -----------------------------------------
+       手机触摸开始
+    ----------------------------------------- */
+
+    if (reviewTrack) {
+
+        reviewTrack.addEventListener(
+            "touchstart",
+            function (event) {
+
+                const touch =
+                    event.touches[0];
+
+                reviewTouchStartX =
+                    touch.clientX;
+
+                reviewTouchStartY =
+                    touch.clientY;
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        /* -----------------------------------------
+           手机触摸结束
+        ----------------------------------------- */
+
+        reviewTrack.addEventListener(
+            "touchend",
+            function (event) {
+
+                const touch =
+                    event.changedTouches[0];
+
+                const endX =
+                    touch.clientX;
+
+                const endY =
+                    touch.clientY;
+
+
+                const distanceX =
+                    endX - reviewTouchStartX;
+
+                const distanceY =
+                    endY - reviewTouchStartY;
+
+
+                /* 防止上下滑动误触 */
+
+                if (
+                    Math.abs(distanceX) <
+                    Math.abs(distanceY)
+                ) {
+
+                    return;
+
+                }
+
+
+                /* 左滑 */
+
+                if (
+                    distanceX <
+                    -SWIPE_DISTANCE
+                ) {
+
+                    showReview(
+                        currentReview + 1,
+                        "next"
+                    );
+
+                }
+
+
+                /* 右滑 */
+
+                else if (
+                    distanceX >
+                    SWIPE_DISTANCE
+                ) {
+
+                    showReview(
+                        currentReview - 1,
+                        "prev"
+                    );
+
+                }
+
+            },
+            {
+                passive: true
+            }
+        );
+
+    }
+
+
+
+    /* =========================================================
+       初始化
+    ========================================================= */
+
+    showTreeSlide(0);
+
+    showReview(0);
+
+});
 ```

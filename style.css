@@ -1911,3 +1911,46 @@ button {
 
 }
 ```
+```css
+/* =========================================================
+   手机轮播触摸优化
+========================================================= */
+
+.tree-track,
+.review-track {
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.tree-slide img,
+.review-slide img {
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+
+/* 防止手机图片长按弹出菜单 */
+
+.tree-slide img,
+.review-slide img {
+    -webkit-touch-callout: none;
+}
+
+
+/* 手机端轮播按钮 */
+
+@media (max-width: 700px) {
+
+    .tree-slider,
+    .review-slider {
+        touch-action: pan-y;
+    }
+
+    .tree-track,
+    .review-track {
+        will-change: transform;
+    }
+
+}
+```
