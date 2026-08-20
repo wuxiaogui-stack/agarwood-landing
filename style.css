@@ -1,4 +1,3 @@
-```css
 /* =========================================================
    基础设置
 ========================================================= */
@@ -9,18 +8,10 @@
     box-sizing: border-box;
 }
 
-
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 80px;
-
-    /*
-       防止移动端浏览器在页面恢复时产生
-       不必要的滚动动画。
-    */
-    overflow-x: hidden;
+    scroll-padding-top: 76px;
 }
-
 
 body {
     font-family:
@@ -32,51 +23,30 @@ body {
         sans-serif;
 
     background: #f7f5ef;
-
     color: #2f2a22;
 
     line-height: 1.7;
 
-    /*
-       防止页面横向溢出导致手机端闪动。
-    */
-    width: 100%;
-
-    min-height: 100%;
-
     overflow-x: hidden;
-
-    /*
-       提升文字渲染稳定性。
-    */
-    -webkit-font-smoothing: antialiased;
-
-    text-rendering: optimizeLegibility;
 }
-
 
 img {
     max-width: 100%;
-
     display: block;
 }
 
-
 a {
     text-decoration: none;
-
     color: inherit;
 }
-
 
 button {
     font-family: inherit;
 }
 
 
-
 /* =========================================================
-   顶部固定导航
+   顶部导航
 ========================================================= */
 
 .header {
@@ -99,14 +69,13 @@ button {
 
     padding: 14px 6%;
 
-    background:
-        rgba(47, 42, 34, 0.88);
+    background: rgba(47, 42, 34, 0.92);
 
     backdrop-filter: blur(12px);
 
     -webkit-backdrop-filter: blur(12px);
 
-    color: #ffffff;
+    color: #fff;
 
     border-bottom:
         1px solid rgba(255, 255, 255, 0.12);
@@ -114,12 +83,6 @@ button {
     box-shadow:
         0 4px 20px rgba(0, 0, 0, 0.12);
 }
-
-
-
-/* =========================================================
-   Logo
-========================================================= */
 
 .logo {
     flex-shrink: 0;
@@ -130,16 +93,10 @@ button {
 
     letter-spacing: 2px;
 
-    color: #ffffff;
+    color: #fff;
 
     white-space: nowrap;
 }
-
-
-
-/* =========================================================
-   导航菜单
-========================================================= */
 
 .nav {
     display: flex;
@@ -155,28 +112,25 @@ button {
     margin-right: 30px;
 }
 
-
 .nav a {
     position: relative;
 
     font-size: 14px;
 
-    color: #ffffff;
+    color: #fff;
 
     opacity: 0.9;
 
     transition:
-        opacity 0.3s ease,
-        color 0.3s ease;
+        opacity 0.25s ease,
+        color 0.25s ease;
 }
-
 
 .nav a:hover {
     opacity: 1;
 
-    color: #ffffff;
+    color: #fff;
 }
-
 
 .nav a::after {
     content: "";
@@ -193,20 +147,12 @@ button {
 
     background: #c4a979;
 
-    transition:
-        width 0.3s ease;
+    transition: width 0.25s ease;
 }
-
 
 .nav a:hover::after {
     width: 100%;
 }
-
-
-
-/* =========================================================
-   导航立即咨询按钮
-========================================================= */
 
 .header-button {
     flex-shrink: 0;
@@ -223,9 +169,9 @@ button {
 
     border-radius: 30px;
 
-    background: #25D366;
+    background: #25d366;
 
-    color: #ffffff;
+    color: #fff;
 
     font-size: 14px;
 
@@ -235,37 +181,27 @@ button {
         0 6px 18px rgba(37, 211, 102, 0.25);
 
     transition:
-        background 0.3s ease,
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
+        transform 0.25s ease,
+        background 0.25s ease;
 }
-
 
 .header-button:hover {
-    background: #128C7E;
+    background: #128c7e;
 
-    color: #ffffff;
-
-    transform:
-        translateY(-2px);
-
-    box-shadow:
-        0 10px 25px rgba(37, 211, 102, 0.35);
+    transform: translateY(-2px);
 }
-
 
 
 /* =========================================================
-   首页 Hero
+   Hero
 ========================================================= */
 
 .hero {
     position: relative;
 
-    /*
-       桌面端使用固定的最小高度。
-    */
     min-height: 100vh;
+
+    min-height: 100svh;
 
     display: flex;
 
@@ -282,9 +218,8 @@ button {
 
     background-repeat: no-repeat;
 
-    color: #ffffff;
+    color: #fff;
 }
-
 
 .hero::before {
     content: "";
@@ -296,16 +231,13 @@ button {
     background:
         linear-gradient(
             90deg,
-            rgba(0, 0, 0, 0.58),
-            rgba(0, 0, 0, 0.28),
+            rgba(0, 0, 0, 0.62),
+            rgba(0, 0, 0, 0.30),
             rgba(0, 0, 0, 0.18)
         );
 
     z-index: 1;
-
-    pointer-events: none;
 }
-
 
 .hero-content {
     position: relative;
@@ -320,9 +252,8 @@ button {
 
     margin-right: 8%;
 
-    padding-top: 80px;
+    padding-top: 76px;
 }
-
 
 .eyebrow {
     margin-bottom: 18px;
@@ -333,11 +264,8 @@ button {
 
     font-weight: 600;
 
-    text-transform: uppercase;
-
     opacity: 0.9;
 }
-
 
 .hero h1 {
     margin-bottom: 24px;
@@ -352,7 +280,6 @@ button {
     letter-spacing: 2px;
 }
 
-
 .hero-description {
     max-width: 560px;
 
@@ -365,7 +292,6 @@ button {
     opacity: 0.95;
 }
 
-
 .hero-buttons {
     display: flex;
 
@@ -375,9 +301,8 @@ button {
 }
 
 
-
 /* =========================================================
-   通用按钮
+   按钮
 ========================================================= */
 
 .button {
@@ -392,36 +317,20 @@ button {
     padding: 13px 26px;
 
     border-radius: 30px;
-
-    font-size: 15px;
-
-    transition:
-        transform 0.3s ease,
-        background 0.3s ease,
-        box-shadow 0.3s ease;
 }
 
-
 .button-outline {
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
     min-width: 190px;
 
     min-height: 60px;
 
     padding: 15px 34px;
 
-    border: none;
-
     border-radius: 32px;
 
-    background: #25D366;
+    background: #25d366;
 
-    color: #ffffff;
+    color: #fff;
 
     font-size: 17px;
 
@@ -431,24 +340,16 @@ button {
         0 8px 25px rgba(37, 211, 102, 0.30);
 
     transition:
-        transform 0.3s ease,
-        background 0.3s ease,
-        box-shadow 0.3s ease;
+        transform 0.25s ease,
+        background 0.25s ease;
 }
-
 
 .button-outline:hover {
-    background: #128C7E;
-
-    color: #ffffff;
+    background: #128c7e;
 
     transform:
-        translateY(-4px) scale(1.02);
-
-    box-shadow:
-        0 12px 30px rgba(37, 211, 102, 0.40);
+        translateY(-3px);
 }
-
 
 
 /* =========================================================
@@ -461,12 +362,11 @@ button {
     grid-template-columns:
         repeat(4, 1fr);
 
-    background: #ffffff;
+    background: #fff;
 
     border-bottom:
         1px solid #e5e1d8;
 }
-
 
 .feature {
     padding: 45px 30px;
@@ -477,11 +377,9 @@ button {
         1px solid #e5e1d8;
 }
 
-
 .feature:last-child {
     border-right: none;
 }
-
 
 .feature-number {
     display: block;
@@ -495,20 +393,17 @@ button {
     color: #8b7655;
 }
 
-
 .feature h3 {
     margin-bottom: 8px;
 
     font-size: 19px;
 }
 
-
 .feature p {
     font-size: 14px;
 
     color: #777064;
 }
-
 
 
 /* =========================================================
@@ -524,7 +419,6 @@ button {
     text-align: center;
 }
 
-
 .section-heading h2 {
     margin-bottom: 20px;
 
@@ -534,7 +428,6 @@ button {
     line-height: 1.3;
 }
 
-
 .section-heading p {
     color: #716b61;
 
@@ -542,9 +435,83 @@ button {
 }
 
 
+/* =========================================================
+   产品
+========================================================= */
+
+.products-section {
+    padding: 100px 7%;
+
+    background: #fff;
+}
+
+.product-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 24px;
+
+    max-width: 1000px;
+
+    margin: 0 auto;
+}
+
+.product-card {
+    position: relative;
+
+    overflow: hidden;
+
+    background: #f8f6f1;
+
+    border:
+        1px solid #e6e0d5;
+
+    border-radius: 14px;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.product-card:hover {
+    transform:
+        translateY(-4px);
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.10);
+}
+
+.product-image {
+    width: 100%;
+
+    aspect-ratio: 1 / 1;
+
+    overflow: hidden;
+
+    background: #e8e3d8;
+}
+
+.product-image img {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.5s ease;
+}
+
+.product-card:hover .product-image img {
+    transform:
+        scale(1.04);
+}
+
 
 /* =========================================================
-   沉香树展示区
+   沉香树
 ========================================================= */
 
 .trees-section {
@@ -552,7 +519,6 @@ button {
 
     background: #f7f5ef;
 }
-
 
 .tree-slider {
     position: relative;
@@ -568,51 +534,41 @@ button {
     box-shadow:
         0 15px 40px rgba(0, 0, 0, 0.10);
 
-    /*
-       防止轮播自身造成横向溢出。
-    */
-    contain: layout paint;
-}
+    touch-action: pan-y;
 
+    user-select: none;
+}
 
 .tree-track {
     display: flex;
 
     width: 100%;
 
-    /*
-       使用 transform，不使用 left。
-    */
-    transition:
-        transform 0.5s ease;
+    transform:
+        translate3d(0, 0, 0);
 
-    /*
-       提前告诉浏览器这是会变化的元素。
-    */
     will-change: transform;
 
-    /*
-       GPU 合成层。
-    */
-    transform: translate3d(0, 0, 0);
+    transition:
+        transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
+.tree-track.no-transition {
+    transition: none !important;
+}
 
 .tree-slide {
-    min-width: 100%;
+    flex:
+        0 0 100%;
+
+    width: 100%;
 
     aspect-ratio: 1 / 1;
 
     overflow: hidden;
 
     background: #e8e3d8;
-
-    /*
-       固定布局尺寸，减少图片加载时页面重排。
-    */
-    contain: layout paint;
 }
-
 
 .tree-slide img {
     width: 100%;
@@ -623,23 +579,12 @@ button {
 
     display: block;
 
-    /*
-       图片不会因为加载而改变轮播尺寸。
-    */
-    aspect-ratio: 1 / 1;
-
-    /*
-       防止拖动图片。
-    */
-    user-select: none;
-
-    -webkit-user-drag: none;
+    pointer-events: none;
 }
 
 
-
 /* =========================================================
-   沉香树左右按钮
+   沉香树按钮
 ========================================================= */
 
 .slider-button {
@@ -663,7 +608,7 @@ button {
     background:
         rgba(47, 42, 34, 0.78);
 
-    color: #ffffff;
+    color: #fff;
 
     font-size: 34px;
 
@@ -671,16 +616,12 @@ button {
 
     cursor: pointer;
 
-    transition:
-        background 0.3s ease,
-        transform 0.3s ease;
-
-    /*
-       防止按钮点击时出现浏览器默认效果。
-    */
     -webkit-tap-highlight-color: transparent;
-}
 
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
 
 .slider-button:hover {
     background: #c4a979;
@@ -691,16 +632,13 @@ button {
         translateY(-50%) scale(1.05);
 }
 
-
 .slider-prev {
     left: 18px;
 }
 
-
 .slider-next {
     right: 18px;
 }
-
 
 
 /* =========================================================
@@ -716,7 +654,6 @@ button {
 
     margin-top: 25px;
 }
-
 
 .slider-dot {
     width: 9px;
@@ -734,12 +671,9 @@ button {
     cursor: pointer;
 
     transition:
-        width 0.3s ease,
-        background 0.3s ease;
-
-    -webkit-tap-highlight-color: transparent;
+        width 0.25s ease,
+        background 0.25s ease;
 }
-
 
 .slider-dot.active {
     width: 28px;
@@ -750,9 +684,8 @@ button {
 }
 
 
-
 /* =========================================================
-   视频区域
+   视频
 ========================================================= */
 
 .video-section {
@@ -760,11 +693,10 @@ button {
 
     background: #28241e;
 
-    color: #ffffff;
+    color: #fff;
 
     text-align: center;
 }
-
 
 .video-content {
     max-width: 700px;
@@ -773,7 +705,6 @@ button {
         0 auto 40px;
 }
 
-
 .video-content h2 {
     margin-bottom: 18px;
 
@@ -781,6 +712,10 @@ button {
         clamp(32px, 4vw, 48px);
 }
 
+.video-content p {
+    color:
+        rgba(255, 255, 255, 0.72);
+}
 
 .video-placeholder {
     width: 100%;
@@ -797,13 +732,7 @@ button {
 
     box-shadow:
         0 15px 40px rgba(0, 0, 0, 0.25);
-
-    /*
-       防止视频加载时造成布局变化。
-    */
-    contain: layout paint;
 }
-
 
 .video-placeholder video {
     width: 100%;
@@ -817,103 +746,7 @@ button {
     object-fit: contain;
 
     background: #000;
-
-    /*
-       视频不参与页面横向溢出。
-    */
-    max-width: 100%;
 }
-
-
-
-/* =========================================================
-   产品展示
-========================================================= */
-
-.products-section {
-    padding: 100px 7%;
-
-    background: #ffffff;
-}
-
-
-.product-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 24px;
-
-    max-width: 1000px;
-
-    margin: 0 auto;
-}
-
-
-.product-card {
-    position: relative;
-
-    overflow: hidden;
-
-    background: #f8f6f1;
-
-    border:
-        1px solid #e6e0d5;
-
-    border-radius: 14px;
-
-    transition:
-        transform 0.35s ease,
-        box-shadow 0.35s ease;
-
-    /*
-       防止图片动画影响外部布局。
-    */
-    contain: layout paint;
-}
-
-
-.product-card:hover {
-    transform:
-        translateY(-5px);
-
-    box-shadow:
-        0 15px 35px rgba(0, 0, 0, 0.10);
-}
-
-
-.product-image {
-    width: 100%;
-
-    aspect-ratio: 1 / 1;
-
-    overflow: hidden;
-
-    background: #e8e3d8;
-}
-
-
-.product-image img {
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: cover;
-
-    aspect-ratio: 1 / 1;
-
-    transition:
-        transform 0.6s ease;
-}
-
-
-.product-card:hover
-.product-image img {
-    transform:
-        scale(1.05);
-}
-
 
 
 /* =========================================================
@@ -926,7 +759,6 @@ button {
     background: #f7f5ef;
 }
 
-
 .review-slider {
     position: relative;
 
@@ -938,34 +770,38 @@ button {
 
     border-radius: 14px;
 
-    background: #ffffff;
+    background: #fff;
 
     box-shadow:
         0 15px 40px rgba(0, 0, 0, 0.08);
 
-    contain: layout paint;
-}
+    touch-action: pan-y;
 
+    user-select: none;
+}
 
 .review-track {
     display: flex;
 
     width: 100%;
 
-    transition:
-        transform 0.5s ease;
-
-    /*
-       GPU 加速。
-    */
-    will-change: transform;
-
     transform:
         translate3d(0, 0, 0);
+
+    will-change: transform;
+
+    transition:
+        transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
+.review-track.no-transition {
+    transition: none !important;
+}
 
 .review-slide {
+    flex:
+        0 0 100%;
+
     min-width: 100%;
 
     display: flex;
@@ -974,11 +810,8 @@ button {
 
     align-items: center;
 
-    background: #ffffff;
-
-    contain: layout paint;
+    background: #fff;
 }
-
 
 .review-slide img {
     width: 100%;
@@ -989,20 +822,12 @@ button {
 
     display: block;
 
-    /*
-       防止图片加载导致容器突然变化。
-    */
-    max-width: 100%;
-
-    user-select: none;
-
-    -webkit-user-drag: none;
+    pointer-events: none;
 }
 
 
-
 /* =========================================================
-   客户反馈左右按钮
+   客户反馈按钮
 ========================================================= */
 
 .review-button {
@@ -1026,19 +851,18 @@ button {
     background:
         rgba(47, 42, 34, 0.78);
 
-    color: #ffffff;
+    color: #fff;
 
     font-size: 30px;
 
     cursor: pointer;
 
-    transition:
-        background 0.3s ease,
-        transform 0.3s ease;
-
     -webkit-tap-highlight-color: transparent;
-}
 
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
 
 .review-button:hover {
     background: #c4a979;
@@ -1049,16 +873,13 @@ button {
         translateY(-50%) scale(1.05);
 }
 
-
 .review-prev {
     left: 15px;
 }
 
-
 .review-next {
     right: 15px;
 }
-
 
 
 /* =========================================================
@@ -1074,7 +895,6 @@ button {
 
     margin-top: 22px;
 }
-
 
 .review-dot {
     width: 9px;
@@ -1092,12 +912,9 @@ button {
     cursor: pointer;
 
     transition:
-        width 0.3s ease,
-        background 0.3s ease;
-
-    -webkit-tap-highlight-color: transparent;
+        width 0.25s ease,
+        background 0.25s ease;
 }
-
 
 .review-dot.active {
     width: 28px;
@@ -1108,9 +925,8 @@ button {
 }
 
 
-
 /* =========================================================
-   联系我们
+   联系
 ========================================================= */
 
 .contact-section {
@@ -1118,18 +934,16 @@ button {
 
     background: #28241e;
 
-    color: #ffffff;
+    color: #fff;
 
     text-align: center;
 }
-
 
 .contact-content {
     max-width: 650px;
 
     margin: 0 auto;
 }
-
 
 .contact-content h2 {
     margin-bottom: 20px;
@@ -1138,19 +952,12 @@ button {
         clamp(34px, 4vw, 52px);
 }
 
-
 .contact-content p {
     margin-bottom: 35px;
 
     color:
         rgba(255, 255, 255, 0.75);
 }
-
-
-
-/* =========================================================
-   WhatsApp
-========================================================= */
 
 .whatsapp-button {
     display: inline-flex;
@@ -1165,52 +972,30 @@ button {
 
     padding: 18px 40px;
 
-    border: none;
-
     border-radius: 36px;
 
-    background: #25D366;
+    background: #25d366;
 
-    color: #ffffff;
+    color: #fff;
 
     font-size: 19px;
 
     font-weight: 700;
-
-    letter-spacing: 0.3px;
 
     box-shadow:
         0 10px 30px rgba(37, 211, 102, 0.30);
 
     transition:
         transform 0.25s ease,
-        background 0.25s ease,
-        box-shadow 0.25s ease;
-
-    cursor: pointer;
-
-    -webkit-tap-highlight-color: transparent;
+        background 0.25s ease;
 }
-
 
 .whatsapp-button:hover {
-    background: #128C7E;
-
-    color: #ffffff;
+    background: #128c7e;
 
     transform:
-        translateY(-4px) scale(1.02);
-
-    box-shadow:
-        0 14px 35px rgba(37, 211, 102, 0.40);
+        translateY(-4px);
 }
-
-
-.whatsapp-button:active {
-    transform:
-        translateY(0) scale(0.98);
-}
-
 
 
 /* =========================================================
@@ -1228,17 +1013,15 @@ button {
     text-align: center;
 }
 
-
 .footer-logo {
     margin-bottom: 18px;
 
-    color: #ffffff;
+    color: #fff;
 
     font-size: 20px;
 
     font-weight: 700;
 }
-
 
 .footer-links {
     display: flex;
@@ -1248,21 +1031,20 @@ button {
     gap: 25px;
 
     margin-bottom: 15px;
-}
 
+    flex-wrap: wrap;
+}
 
 .footer-links a {
     font-size: 13px;
 
     transition:
-        color 0.3s ease;
+        color 0.25s ease;
 }
-
 
 .footer-links a:hover {
     color: #c4a979;
 }
-
 
 .footer p {
     font-size: 12px;
@@ -1272,19 +1054,16 @@ button {
 }
 
 
-
 /* =========================================================
    平板
 ========================================================= */
 
 @media (max-width: 1000px) {
 
-
     .header {
         padding:
             14px 4%;
     }
-
 
     .nav {
         gap: 18px;
@@ -1292,11 +1071,9 @@ button {
         margin-right: 18px;
     }
 
-
     .nav a {
         font-size: 13px;
     }
-
 
     .header-button {
         padding:
@@ -1305,68 +1082,33 @@ button {
         font-size: 13px;
     }
 
-
     .hero-content {
         margin-left: 7%;
 
         margin-right: 7%;
     }
 
-
     .features {
         grid-template-columns:
             repeat(2, 1fr);
     }
 
-
     .feature:nth-child(2) {
         border-right: none;
     }
-
 
     .product-grid {
         grid-template-columns:
             repeat(2, 1fr);
     }
-
 }
 
 
-
 /* =========================================================
-   手机端
+   手机
 ========================================================= */
 
 @media (max-width: 700px) {
-
-
-    /* =====================================================
-       页面基础
-    ===================================================== */
-
-    html {
-        scroll-padding-top: 64px;
-
-        /*
-           手机端取消可能造成视觉跳动的平滑滚动。
-        */
-        scroll-behavior: auto;
-    }
-
-
-    body {
-        width: 100%;
-
-        min-width: 0;
-
-        overflow-x: hidden;
-    }
-
-
-
-    /* =====================================================
-       固定导航
-    ===================================================== */
 
     .header {
         min-height: 64px;
@@ -1375,18 +1117,14 @@ button {
             10px 4%;
 
         background:
-            rgba(47, 42, 34, 0.94);
+            rgba(47, 42, 34, 0.96);
 
         backdrop-filter:
-            blur(14px);
+            blur(12px);
 
         -webkit-backdrop-filter:
-            blur(14px);
-
-        box-shadow:
-            0 4px 18px rgba(0, 0, 0, 0.18);
+            blur(12px);
     }
-
 
     .logo {
         font-size: 17px;
@@ -1394,11 +1132,9 @@ button {
         letter-spacing: 1px;
     }
 
-
     .nav {
         display: none;
     }
-
 
     .header-button {
         min-height: 40px;
@@ -1409,56 +1145,34 @@ button {
         border-radius: 24px;
 
         font-size: 12px;
-
-        box-shadow:
-            0 5px 15px rgba(37, 211, 102, 0.25);
     }
 
 
-
-    /* =====================================================
-       Hero
-    ===================================================== */
+    /* Hero */
 
     .hero {
-
-        /*
-           不再使用 100svh。
-
-           使用固定的最小高度，
-           避免手机浏览器地址栏变化导致
-           首屏高度不断变化。
-        */
-
-        min-height: 720px;
-
-        height: 100svh;
-
-        max-height: 900px;
+        min-height: 100svh;
 
         background-position:
             center center;
     }
 
-
     .hero::before {
         background:
             linear-gradient(
                 90deg,
-                rgba(0, 0, 0, 0.62),
-                rgba(0, 0, 0, 0.36)
+                rgba(0, 0, 0, 0.64),
+                rgba(0, 0, 0, 0.38)
             );
     }
-
 
     .hero-content {
         margin-left: 6%;
 
         margin-right: 6%;
 
-        padding-top: 80px;
+        padding-top: 70px;
     }
-
 
     .eyebrow {
         margin-bottom: 14px;
@@ -1467,7 +1181,6 @@ button {
 
         letter-spacing: 2px;
     }
-
 
     .hero h1 {
         margin-bottom: 20px;
@@ -1479,7 +1192,6 @@ button {
         letter-spacing: 1px;
     }
 
-
     .hero-description {
         margin-bottom: 28px;
 
@@ -1487,7 +1199,6 @@ button {
 
         line-height: 1.8;
     }
-
 
     .hero-buttons {
         flex-direction: column;
@@ -1497,10 +1208,7 @@ button {
         width: 100%;
     }
 
-
     .button-outline {
-        width: auto;
-
         min-width: 180px;
 
         min-height: 56px;
@@ -1512,32 +1220,21 @@ button {
     }
 
 
-
-    /* =====================================================
-       核心特点
-    ===================================================== */
+    /* 特点 */
 
     .features {
         grid-template-columns:
             1fr 1fr;
     }
 
-
     .feature {
         padding:
             28px 12px;
     }
 
-
-    .feature:nth-child(2) {
-        border-right: none;
-    }
-
-
     .feature h3 {
         font-size: 16px;
     }
-
 
     .feature p {
         font-size: 12px;
@@ -1545,37 +1242,29 @@ button {
         line-height: 1.6;
     }
 
-
     .feature-number {
         font-size: 11px;
     }
 
 
-
-    /* =====================================================
-       通用区域
-    ===================================================== */
+    /* 通用区域 */
 
     .trees-section,
     .products-section,
     .reviews-section {
-
         padding:
             70px 5%;
     }
 
-
     .section-heading {
         margin-bottom: 40px;
     }
-
 
     .section-heading h2 {
         font-size: 32px;
 
         line-height: 1.3;
     }
-
 
     .section-heading p {
         font-size: 14px;
@@ -1584,30 +1273,36 @@ button {
     }
 
 
+    /* 产品 */
 
-    /* =====================================================
-       沉香树轮播
-    ===================================================== */
+    .product-grid {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 12px;
+    }
+
+    .product-card {
+        border-radius: 10px;
+    }
+
+    .product-card:hover {
+        transform: none;
+
+        box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .product-card:hover .product-image img {
+        transform: none;
+    }
+
+
+    /* 沉香树 */
 
     .tree-slider {
         border-radius: 10px;
-
-        /*
-           防止移动端轮播产生横向滚动。
-        */
-        width: 100%;
-
-        max-width: 100%;
     }
-
-
-    .tree-track {
-        transform:
-            translate3d(0, 0, 0);
-
-        will-change: transform;
-    }
-
 
     .slider-button {
         width: 40px;
@@ -1617,124 +1312,50 @@ button {
         font-size: 28px;
     }
 
-
     .slider-prev {
         left: 10px;
     }
 
-
     .slider-next {
         right: 10px;
     }
-
 
     .slider-dots {
         margin-top: 18px;
     }
 
 
-
-    /* =====================================================
-       视频
-    ===================================================== */
+    /* 视频 */
 
     .video-section {
         padding:
             70px 5%;
     }
 
-
     .video-content {
         margin-bottom: 30px;
     }
-
 
     .video-content h2 {
         font-size: 32px;
     }
 
-
     .video-placeholder {
-        width: 100%;
-
         border-radius: 10px;
     }
-
 
     .video-placeholder video {
         width: 100%;
 
-        height: auto;
-
         max-height: none;
-
-        display: block;
     }
 
 
-
-    /* =====================================================
-       产品四宫格
-    ===================================================== */
-
-    .product-grid {
-        grid-template-columns:
-            1fr 1fr;
-
-        gap: 12px;
-
-        width: 100%;
-    }
-
-
-    .product-card {
-        border-radius: 10px;
-
-        border:
-            1px solid #e6e0d5;
-    }
-
-
-    .product-image {
-        aspect-ratio: 1 / 1;
-    }
-
-
-    .product-card:hover {
-        transform: none;
-
-        box-shadow:
-            0 8px 20px rgba(0, 0, 0, 0.06);
-    }
-
-
-    .product-card:hover
-    .product-image img {
-        transform: none;
-    }
-
-
-
-    /* =====================================================
-       客户反馈
-    ===================================================== */
+    /* 客户反馈 */
 
     .review-slider {
         border-radius: 10px;
-
-        width: 100%;
-
-        max-width: 100%;
     }
-
-
-    .review-track {
-        transform:
-            translate3d(0, 0, 0);
-
-        will-change: transform;
-    }
-
 
     .review-button {
         width: 38px;
@@ -1744,39 +1365,31 @@ button {
         font-size: 26px;
     }
 
-
     .review-prev {
         left: 8px;
     }
-
 
     .review-next {
         right: 8px;
     }
 
 
-
-    /* =====================================================
-       联系我们
-    ===================================================== */
+    /* 联系 */
 
     .contact-section {
         padding:
             80px 5%;
     }
 
-
     .contact-content h2 {
         font-size: 36px;
     }
-
 
     .contact-content p {
         font-size: 14px;
 
         line-height: 1.8;
     }
-
 
     .whatsapp-button {
         width: 100%;
@@ -1791,31 +1404,20 @@ button {
         font-size: 18px;
 
         border-radius: 34px;
-
-        box-shadow:
-            0 10px 28px
-            rgba(37, 211, 102, 0.30);
     }
 
 
-
-    /* =====================================================
-       Footer
-    ===================================================== */
+    /* Footer */
 
     .footer {
         padding:
             30px 5%;
     }
 
-
     .footer-links {
-        flex-wrap: wrap;
-
         gap:
             12px 18px;
     }
-
 
     .footer-links a {
         font-size: 12px;
@@ -1824,23 +1426,15 @@ button {
 }
 
 
-
 /* =========================================================
-   超小屏手机
+   超小屏
 ========================================================= */
 
 @media (max-width: 380px) {
 
-
-    .hero {
-        min-height: 650px;
-    }
-
-
     .logo {
         font-size: 15px;
     }
-
 
     .header-button {
         padding:
@@ -1849,108 +1443,29 @@ button {
         font-size: 11px;
     }
 
-
     .hero h1 {
         font-size: 34px;
     }
 
-
     .hero-description {
         font-size: 14px;
     }
-
 
     .feature {
         padding:
             25px 8px;
     }
 
-
     .feature h3 {
         font-size: 15px;
     }
 
-
     .feature p {
         font-size: 11px;
     }
-
 
     .product-grid {
         gap: 8px;
     }
 
 }
-
-
-
-/* =========================================================
-   减少动画模式
-========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    html {
-        scroll-behavior: auto;
-    }
-
-
-    *,
-    *::before,
-    *::after {
-
-        animation-duration: 0.01ms !important;
-
-        animation-iteration-count: 1 !important;
-
-        transition-duration: 0.01ms !important;
-
-        scroll-behavior: auto !important;
-
-    }
-
-}
-```
-```css
-/* =========================================================
-   手机轮播触摸优化
-========================================================= */
-
-.tree-track,
-.review-track {
-    touch-action: pan-y;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-.tree-slide img,
-.review-slide img {
-    -webkit-user-drag: none;
-    user-select: none;
-}
-
-
-/* 防止手机图片长按弹出菜单 */
-
-.tree-slide img,
-.review-slide img {
-    -webkit-touch-callout: none;
-}
-
-
-/* 手机端轮播按钮 */
-
-@media (max-width: 700px) {
-
-    .tree-slider,
-    .review-slider {
-        touch-action: pan-y;
-    }
-
-    .tree-track,
-    .review-track {
-        will-change: transform;
-    }
-
-}
-```

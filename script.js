@@ -1,439 +1,327 @@
-```javascript
 document.addEventListener("DOMContentLoaded", function () {
 
-    /* =========================================================
-       通用触摸滑动参数
-    ========================================================= */
+    /* =====================================================
+       工具函数
+    ===================================================== */
 
-    const SWIPE_DISTANCE = 50;
+    function setupInfiniteSlider(options) {
 
+        const {
+            track,
+            slides,
+            prevButton,
+            nextButton,
+            dots
+        } = options;
 
-    /* =========================================================
-       沉香树轮播
-    ========================================================= */
-
-    const treeTrack = document.querySelector(".tree-track");
-    const treeSlides = document.querySelectorAll(".tree-slide");
-    const treePrev = document.querySelector(".slider-prev");
-    const treeNext = document.querySelector(".slider-next");
-    const treeDots = document.querySelectorAll(".slider-dot");
-
-    let currentTreeSlide = 0;
-    let treeTouchStartX = 0;
-    let treeTouchStartY = 0;
-    let treeIsAnimating = false;
-
-
-    function updateTreeDots() {
-
-        treeDots.forEach((dot, index) => {
-
-            dot.classList.toggle(
-                "active",
-                index === currentTreeSlide
-            );
-
-        });
-
-    }
-
-
-    function showTreeSlide(index, direction = "next") {
-
-        if (!treeTrack || treeSlides.length === 0) {
+        if (!track || !slides.length) {
             return;
         }
 
-        if (treeIsAnimating) {
+
+        /* ---------------------------------------------
+           保存原始数量
+        --------------------------------------------- */
+
+        const originalSlides = Array.from(slides);
+
+        const originalCount = originalSlides.length;
+
+
+        if (originalCount <= 1) {
             return;
         }
 
-        treeIsAnimating = true;
+
+        /* ---------------------------------------------
+           克隆第一张和最后一张
+           
+           原始：
+           1 2 3
+
+           变成：
+           3 1 2 3 1
+        --------------------------------------------- */
+
+        const firstClone =
+            originalSlides[0].cloneNode(true);
+
+        const lastClone =
+            originalSlides[originalCount - 1].cloneNode(true);
 
 
-        /* -----------------------------------------
-           计算下一张
-        ----------------------------------------- */
+        firstClone.classList.add("clone-slide");
 
-        if (index < 0) {
-
-            currentTreeSlide = treeSlides.length - 1;
-
-        } else if (index >= treeSlides.length) {
-
-            currentTreeSlide = 0;
-
-        } else {
-
-            currentTreeSlide = index;
-
-        }
+        lastClone.classList.add("clone-slide");
 
 
-        updateTreeDots();
+        track.appendChild(firstClone);
+
+        track.insertBefore(
+            lastClone,
+            track.firstChild
+        );
 
 
-        /* -----------------------------------------
-           正常轮播
-        ----------------------------------------- */
-
-        treeTrack.style.transition =
-            "transform 0.45s ease";
-
-        treeTrack.style.transform =
-            `translateX(-${currentTreeSlide * 100}%)`;
-
-
-        setTimeout(function () {
-
-            treeIsAnimating = false;
-
-        }, 480);
-
-    }
-
-
-    /* -----------------------------------------
-       左按钮
-    ----------------------------------------- */
-
-    if (treePrev) {
-
-        treePrev.addEventListener("click", function () {
-
-            showTreeSlide(
-                currentTreeSlide - 1,
-                "prev"
+        const allSlides =
+            track.querySelectorAll(
+                ".tree-slide, .review-slide"
             );
 
-        });
 
-    }
+        /* ---------------------------------------------
+           当前索引
 
+           真实第一张 = 1
 
-    /* -----------------------------------------
-       右按钮
-    ----------------------------------------- */
+           因为 0 是最后一张克隆
+        --------------------------------------------- */
 
-    if (treeNext) {
-
-        treeNext.addEventListener("click", function () {
-
-            showTreeSlide(
-                currentTreeSlide + 1,
-                "next"
-            );
-
-        });
-
-    }
+        let currentIndex = 1;
 
 
-    /* -----------------------------------------
-       圆点
-    ----------------------------------------- */
+        let isAnimating = false;
 
-    treeDots.forEach(function (dot, index) {
 
-        dot.addEventListener("click", function () {
+        let touchStartX = 0;
 
-            if (index > currentTreeSlide) {
+        let touchStartY = 0;
 
-                showTreeSlide(index, "next");
+        let touchEndX = 0;
+
+        let touchEndY = 0;
+
+
+        /* ---------------------------------------------
+           更新位置
+        --------------------------------------------- */
+
+        function updatePosition(animate = true) {
+
+            if (animate) {
+
+                track.classList.remove(
+                    "no-transition"
+                );
 
             } else {
 
-                showTreeSlide(index, "prev");
+                track.classList.add(
+                    "no-transition"
+                );
 
             }
 
-        });
 
-    });
+            track.style.transform =
+                `translate3d(-${currentIndex * 100}%, 0, 0)`;
 
 
-    /* -----------------------------------------
-       手机触摸开始
-    ----------------------------------------- */
+            updateDots();
+        }
 
-    if (treeTrack) {
 
-        treeTrack.addEventListener(
-            "touchstart",
-            function (event) {
+        /* ---------------------------------------------
+           更新圆点
+        --------------------------------------------- */
 
-                const touch = event.touches[0];
+        function updateDots() {
 
-                treeTouchStartX = touch.clientX;
+            let realIndex =
+                currentIndex - 1;
 
-                treeTouchStartY = touch.clientY;
 
-            },
-            {
-                passive: true
+            if (realIndex < 0) {
+
+                realIndex =
+                    originalCount - 1;
+
             }
-        );
 
 
-        /* -----------------------------------------
-           手机触摸结束
-        ----------------------------------------- */
+            if (realIndex >= originalCount) {
 
-        treeTrack.addEventListener(
-            "touchend",
-            function (event) {
+                realIndex = 0;
 
-                const touch = event.changedTouches[0];
-
-                const endX = touch.clientX;
-                const endY = touch.clientY;
-
-                const distanceX =
-                    endX - treeTouchStartX;
-
-                const distanceY =
-                    endY - treeTouchStartY;
+            }
 
 
-                /* 防止上下滚动被误认为左右滑 */
+            dots.forEach(function (dot, index) {
+
+                dot.classList.toggle(
+                    "active",
+                    index === realIndex
+                );
+
+            });
+
+        }
+
+
+        /* ---------------------------------------------
+           下一张
+        --------------------------------------------- */
+
+        function next() {
+
+            if (isAnimating) {
+                return;
+            }
+
+
+            isAnimating = true;
+
+
+            currentIndex++;
+
+
+            updatePosition(true);
+        }
+
+
+        /* ---------------------------------------------
+           上一张
+        --------------------------------------------- */
+
+        function previous() {
+
+            if (isAnimating) {
+                return;
+            }
+
+
+            isAnimating = true;
+
+
+            currentIndex--;
+
+
+            updatePosition(true);
+        }
+
+
+        /* ---------------------------------------------
+           动画结束
+           
+           到达克隆图后瞬间跳回真实图片
+           
+           第3张 → 第1张
+           
+           用户看到的是连续动画
+        --------------------------------------------- */
+
+        track.addEventListener(
+            "transitionend",
+            function () {
 
                 if (
-                    Math.abs(distanceX) <
-                    Math.abs(distanceY)
+                    currentIndex ===
+                    originalCount + 1
                 ) {
-                    return;
-                }
 
+                    currentIndex = 1;
 
-                /* 左滑 */
-
-                if (distanceX < -SWIPE_DISTANCE) {
-
-                    showTreeSlide(
-                        currentTreeSlide + 1,
-                        "next"
-                    );
+                    updatePosition(false);
 
                 }
 
-
-                /* 右滑 */
 
                 else if (
-                    distanceX > SWIPE_DISTANCE
+                    currentIndex === 0
                 ) {
 
-                    showTreeSlide(
-                        currentTreeSlide - 1,
-                        "prev"
-                    );
+                    currentIndex =
+                        originalCount;
+
+                    updatePosition(false);
 
                 }
 
-            },
-            {
-                passive: true
+
+                isAnimating = false;
+
             }
         );
 
-    }
+
+        /* ---------------------------------------------
+           左右按钮
+        --------------------------------------------- */
+
+        if (nextButton) {
+
+            nextButton.addEventListener(
+                "click",
+                function () {
+
+                    next();
+
+                }
+            );
+
+        }
 
 
+        if (prevButton) {
 
-    /* =========================================================
-       客户反馈轮播
-    ========================================================= */
+            prevButton.addEventListener(
+                "click",
+                function () {
 
-    const reviewTrack =
-        document.querySelector(".review-track");
+                    previous();
 
-    const reviewSlides =
-        document.querySelectorAll(".review-slide");
+                }
+            );
 
-    const reviewPrev =
-        document.querySelector(".review-prev");
-
-    const reviewNext =
-        document.querySelector(".review-next");
-
-    const reviewDots =
-        document.querySelectorAll(".review-dot");
-
-    let currentReview = 0;
-
-    let reviewTouchStartX = 0;
-    let reviewTouchStartY = 0;
-
-    let reviewIsAnimating = false;
+        }
 
 
-    function updateReviewDots() {
+        /* ---------------------------------------------
+           圆点点击
+        --------------------------------------------- */
 
-        reviewDots.forEach(function (dot, index) {
+        dots.forEach(function (dot, index) {
 
-            dot.classList.toggle(
-                "active",
-                index === currentReview
+            dot.addEventListener(
+                "click",
+                function () {
+
+                    if (isAnimating) {
+                        return;
+                    }
+
+
+                    currentIndex =
+                        index + 1;
+
+
+                    updatePosition(true);
+
+                }
             );
 
         });
 
-    }
 
+        /* ---------------------------------------------
+           手机触摸滑动
+        --------------------------------------------- */
 
-    function showReview(index, direction = "next") {
-
-        if (
-            !reviewTrack ||
-            reviewSlides.length === 0
-        ) {
-            return;
-        }
-
-        if (reviewIsAnimating) {
-            return;
-        }
-
-        reviewIsAnimating = true;
-
-
-        /* -----------------------------------------
-           计算下一张
-        ----------------------------------------- */
-
-        if (index < 0) {
-
-            currentReview =
-                reviewSlides.length - 1;
-
-        } else if (
-            index >= reviewSlides.length
-        ) {
-
-            currentReview = 0;
-
-        } else {
-
-            currentReview = index;
-
-        }
-
-
-        updateReviewDots();
-
-
-        /* -----------------------------------------
-           正常轮播动画
-        ----------------------------------------- */
-
-        reviewTrack.style.transition =
-            "transform 0.45s ease";
-
-        reviewTrack.style.transform =
-            `translateX(-${currentReview * 100}%)`;
-
-
-        setTimeout(function () {
-
-            reviewIsAnimating = false;
-
-        }, 480);
-
-    }
-
-
-    /* -----------------------------------------
-       左按钮
-    ----------------------------------------- */
-
-    if (reviewPrev) {
-
-        reviewPrev.addEventListener(
-            "click",
-            function () {
-
-                showReview(
-                    currentReview - 1,
-                    "prev"
-                );
-
-            }
-        );
-
-    }
-
-
-    /* -----------------------------------------
-       右按钮
-    ----------------------------------------- */
-
-    if (reviewNext) {
-
-        reviewNext.addEventListener(
-            "click",
-            function () {
-
-                showReview(
-                    currentReview + 1,
-                    "next"
-                );
-
-            }
-        );
-
-    }
-
-
-    /* -----------------------------------------
-       客户反馈圆点
-    ----------------------------------------- */
-
-    reviewDots.forEach(function (dot, index) {
-
-        dot.addEventListener(
-            "click",
-            function () {
-
-                if (index > currentReview) {
-
-                    showReview(
-                        index,
-                        "next"
-                    );
-
-                } else {
-
-                    showReview(
-                        index,
-                        "prev"
-                    );
-
-                }
-
-            }
-        );
-
-    });
-
-
-    /* -----------------------------------------
-       手机触摸开始
-    ----------------------------------------- */
-
-    if (reviewTrack) {
-
-        reviewTrack.addEventListener(
+        track.addEventListener(
             "touchstart",
             function (event) {
 
-                const touch =
-                    event.touches[0];
+                if (!event.touches.length) {
+                    return;
+                }
 
-                reviewTouchStartX =
-                    touch.clientX;
 
-                reviewTouchStartY =
-                    touch.clientY;
+                touchStartX =
+                    event.touches[0].clientX;
+
+
+                touchStartY =
+                    event.touches[0].clientY;
 
             },
             {
@@ -442,34 +330,37 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /* -----------------------------------------
-           手机触摸结束
-        ----------------------------------------- */
-
-        reviewTrack.addEventListener(
+        track.addEventListener(
             "touchend",
             function (event) {
 
-                const touch =
-                    event.changedTouches[0];
+                if (!event.changedTouches.length) {
+                    return;
+                }
 
-                const endX =
-                    touch.clientX;
 
-                const endY =
-                    touch.clientY;
+                touchEndX =
+                    event.changedTouches[0].clientX;
+
+
+                touchEndY =
+                    event.changedTouches[0].clientY;
 
 
                 const distanceX =
-                    endX - reviewTouchStartX;
+                    touchEndX - touchStartX;
+
 
                 const distanceY =
-                    endY - reviewTouchStartY;
+                    touchEndY - touchStartY;
 
 
-                /* 防止上下滑动误触 */
+                /* -------------------------------------
+                   防止上下滚动被误判为左右滑动
+                ------------------------------------- */
 
                 if (
+                    Math.abs(distanceX) < 50 ||
                     Math.abs(distanceX) <
                     Math.abs(distanceY)
                 ) {
@@ -479,32 +370,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                /* 左滑 */
+                if (distanceX < 0) {
 
-                if (
-                    distanceX <
-                    -SWIPE_DISTANCE
-                ) {
+                    next();
 
-                    showReview(
-                        currentReview + 1,
-                        "next"
-                    );
+                } else {
 
-                }
-
-
-                /* 右滑 */
-
-                else if (
-                    distanceX >
-                    SWIPE_DISTANCE
-                ) {
-
-                    showReview(
-                        currentReview - 1,
-                        "prev"
-                    );
+                    previous();
 
                 }
 
@@ -514,17 +386,147 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         );
 
+
+        /* ---------------------------------------------
+           防止图片拖拽
+        --------------------------------------------- */
+
+        track.addEventListener(
+            "dragstart",
+            function (event) {
+
+                event.preventDefault();
+
+            }
+        );
+
+
+        /* ---------------------------------------------
+           初始位置
+        --------------------------------------------- */
+
+        track.classList.add(
+            "no-transition"
+        );
+
+
+        currentIndex = 1;
+
+
+        updatePosition(false);
+
+
+        /* ---------------------------------------------
+           下一帧恢复动画
+        --------------------------------------------- */
+
+        requestAnimationFrame(function () {
+
+            requestAnimationFrame(function () {
+
+                track.classList.remove(
+                    "no-transition"
+                );
+
+            });
+
+        });
+
     }
 
 
 
-    /* =========================================================
-       初始化
-    ========================================================= */
+    /* =====================================================
+       沉香树无限轮播
+    ===================================================== */
 
-    showTreeSlide(0);
+    setupInfiniteSlider({
 
-    showReview(0);
+        track:
+            document.querySelector(
+                ".tree-track"
+            ),
+
+        slides:
+            document.querySelectorAll(
+                ".tree-slide"
+            ),
+
+        prevButton:
+            document.querySelector(
+                ".slider-prev"
+            ),
+
+        nextButton:
+            document.querySelector(
+                ".slider-next"
+            ),
+
+        dots:
+            document.querySelectorAll(
+                ".slider-dot"
+            )
+
+    });
+
+
+
+    /* =====================================================
+       客户反馈无限轮播
+    ===================================================== */
+
+    setupInfiniteSlider({
+
+        track:
+            document.querySelector(
+                ".review-track"
+            ),
+
+        slides:
+            document.querySelectorAll(
+                ".review-slide"
+            ),
+
+        prevButton:
+            document.querySelector(
+                ".review-prev"
+            ),
+
+        nextButton:
+            document.querySelector(
+                ".review-next"
+            ),
+
+        dots:
+            document.querySelectorAll(
+                ".review-dot"
+            )
+
+    });
+
+
+
+    /* =====================================================
+       防止页面刷新后自动跳到锚点
+       
+       例如：
+       agarwood-landing.pages.dev/#contact
+       
+       如果用户重新打开页面，
+       自动回到顶部。
+    ===================================================== */
+
+    if (
+        window.location.hash &&
+        performance.getEntriesByType
+    ) {
+
+        window.scrollTo(
+            0,
+            0
+        );
+
+    }
+
 
 });
-```
