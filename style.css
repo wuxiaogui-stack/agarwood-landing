@@ -1,13 +1,4 @@
-
-/* =========================================================
-   AGARWOOD LANDING PAGE
-   最终纯净版 CSS
-========================================================= */
-
-/* =========================================================
-   1. 基础设置
-========================================================= */
-
+css
 * {
     margin: 0;
     padding: 0;
@@ -17,14 +8,9 @@
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 76px;
-    -webkit-text-size-adjust: 100%;
 }
 
 body {
-    width: 100%;
-    min-height: 100%;
-    overflow-x: hidden;
-
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -36,14 +22,15 @@ body {
     background: #f7f5ef;
     color: #2f2a22;
     line-height: 1.7;
+    overflow-x: hidden;
 
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
 
 img {
-    display: block;
     max-width: 100%;
+    display: block;
 }
 
 a {
@@ -51,60 +38,21 @@ a {
     text-decoration: none;
 }
 
-button,
-input,
-textarea,
-select {
+button {
     font-family: inherit;
 }
 
-button {
-    cursor: pointer;
-}
 
-video {
-    display: block;
-    max-width: 100%;
-}
-
-
-/* =========================================================
-   2. 页面基础防闪动
-========================================================= */
-
-html,
-body {
-    position: relative;
-    width: 100%;
-}
-
-main {
-    width: 100%;
-    overflow: hidden;
-}
-
-section {
-    position: relative;
-    width: 100%;
-}
-
-.page-ready {
-    visibility: visible;
-}
-
-
-/* =========================================================
-   3. 顶部导航
-========================================================= */
+/* =========================
+   Header
+========================= */
 
 .header {
     position: fixed;
     top: 0;
     left: 0;
-
     width: 100%;
     min-height: 76px;
-
     z-index: 1000;
 
     display: flex;
@@ -112,165 +60,107 @@ section {
 
     padding: 14px 6%;
 
-    background: rgba(47, 42, 34, 0.96);
+    background: rgba(47, 42, 34, 0.94);
+    color: #fff;
 
-    color: #ffffff;
+    border-bottom: 1px solid rgba(255,255,255,.1);
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0,0,0,.12);
 
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .logo {
-    flex: 0 0 auto;
-
-    display: inline-flex;
-    align-items: center;
-
+    flex-shrink: 0;
+    color: #fff;
     font-size: 22px;
     font-weight: 700;
     letter-spacing: 2px;
-
-    color: #ffffff;
-
     white-space: nowrap;
 }
-
-
-/* =========================================================
-   4. 桌面导航
-========================================================= */
 
 .nav {
     display: flex;
     align-items: center;
-    justify-content: center;
-
     gap: 30px;
-
     margin-left: auto;
     margin-right: 30px;
 }
 
 .nav a {
     position: relative;
-
-    display: inline-flex;
-    align-items: center;
-
-    min-height: 40px;
-
-    color: #ffffff;
+    color: #fff;
     font-size: 14px;
-
-    opacity: 0.9;
-
-    transition:
-        opacity 0.25s ease,
-        color 0.25s ease;
+    opacity: .9;
 }
 
 .nav a:hover {
     opacity: 1;
-    color: #c4a979;
 }
 
 .nav a::after {
     content: "";
-
     position: absolute;
     left: 0;
-    bottom: 1px;
-
+    bottom: -7px;
     width: 0;
     height: 2px;
-
     background: #c4a979;
-
-    transition: width 0.25s ease;
+    transition: width .25s ease;
 }
 
 .nav a:hover::after {
     width: 100%;
 }
 
-
-/* =========================================================
-   5. Header WhatsApp 按钮
-========================================================= */
-
 .header-button {
-    flex: 0 0 auto;
+    flex-shrink: 0;
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
     min-height: 44px;
-
     padding: 10px 24px;
 
     border-radius: 30px;
 
     background: #25d366;
-    color: #ffffff;
+    color: #fff;
 
     font-size: 14px;
     font-weight: 700;
-
-    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.25);
-
-    transition:
-        transform 0.25s ease,
-        background 0.25s ease;
 }
 
 .header-button:hover {
     background: #128c7e;
-    transform: translateY(-2px);
 }
-
-
-/* =========================================================
-   6. 手机菜单按钮
-========================================================= */
 
 .menu-toggle {
     display: none;
 
-    flex: 0 0 auto;
-
-    width: 44px;
-    height: 44px;
-
-    margin-left: 8px;
-    padding: 8px;
+    width: 42px;
+    height: 42px;
 
     border: 0;
     border-radius: 8px;
 
     background: transparent;
 
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
 
     gap: 5px;
 }
 
 .menu-toggle span {
-    display: block;
-
     width: 23px;
     height: 2px;
-
+    background: #fff;
     border-radius: 2px;
-
-    background: #ffffff;
-
-    transition:
-        transform 0.25s ease,
-        opacity 0.25s ease;
+    transition: transform .25s ease, opacity .25s ease;
 }
 
 .menu-toggle.active span:nth-child(1) {
@@ -286,14 +176,13 @@ section {
 }
 
 
-/* =========================================================
-   7. Hero 首页
-========================================================= */
+/* =========================
+   Hero
+========================= */
 
 .hero {
     position: relative;
 
-    min-height: 100vh;
     min-height: 100svh;
 
     display: flex;
@@ -301,30 +190,26 @@ section {
 
     overflow: hidden;
 
-    background-color: #302b23;
-    background-image: url("images/hero.jpg");
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+    background:
+        url("images/hero.jpg")
+        center center / cover
+        no-repeat;
 
-    color: #ffffff;
+    color: #fff;
 }
 
 .hero::before {
     content: "";
-
     position: absolute;
     inset: 0;
 
     background:
         linear-gradient(
             90deg,
-            rgba(0, 0, 0, 0.64),
-            rgba(0, 0, 0, 0.35),
-            rgba(0, 0, 0, 0.15)
+            rgba(0,0,0,.62),
+            rgba(0,0,0,.32),
+            rgba(0,0,0,.12)
         );
-
-    z-index: 1;
 }
 
 .hero-content {
@@ -344,103 +229,42 @@ section {
     margin-bottom: 18px;
 
     font-size: 13px;
-    font-weight: 600;
-
     letter-spacing: 3px;
-
-    opacity: 0.9;
+    font-weight: 600;
 }
 
 .hero h1 {
     margin-bottom: 24px;
 
-    font-size: clamp(42px, 5vw, 72px);
-
+    font-size: clamp(42px,5vw,72px);
     line-height: 1.2;
-    font-weight: 700;
 
     letter-spacing: 2px;
 }
 
 .hero-description {
     max-width: 560px;
-
-    margin-bottom: 34px;
-
     font-size: 18px;
     line-height: 2;
-
-    opacity: 0.95;
-}
-
-.hero-buttons {
-    display: flex;
-    align-items: center;
-
-    gap: 16px;
-    flex-wrap: wrap;
+    opacity: .95;
 }
 
 
-/* =========================================================
-   8. 通用按钮
-========================================================= */
-
-.button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    min-width: 190px;
-    min-height: 60px;
-
-    padding: 15px 34px;
-
-    border-radius: 32px;
-
-    font-size: 17px;
-    font-weight: 700;
-
-    transition:
-        transform 0.25s ease,
-        background 0.25s ease,
-        box-shadow 0.25s ease;
-}
-
-.button-primary {
-    background: #25d366;
-    color: #ffffff;
-
-    box-shadow:
-        0 8px 25px rgba(37, 211, 102, 0.3);
-}
-
-.button-primary:hover {
-    background: #128c7e;
-
-    transform: translateY(-3px);
-
-    box-shadow:
-        0 12px 30px rgba(37, 211, 102, 0.4);
-}
-
-
-/* =========================================================
-   9. 核心特点
-========================================================= */
+/* =========================
+   Features
+========================= */
 
 .features {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4,1fr);
 
-    background: #ffffff;
+    background: #fff;
 
     border-bottom: 1px solid #e5e1d8;
 }
 
 .feature {
     padding: 45px 30px;
-
     text-align: center;
 
     border-right: 1px solid #e5e1d8;
@@ -452,72 +276,59 @@ section {
 
 .feature-number {
     display: block;
-
     margin-bottom: 12px;
-
-    color: #8b7655;
 
     font-size: 13px;
     letter-spacing: 2px;
+    color: #8b7655;
 }
 
 .feature h3 {
     margin-bottom: 8px;
-
     font-size: 19px;
 }
 
 .feature p {
     color: #777064;
-
     font-size: 14px;
 }
 
 
-/* =========================================================
-   10. 通用标题
-========================================================= */
+/* =========================
+   Common
+========================= */
 
 .section-heading {
     max-width: 760px;
-
     margin: 0 auto 55px;
-
     text-align: center;
 }
 
 .section-heading h2 {
     margin-bottom: 20px;
-
-    font-size: clamp(32px, 4vw, 48px);
-
+    font-size: clamp(32px,4vw,48px);
     line-height: 1.3;
 }
 
 .section-heading p {
     color: #716b61;
-
     font-size: 16px;
-    line-height: 1.8;
 }
 
 
-/* =========================================================
-   11. 沉香树 + 工厂展示
-========================================================= */
+/* =========================
+   Trees
+========================= */
 
 .trees-section {
     padding: 100px 7%;
-
     background: #f7f5ef;
 }
 
 .tree-slider {
     position: relative;
 
-    width: 100%;
-    max-width: 900px;
-
+    max-width: 850px;
     margin: 0 auto;
 
     overflow: hidden;
@@ -526,35 +337,26 @@ section {
 
     background: #e8e3d8;
 
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 40px rgba(0,0,0,.1);
 
     touch-action: pan-y;
 }
 
 .tree-track {
     display: flex;
-
     width: 100%;
 
-    transform: translate3d(-100%, 0, 0);
-
+    transform: translate3d(0,0,0);
     will-change: transform;
 
-    transition: transform 0.45s ease;
+    transition: transform .45s ease;
 }
 
 .tree-slide {
-    position: relative;
-
-    flex: 0 0 100%;
-
-    width: 100%;
-
+    min-width: 100%;
     aspect-ratio: 1 / 1;
 
     overflow: hidden;
-
     background: #e8e3d8;
 }
 
@@ -563,56 +365,37 @@ section {
     height: 100%;
 
     object-fit: cover;
-
-    display: block;
-
-    user-select: none;
-    -webkit-user-drag: none;
+    cursor: zoom-in;
 }
 
-
-/* =========================================================
-   12. 沉香树轮播按钮
-========================================================= */
-
-.slider-button {
+.slider-button,
+.review-button {
     position: absolute;
-    top: 50%;
 
-    z-index: 10;
+    top: 50%;
+    transform: translateY(-50%);
+
+    z-index: 20;
 
     width: 48px;
     height: 48px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 0;
-
     border: 0;
     border-radius: 50%;
 
-    transform: translateY(-50%);
-
-    background: rgba(47, 42, 34, 0.78);
-
-    color: #ffffff;
+    background: rgba(47,42,34,.8);
+    color: #fff;
 
     font-size: 34px;
     line-height: 1;
 
-    transition:
-        background 0.25s ease,
-        transform 0.25s ease;
+    cursor: pointer;
 }
 
-.slider-button:hover {
+.slider-button:hover,
+.review-button:hover {
     background: #c4a979;
-
     color: #28241e;
-
-    transform: translateY(-50%) scale(1.05);
 }
 
 .slider-prev {
@@ -623,82 +406,68 @@ section {
     right: 18px;
 }
 
-
-/* =========================================================
-   13. 沉香树圆点
-========================================================= */
-
-.slider-dots {
+.slider-dots,
+.review-dots {
     display: flex;
     justify-content: center;
-    align-items: center;
-
     gap: 10px;
-
     margin-top: 25px;
 }
 
-.slider-dot {
+.slider-dot,
+.review-dot {
     width: 9px;
     height: 9px;
 
     padding: 0;
-
     border: 0;
-    border-radius: 50%;
 
+    border-radius: 50%;
     background: #cfc7b8;
+
+    cursor: pointer;
 }
 
-.slider-dot.active {
+.slider-dot.active,
+.review-dot.active {
     width: 28px;
-
     border-radius: 10px;
-
     background: #8b7655;
 }
 
 
-/* =========================================================
-   14. 视频区域
-========================================================= */
+/* =========================
+   Video
+========================= */
 
 .video-section {
     padding: 100px 7%;
-
     background: #28241e;
-
-    color: #ffffff;
-
+    color: #fff;
     text-align: center;
 }
 
 .video-content {
     max-width: 700px;
-
     margin: 0 auto 40px;
 }
 
-.video-eyebrow {
+.video-eyebrow,
+.contact-eyebrow,
+.shipping-eyebrow {
     margin-bottom: 12px;
-
     color: #c4a979;
-
     font-size: 12px;
     letter-spacing: 3px;
 }
 
 .video-content h2 {
     margin-bottom: 18px;
-
-    font-size: clamp(32px, 4vw, 48px);
-
-    line-height: 1.3;
+    font-size: clamp(32px,4vw,48px);
 }
 
 .video-content p:last-child {
-    color: rgba(255, 255, 255, 0.72);
-
+    color: rgba(255,255,255,.72);
     font-size: 15px;
 }
 
@@ -713,276 +482,233 @@ section {
     border-radius: 14px;
 
     background: #000;
-
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 15px 40px rgba(0,0,0,.25);
 }
 
 .video-placeholder video {
     width: 100%;
-    height: auto;
-
     max-height: 600px;
-
-    object-fit: contain;
-
+    display: block;
     background: #000;
 }
 
 
-/* =========================================================
-   15. 产品展示
-========================================================= */
+/* =========================
+   Products
+========================= */
 
 .products-section {
     padding: 100px 7%;
-
-    background: #ffffff;
+    background: #fff;
 }
 
 .product-grid {
     display: grid;
-
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2,1fr);
 
     gap: 24px;
 
-    width: 100%;
     max-width: 1000px;
-
     margin: 0 auto;
 }
 
 .product-card {
-    position: relative;
-
     overflow: hidden;
 
     background: #f8f6f1;
 
     border: 1px solid #e6e0d5;
     border-radius: 14px;
-
-    transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-
-    box-shadow:
-        0 15px 35px rgba(0, 0, 0, 0.1);
 }
 
 .product-image {
     width: 100%;
-
     aspect-ratio: 1 / 1;
-
     overflow: hidden;
-
-    background: #e8e3d8;
 }
 
 .product-image img {
     width: 100%;
     height: 100%;
-
     object-fit: cover;
 
-    transition: transform 0.5s ease;
+    cursor: zoom-in;
+
+    transition: transform .5s ease;
 }
 
 .product-card:hover .product-image img {
     transform: scale(1.04);
 }
 
-
-/* =========================================================
-   16. 产品 CTA
-========================================================= */
-
 .section-cta {
     display: flex;
     justify-content: center;
-
     margin-top: 42px;
 }
 
-.secondary-cta {
+.secondary-cta,
+.shipping-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
     min-height: 54px;
-
     padding: 14px 30px;
 
     border-radius: 30px;
 
     background: #25d366;
-    color: #ffffff;
+    color: #fff;
 
     font-size: 16px;
     font-weight: 700;
-
-    box-shadow:
-        0 8px 22px rgba(37, 211, 102, 0.25);
-
-    transition:
-        transform 0.25s ease,
-        background 0.25s ease;
 }
 
-.secondary-cta:hover {
+.secondary-cta:hover,
+.shipping-button:hover {
     background: #128c7e;
-
-    transform: translateY(-3px);
 }
 
 
-/* =========================================================
-   17. 配送服务
-   兼容未来新增 delivery-section
-========================================================= */
+/* =========================
+   Shipping
+========================= */
 
-.delivery-section {
+.shipping-section {
     padding: 100px 7%;
-
     background: #f7f5ef;
 }
 
-.delivery-content {
-    max-width: 900px;
-
-    margin: 0 auto;
-
-    text-align: center;
-}
-
-.delivery-text {
-    max-width: 720px;
-
-    margin: 0 auto 35px;
-
-    color: #716b61;
-
-    font-size: 16px;
-    line-height: 1.9;
-}
-
-.delivery-image {
-    width: 100%;
-    max-width: 900px;
-
-    margin: 0 auto 35px;
-
-    overflow: hidden;
-
-    border-radius: 14px;
-
-    background: #e8e3d8;
-
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.08);
-}
-
-.delivery-image img {
-    width: 100%;
-    height: auto;
-
-    display: block;
-
-    object-fit: cover;
-}
-
-.delivery-info {
+.shipping-content {
     display: grid;
+    grid-template-columns: 1fr 1fr;
 
-    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
 
-    gap: 20px;
-
-    max-width: 700px;
-
+    max-width: 1100px;
     margin: 0 auto;
 }
 
-.delivery-item {
-    padding: 25px;
-
-    background: #ffffff;
-
-    border: 1px solid #e6e0d5;
-    border-radius: 12px;
+.shipping-info {
+    display: grid;
+    gap: 20px;
 }
 
-.delivery-item h3 {
+.shipping-item {
+    padding: 28px;
+
+    background: #fff;
+
+    border: 1px solid #e5e1d8;
+    border-radius: 14px;
+}
+
+.shipping-number {
+    display: block;
     margin-bottom: 8px;
 
-    font-size: 18px;
+    color: #8b7655;
+
+    font-size: 13px;
+    letter-spacing: 2px;
 }
 
-.delivery-item p {
-    color: #716b61;
+.shipping-item h3 {
+    margin-bottom: 8px;
+    font-size: 20px;
+}
 
+.shipping-item p {
+    color: #716b61;
     font-size: 14px;
 }
 
+.shipping-promotion {
+    overflow: hidden;
 
-/* =========================================================
-   18. 客户反馈
-========================================================= */
+    background: #fff;
+
+    border: 1px solid #e5e1d8;
+    border-radius: 14px;
+
+    box-shadow: 0 12px 30px rgba(0,0,0,.06);
+}
+
+.shipping-promotion-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+}
+
+.shipping-promotion-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    cursor: zoom-in;
+}
+
+.shipping-promotion-text {
+    padding: 30px;
+}
+
+.shipping-promotion-text h3 {
+    margin-bottom: 12px;
+    font-size: 24px;
+}
+
+.shipping-promotion-text p {
+    margin-bottom: 24px;
+    color: #716b61;
+}
+
+
+/* =========================
+   Reviews
+========================= */
 
 .reviews-section {
     padding: 100px 7%;
-
     background: #f7f5ef;
 }
 
 .review-slider {
     position: relative;
 
-    width: 100%;
     max-width: 850px;
-
     margin: 0 auto;
 
     overflow: hidden;
 
     border-radius: 14px;
 
-    background: #ffffff;
+    background: #fff;
 
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 15px 40px rgba(0,0,0,.08);
 
     touch-action: pan-y;
 }
 
 .review-track {
     display: flex;
-
     width: 100%;
 
-    transform: translate3d(-100%, 0, 0);
-
+    transform: translate3d(0,0,0);
     will-change: transform;
 
-    transition: transform 0.45s ease;
+    transition: transform .45s ease;
 }
 
 .review-slide {
-    flex: 0 0 100%;
-
-    width: 100%;
+    min-width: 100%;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    background: #ffffff;
+    background: #fff;
 }
 
 .review-slide img {
@@ -991,55 +717,7 @@ section {
 
     object-fit: contain;
 
-    display: block;
-
-    user-select: none;
-    -webkit-user-drag: none;
-}
-
-
-/* =========================================================
-   19. 客户反馈按钮
-========================================================= */
-
-.review-button {
-    position: absolute;
-    top: 50%;
-
-    z-index: 10;
-
-    width: 45px;
-    height: 45px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 0;
-
-    border: 0;
-    border-radius: 50%;
-
-    transform: translateY(-50%);
-
-    background: rgba(47, 42, 34, 0.78);
-
-    color: #ffffff;
-
-    font-size: 30px;
-    line-height: 1;
-
-    transition:
-        background 0.25s ease,
-        transform 0.25s ease;
-}
-
-.review-button:hover {
-    background: #c4a979;
-
-    color: #28241e;
-
-    transform: translateY(-50%) scale(1.05);
+    cursor: zoom-in;
 }
 
 .review-prev {
@@ -1051,90 +729,31 @@ section {
 }
 
 
-/* =========================================================
-   20. 客户反馈圆点
-========================================================= */
-
-.review-dots {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    gap: 10px;
-
-    margin-top: 22px;
-}
-
-.review-dot {
-    width: 9px;
-    height: 9px;
-
-    padding: 0;
-
-    border: 0;
-    border-radius: 50%;
-
-    background: #cfc7b8;
-}
-
-.review-dot.active {
-    width: 28px;
-
-    border-radius: 10px;
-
-    background: #8b7655;
-}
-
-
-/* =========================================================
-   21. 联系我们
-========================================================= */
+/* =========================
+   Contact
+========================= */
 
 .contact-section {
     padding: 110px 7%;
-
     background: #28241e;
-
-    color: #ffffff;
-
+    color: #fff;
     text-align: center;
 }
 
 .contact-content {
     max-width: 650px;
-
     margin: 0 auto;
-}
-
-.contact-eyebrow {
-    margin-bottom: 12px;
-
-    color: #c4a979;
-
-    font-size: 12px;
-    letter-spacing: 3px;
 }
 
 .contact-content h2 {
     margin-bottom: 20px;
-
-    font-size: clamp(34px, 4vw, 52px);
-
-    line-height: 1.3;
+    font-size: clamp(34px,4vw,52px);
 }
 
 .contact-content p {
     margin-bottom: 35px;
-
-    color: rgba(255, 255, 255, 0.75);
-
-    font-size: 16px;
+    color: rgba(255,255,255,.75);
 }
-
-
-/* =========================================================
-   22. WhatsApp 主按钮
-========================================================= */
 
 .whatsapp-button {
     display: inline-flex;
@@ -1149,39 +768,28 @@ section {
     border-radius: 36px;
 
     background: #25d366;
-    color: #ffffff;
+    color: #fff;
 
     font-size: 19px;
     font-weight: 700;
 
-    box-shadow:
-        0 10px 30px rgba(37, 211, 102, 0.3);
-
-    transition:
-        transform 0.25s ease,
-        background 0.25s ease;
+    box-shadow: 0 10px 30px rgba(37,211,102,.3);
 }
 
 .whatsapp-button:hover {
     background: #128c7e;
-
-    transform: translateY(-4px);
-
-    box-shadow:
-        0 14px 35px rgba(37, 211, 102, 0.4);
 }
 
 
-/* =========================================================
-   23. Footer
-========================================================= */
+/* =========================
+   Footer
+========================= */
 
 .footer {
     padding: 35px 7%;
 
     background: #1d1a16;
-
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255,255,255,.7);
 
     text-align: center;
 }
@@ -1189,8 +797,7 @@ section {
 .footer-logo {
     margin-bottom: 18px;
 
-    color: #ffffff;
-
+    color: #fff;
     font-size: 20px;
     font-weight: 700;
 }
@@ -1198,7 +805,7 @@ section {
 .footer-links {
     display: flex;
     justify-content: center;
-    align-items: center;
+    flex-wrap: wrap;
 
     gap: 25px;
 
@@ -1207,8 +814,6 @@ section {
 
 .footer-links a {
     font-size: 13px;
-
-    transition: color 0.25s ease;
 }
 
 .footer-links a:hover {
@@ -1216,35 +821,125 @@ section {
 }
 
 .footer p {
-    color: rgba(255, 255, 255, 0.45);
-
     font-size: 12px;
+    color: rgba(255,255,255,.45);
 }
 
 
-/* =========================================================
-   24. 图片点击区域
-   防止图片出现奇怪的行内间隙
-========================================================= */
+/* =========================
+   Image Lightbox
+========================= */
 
-.product-image,
-.tree-slide,
-.review-slide,
-.delivery-image {
-    line-height: 0;
+.image-lightbox {
+    position: fixed;
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+
+    background: rgba(0,0,0,.94);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition: opacity .2s ease;
 }
 
-.product-image img,
-.tree-slide img,
-.review-slide img,
-.delivery-image img {
-    vertical-align: middle;
+.image-lightbox.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.lightbox-image-wrap {
+    width: min(92vw,1200px);
+    height: min(88vh,900px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-image-wrap img {
+    max-width: 100%;
+    max-height: 100%;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    border-radius: 4px;
+
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.lightbox-close,
+.lightbox-prev,
+.lightbox-next {
+    position: absolute;
+
+    z-index: 10000;
+
+    border: 0;
+
+    color: #fff;
+    background: rgba(0,0,0,.45);
+
+    cursor: pointer;
+}
+
+.lightbox-close {
+    top: 18px;
+    right: 22px;
+
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    font-size: 34px;
+    line-height: 1;
+}
+
+.lightbox-prev,
+.lightbox-next {
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 54px;
+    height: 70px;
+
+    font-size: 46px;
+    line-height: 1;
+}
+
+.lightbox-prev {
+    left: 18px;
+}
+
+.lightbox-next {
+    right: 18px;
+}
+
+.lightbox-close:hover,
+.lightbox-prev:hover,
+.lightbox-next:hover {
+    background: #c4a979;
+    color: #28241e;
 }
 
 
-/* =========================================================
-   25. 平板
-========================================================= */
+/* =========================
+   Tablet
+========================= */
 
 @media (max-width: 1000px) {
 
@@ -1254,7 +949,6 @@ section {
 
     .nav {
         gap: 18px;
-
         margin-right: 18px;
     }
 
@@ -1264,33 +958,26 @@ section {
 
     .header-button {
         padding: 9px 18px;
-
         font-size: 13px;
     }
 
-    .hero-content {
-        margin-left: 7%;
-        margin-right: 7%;
-    }
-
     .features {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2,1fr);
     }
 
     .feature:nth-child(2) {
         border-right: 0;
     }
 
-    .feature:nth-child(3),
-    .feature:nth-child(4) {
-        border-top: 1px solid #e5e1d8;
+    .shipping-content {
+        grid-template-columns: 1fr;
     }
 }
 
 
-/* =========================================================
-   26. 手机端
-========================================================= */
+/* =========================
+   Mobile
+========================= */
 
 @media (max-width: 700px) {
 
@@ -1302,11 +989,6 @@ section {
         overflow-x: hidden;
     }
 
-
-    /* -----------------------------------------------------
-       手机导航
-    ----------------------------------------------------- */
-
     .header {
         min-height: 64px;
 
@@ -1314,50 +996,29 @@ section {
 
         display: flex;
         align-items: center;
-
-        background: rgba(47, 42, 34, 0.97);
-
-        box-shadow:
-            0 4px 16px rgba(0, 0, 0, 0.14);
     }
 
     .logo {
-        flex: 1 1 auto;
-
-        min-width: 0;
-
         font-size: 17px;
         letter-spacing: 1px;
-
-        line-height: 1;
     }
 
     .header-button {
-        flex: 0 0 auto;
-
         min-height: 40px;
 
-        padding: 8px 14px;
+        margin-left: auto;
 
-        border-radius: 24px;
+        padding: 8px 15px;
 
         font-size: 12px;
-
-        white-space: nowrap;
     }
 
     .menu-toggle {
         display: flex;
+        flex-shrink: 0;
 
-        flex: 0 0 44px;
-
-        margin-left: 7px;
+        margin-left: 8px;
     }
-
-
-    /* -----------------------------------------------------
-       手机导航下拉菜单
-    ----------------------------------------------------- */
 
     .nav {
         position: absolute;
@@ -1372,17 +1033,9 @@ section {
 
         display: flex;
         flex-direction: column;
-        align-items: stretch;
-
         gap: 0;
 
-        background: rgba(47, 42, 34, 0.98);
-
-        border-top:
-            1px solid rgba(255, 255, 255, 0.08);
-
-        box-shadow:
-            0 12px 25px rgba(0, 0, 0, 0.2);
+        background: rgba(47,42,34,.98);
 
         opacity: 0;
         visibility: hidden;
@@ -1391,32 +1044,25 @@ section {
         transform: translateY(-8px);
 
         transition:
-            opacity 0.2s ease,
-            transform 0.2s ease,
-            visibility 0.2s ease;
+            opacity .2s ease,
+            transform .2s ease,
+            visibility .2s ease;
     }
 
     .nav.mobile-open {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-
         transform: translateY(0);
     }
 
     .nav a {
-        display: flex;
-        align-items: center;
-
         width: 100%;
-        min-height: 50px;
-
         padding: 14px 6%;
 
-        font-size: 15px;
+        border-bottom: 1px solid rgba(255,255,255,.07);
 
-        border-bottom:
-            1px solid rgba(255, 255, 255, 0.07);
+        font-size: 15px;
     }
 
     .nav a:last-child {
@@ -1428,13 +1074,8 @@ section {
     }
 
 
-    /* -----------------------------------------------------
-       Hero
-    ----------------------------------------------------- */
-
     .hero {
         min-height: 100svh;
-
         background-position: center center;
     }
 
@@ -1442,68 +1083,34 @@ section {
         background:
             linear-gradient(
                 90deg,
-                rgba(0, 0, 0, 0.67),
-                rgba(0, 0, 0, 0.38)
+                rgba(0,0,0,.66),
+                rgba(0,0,0,.38)
             );
     }
 
     .hero-content {
-        width: auto;
-
-        margin-left: 6%;
-        margin-right: 6%;
-
-        padding-top: 70px;
+        margin: 0 6%;
+        padding-top: 64px;
     }
 
     .eyebrow {
         margin-bottom: 14px;
-
         font-size: 11px;
         letter-spacing: 2px;
     }
 
     .hero h1 {
         margin-bottom: 20px;
-
         font-size: 38px;
-
         line-height: 1.25;
-
         letter-spacing: 1px;
     }
 
     .hero-description {
-        max-width: 100%;
-
-        margin-bottom: 28px;
-
         font-size: 15px;
-
         line-height: 1.8;
     }
 
-    .hero-buttons {
-        width: 100%;
-
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .button {
-        min-width: 180px;
-
-        min-height: 56px;
-
-        padding: 14px 28px;
-
-        font-size: 16px;
-    }
-
-
-    /* -----------------------------------------------------
-       核心特点
-    ----------------------------------------------------- */
 
     .features {
         grid-template-columns: 1fr 1fr;
@@ -1511,13 +1118,6 @@ section {
 
     .feature {
         padding: 28px 12px;
-
-        border-right: 1px solid #e5e1d8;
-    }
-
-    .feature:nth-child(2),
-    .feature:nth-child(4) {
-        border-right: 0;
     }
 
     .feature:nth-child(3),
@@ -1525,10 +1125,8 @@ section {
         border-top: 1px solid #e5e1d8;
     }
 
-    .feature-number {
-        margin-bottom: 8px;
-
-        font-size: 11px;
+    .feature:nth-child(3) {
+        border-right: 1px solid #e5e1d8;
     }
 
     .feature h3 {
@@ -1537,19 +1135,14 @@ section {
 
     .feature p {
         font-size: 12px;
-
         line-height: 1.6;
     }
 
 
-    /* -----------------------------------------------------
-       通用区域
-    ----------------------------------------------------- */
-
     .trees-section,
     .products-section,
     .reviews-section,
-    .delivery-section {
+    .shipping-section {
         padding: 70px 5%;
     }
 
@@ -1558,33 +1151,21 @@ section {
     }
 
     .section-heading h2 {
-        margin-bottom: 15px;
-
         font-size: 32px;
-
-        line-height: 1.3;
     }
 
     .section-heading p {
         font-size: 14px;
-
         line-height: 1.8;
     }
 
-
-    /* -----------------------------------------------------
-       沉香树轮播
-    ----------------------------------------------------- */
 
     .tree-slider {
         border-radius: 10px;
     }
 
-    .tree-slide {
-        aspect-ratio: 1 / 1;
-    }
-
-    .slider-button {
+    .slider-button,
+    .review-button {
         width: 40px;
         height: 40px;
 
@@ -1599,14 +1180,6 @@ section {
         right: 10px;
     }
 
-    .slider-dots {
-        margin-top: 18px;
-    }
-
-
-    /* -----------------------------------------------------
-       视频
-    ----------------------------------------------------- */
 
     .video-section {
         padding: 70px 5%;
@@ -1622,7 +1195,6 @@ section {
 
     .video-content p:last-child {
         font-size: 14px;
-
         line-height: 1.8;
     }
 
@@ -1630,33 +1202,14 @@ section {
         border-radius: 10px;
     }
 
-    .video-placeholder video {
-        width: 100%;
-        max-height: none;
-    }
-
-
-    /* -----------------------------------------------------
-       产品
-    ----------------------------------------------------- */
 
     .product-grid {
         grid-template-columns: 1fr 1fr;
-
         gap: 12px;
-
-        width: 100%;
     }
 
     .product-card {
         border-radius: 10px;
-    }
-
-    .product-card:hover {
-        transform: none;
-
-        box-shadow:
-            0 8px 20px rgba(0, 0, 0, 0.06);
     }
 
     .product-card:hover .product-image img {
@@ -1669,51 +1222,24 @@ section {
 
     .secondary-cta {
         width: 100%;
-
-        min-height: 56px;
-
-        font-size: 16px;
     }
 
 
-    /* -----------------------------------------------------
-       配送服务
-    ----------------------------------------------------- */
-
-    .delivery-text {
-        font-size: 14px;
-
-        line-height: 1.8;
+    .shipping-content {
+        gap: 20px;
     }
 
-    .delivery-image {
-        border-radius: 10px;
+    .shipping-item {
+        padding: 22px;
     }
 
-    .delivery-info {
-        grid-template-columns: 1fr;
-
-        gap: 12px;
+    .shipping-promotion-text {
+        padding: 24px;
     }
 
-    .delivery-item {
-        padding: 20px;
-    }
-
-
-    /* -----------------------------------------------------
-       客户反馈
-    ----------------------------------------------------- */
 
     .review-slider {
         border-radius: 10px;
-    }
-
-    .review-button {
-        width: 38px;
-        height: 38px;
-
-        font-size: 26px;
     }
 
     .review-prev {
@@ -1725,10 +1251,6 @@ section {
     }
 
 
-    /* -----------------------------------------------------
-       联系我们
-    ----------------------------------------------------- */
-
     .contact-section {
         padding: 80px 5%;
     }
@@ -1739,71 +1261,79 @@ section {
 
     .contact-content p {
         font-size: 14px;
-
         line-height: 1.8;
     }
 
     .whatsapp-button {
         width: 100%;
-
         min-width: 0;
-
         min-height: 64px;
-
         padding: 17px 25px;
-
         font-size: 18px;
-
-        border-radius: 34px;
     }
 
-
-    /* -----------------------------------------------------
-       Footer
-    ----------------------------------------------------- */
 
     .footer {
         padding: 30px 5%;
     }
 
     .footer-links {
-        flex-wrap: wrap;
-
         gap: 12px 18px;
     }
 
     .footer-links a {
         font-size: 12px;
     }
+
+
+    /* 手机端图片放大 */
+
+    .image-lightbox {
+        padding: 15px;
+    }
+
+    .lightbox-image-wrap {
+        width: 94vw;
+        height: 82vh;
+    }
+
+    .lightbox-close {
+        top: 10px;
+        right: 10px;
+
+        width: 44px;
+        height: 44px;
+
+        font-size: 30px;
+    }
+
+    .lightbox-prev,
+    .lightbox-next {
+        width: 38px;
+        height: 56px;
+
+        font-size: 34px;
+    }
+
+    .lightbox-prev {
+        left: 5px;
+    }
+
+    .lightbox-next {
+        right: 5px;
+    }
 }
 
 
-/* =========================================================
-   27. 超小屏
-========================================================= */
-
 @media (max-width: 380px) {
-
-    .header {
-        padding-left: 3%;
-        padding-right: 3%;
-    }
 
     .logo {
         font-size: 15px;
     }
 
     .header-button {
-        padding: 7px 11px;
-
+        padding: 7px 12px;
         font-size: 11px;
-    }
-
-    .menu-toggle {
-        width: 40px;
-        flex-basis: 40px;
-
-        margin-left: 4px;
     }
 
     .hero h1 {
@@ -1832,9 +1362,9 @@ section {
 }
 
 
-/* =========================================================
-   28. 减少动画
-========================================================= */
+/* =========================
+   Reduced Motion
+========================= */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -1845,35 +1375,9 @@ section {
     *,
     *::before,
     *::after {
-        animation-duration: 0.01ms !important;
+        animation-duration: .01ms !important;
         animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
     }
 }
 
-
-/* =========================================================
-   29. 触摸设备优化
-========================================================= */
-
-@media (hover: none) and (pointer: coarse) {
-
-    .nav a:hover,
-    .header-button:hover,
-    .button-primary:hover,
-    .secondary-cta:hover,
-    .whatsapp-button:hover,
-    .product-card:hover {
-        transform: none;
-    }
-
-    .product-card:hover .product-image img {
-        transform: none;
-    }
-
-    .slider-button:hover,
-    .review-button:hover {
-        transform: translateY(-50%);
-    }
-}
