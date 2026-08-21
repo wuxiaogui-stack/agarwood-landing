@@ -1,183 +1,189 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    /* =========================================================
-       1. 手机端导航
-    ========================================================= */
+    /* =====================================================
+       手机端导航
+    ===================================================== */
 
     const menuToggle = document.getElementById("menuToggle");
     const mainNav = document.getElementById("mainNav");
 
     function closeMenu() {
-
         if (!menuToggle || !mainNav) {
             return;
         }
 
         mainNav.classList.remove("mobile-open");
         menuToggle.classList.remove("active");
-
-        menuToggle.setAttribute(
-            "aria-expanded",
-            "false"
-        );
+        menuToggle.setAttribute("aria-expanded", "false");
     }
-
 
     if (menuToggle && mainNav) {
 
-        menuToggle.addEventListener(
-            "click",
-            function (event) {
+        menuToggle.addEventListener("click", function (event) {
 
-                event.preventDefault();
-                event.stopPropagation();
+            event.stopPropagation();
 
-                const isOpen =
-                    mainNav.classList.toggle(
-                        "mobile-open"
-                    );
+            const isOpen =
+                mainNav.classList.toggle("mobile-open");
 
-                menuToggle.classList.toggle(
-                    "active",
-                    isOpen
-                );
+            menuToggle.classList.toggle(
+                "active",
+                isOpen
+            );
 
-                menuToggle.setAttribute(
-                    "aria-expanded",
-                    isOpen ? "true" : "false"
-                );
-            }
-        );
+            menuToggle.setAttribute(
+                "aria-expanded",
+                isOpen ? "true" : "false"
+            );
+        });
 
 
-        mainNav
-            .querySelectorAll("a")
-            .forEach(function (link) {
+        mainNav.querySelectorAll("a").forEach(function (link) {
 
-                link.addEventListener(
-                    "click",
-                    function () {
-                        closeMenu();
-                    }
-                );
-
+            link.addEventListener("click", function () {
+                closeMenu();
             });
 
+        });
 
-        document.addEventListener(
-            "click",
-            function (event) {
 
-                if (
-                    !mainNav.contains(event.target) &&
-                    !menuToggle.contains(event.target)
-                ) {
-                    closeMenu();
-                }
+        document.addEventListener("click", function (event) {
 
+            if (
+                !mainNav.contains(event.target) &&
+                !menuToggle.contains(event.target)
+            ) {
+                closeMenu();
             }
-        );
+
+        });
+
     }
 
 
-    /* =========================================================
-       2. 通用轮播系统
-       
-       不使用 clone。
-       每个轮播完全独立。
-    ========================================================= */
+    /* =====================================================
+       通用轮播
+       每个轮播完全独立
+    ===================================================== */
 
-    function createSlider(options) {
+    function initSlider(config) {
 
-        const slider =
-            document.querySelector(options.slider);
+        const slider = document.querySelector(config.slider);
 
-        const track =
-            slider
-                ? slider.querySelector(options.track)
-                : null;
-
-
-        if (!slider || !track) {
+        if (!slider) {
             return;
         }
 
+        const track =
+            slider.querySelector(config.track);
 
         const slides =
             Array.from(
-                track.querySelectorAll(
-                    options.slide
-                )
+                track.querySelectorAll(config.slide)
             );
-
 
         const prev =
-            slider.querySelector(
-                options.prev
-            );
+            slider.querySelector(config.prev);
 
         const next =
-            slider.querySelector(
-                options.next
-            );
+            slider.querySelector(config.next);
+
+        const dotsContainer =
+            document.querySelector(config.dots);
 
         const dots =
-            Array.from(
-                slider.querySelectorAll(
-                    options.dot
+            dotsContainer
+                ? Array.from(
+                    dotsContainer.querySelectorAll(config.dot)
                 )
-            );
+                : [];
 
-
-        if (slides.length === 0) {
+        if (!track || slides.length === 0) {
             return;
         }
 
 
-        let currentIndex = 0;
+        /* -----------------------------
+           单张图片
+        ----------------------------- */
+
+        if (slides.length === 1) {
+
+            track.style.transform =
+                "translate3d(0,0,0)";
+
+            if (prev) {
+                prev.style.display = "none";
+            }
+
+            if (next) {
+                next.style.display = "none";
+            }
+
+            dots.forEach(function (dot) {
+                dot.style.display = "none";
+            });
+
+            return;
+        }
+
+
+        /* -----------------------------
+           克隆首尾图片
+        ----------------------------- */
+
+        const firstClone =
+            slides[0].cloneNode(true);
+
+        const lastClone =
+            slides[slides.length - 1].cloneNode(true);
+
+        firstClone.classList.add("slider-clone");
+        lastClone.classList.add("slider-clone");
+
+        track.insertBefore(
+            lastClone,
+            track.firstChild
+        );
+
+        track.appendChild(firstClone);
+
+
+        const total = slides.length;
+
+        let current = 1;
 
         let isMoving = false;
 
 
-        /* -----------------------------------------------------
+        /* -----------------------------
            更新圆点
-        ----------------------------------------------------- */
+        ----------------------------- */
 
         function updateDots() {
 
-            dots.forEach(
-                function (dot, index) {
+            const realIndex =
+                current - 1;
 
-                    if (
-                        index === currentIndex
-                    ) {
+            dots.forEach(function (dot, index) {
 
-                        dot.classList.add(
-                            "active"
-                        );
+                dot.classList.toggle(
+                    "active",
+                    index === realIndex
+                );
 
-                    } else {
+            });
 
-                        dot.classList.remove(
-                            "active"
-                        );
-
-                    }
-
-                }
-            );
         }
 
 
-        /* -----------------------------------------------------
-           更新图片位置
-        ----------------------------------------------------- */
+        /* -----------------------------
+           设置位置
+        ----------------------------- */
 
-        function updatePosition(
-            animate
-        ) {
+        function setPosition(animated) {
 
-            if (animate) {
+            if (animated) {
 
                 track.style.transition =
                     "transform 0.45s ease";
@@ -186,113 +192,72 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 track.style.transition =
                     "none";
-            }
 
+            }
 
             track.style.transform =
                 "translate3d(-" +
-                (currentIndex * 100) +
+                (current * 100) +
                 "%, 0, 0)";
-
 
             updateDots();
         }
 
 
-        /* -----------------------------------------------------
-           切换图片
-        ----------------------------------------------------- */
+        /* -----------------------------
+           移动
+        ----------------------------- */
 
-        function goTo(index) {
-
-            if (
-                slides.length <= 1
-            ) {
-                return;
-            }
-
+        function move(direction) {
 
             if (isMoving) {
                 return;
             }
 
-
-            if (index < 0) {
-
-                index =
-                    slides.length - 1;
-            }
-
-
-            if (
-                index >= slides.length
-            ) {
-
-                index = 0;
-            }
-
-
-            currentIndex = index;
-
-
-            /*
-             * 先更新圆点，
-             * 保证圆点和当前图片同步。
-             */
-
-            updateDots();
-
-
             isMoving = true;
 
+            current += direction;
 
-            updatePosition(true);
+            setPosition(true);
         }
 
 
-        /* -----------------------------------------------------
-           上一张
-        ----------------------------------------------------- */
-
-        function goPrevious() {
-
-            goTo(
-                currentIndex - 1
-            );
-        }
-
-
-        /* -----------------------------------------------------
-           下一张
-        ----------------------------------------------------- */
-
-        function goNext() {
-
-            goTo(
-                currentIndex + 1
-            );
-        }
-
-
-        /* -----------------------------------------------------
-           动画结束
-        ----------------------------------------------------- */
+        /* -----------------------------
+           处理无限循环
+        ----------------------------- */
 
         track.addEventListener(
             "transitionend",
-            function () {
+            function (event) {
+
+                if (
+                    event.propertyName &&
+                    event.propertyName !== "transform"
+                ) {
+                    return;
+                }
+
+                if (current === total + 1) {
+
+                    current = 1;
+
+                    setPosition(false);
+
+                } else if (current === 0) {
+
+                    current = total;
+
+                    setPosition(false);
+                }
 
                 isMoving = false;
-
-                updateDots();
-
             }
         );
 
 
-        /* -----------------------------------------------------
-           上一张按钮
-        ----------------------------------------------------- */
+        /* -----------------------------
+           上一张
+        ----------------------------- */
 
         if (prev) {
 
@@ -303,16 +268,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     event.preventDefault();
                     event.stopPropagation();
 
-                    goPrevious();
-
+                    move(-1);
                 }
             );
+
         }
 
 
-        /* -----------------------------------------------------
-           下一张按钮
-        ----------------------------------------------------- */
+        /* -----------------------------
+           下一张
+        ----------------------------- */
 
         if (next) {
 
@@ -323,44 +288,48 @@ document.addEventListener("DOMContentLoaded", function () {
                     event.preventDefault();
                     event.stopPropagation();
 
-                    goNext();
-
+                    move(1);
                 }
             );
+
         }
 
 
-        /* -----------------------------------------------------
-           圆点按钮
-        ----------------------------------------------------- */
+        /* -----------------------------
+           圆点
+        ----------------------------- */
 
-        dots.forEach(
-            function (dot, index) {
+        dots.forEach(function (dot, index) {
 
-                dot.addEventListener(
-                    "click",
-                    function (event) {
+            dot.addEventListener(
+                "click",
+                function (event) {
 
-                        event.preventDefault();
-                        event.stopPropagation();
+                    event.preventDefault();
+                    event.stopPropagation();
 
-                        goTo(index);
-
+                    if (isMoving) {
+                        return;
                     }
-                );
 
-            }
-        );
+                    current = index + 1;
+
+                    setPosition(true);
+
+                    isMoving = true;
+                }
+            );
+
+        });
 
 
-        /* =====================================================
-           手机端左右滑动
-        ===================================================== */
+        /* -----------------------------
+           手机左右滑动
+        ----------------------------- */
 
         let startX = 0;
         let startY = 0;
-        let touching = false;
-
+        let isTouching = false;
 
         track.addEventListener(
             "touchstart",
@@ -368,11 +337,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (
                     !event.touches ||
-                    event.touches.length === 0
+                    event.touches.length !== 1
                 ) {
                     return;
                 }
-
 
                 startX =
                     event.touches[0].clientX;
@@ -380,7 +348,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 startY =
                     event.touches[0].clientY;
 
-                touching = true;
+                isTouching = true;
 
             },
             {
@@ -393,21 +361,18 @@ document.addEventListener("DOMContentLoaded", function () {
             "touchend",
             function (event) {
 
-                if (!touching) {
+                if (!isTouching) {
                     return;
                 }
 
-
-                touching = false;
-
+                isTouching = false;
 
                 if (
                     !event.changedTouches ||
-                    event.changedTouches.length === 0
+                    event.changedTouches.length !== 1
                 ) {
                     return;
                 }
-
 
                 const endX =
                     event.changedTouches[0].clientX;
@@ -415,41 +380,30 @@ document.addEventListener("DOMContentLoaded", function () {
                 const endY =
                     event.changedTouches[0].clientY;
 
-
-                const diffX =
+                const deltaX =
                     endX - startX;
 
-                const diffY =
+                const deltaY =
                     endY - startY;
 
 
-                /*
-                 * 只有明显的横向滑动
-                 * 才切换图片。
-                 */
+                /* 只处理水平滑动 */
 
                 if (
-                    Math.abs(diffX) < 50
+                    Math.abs(deltaX) < 50 ||
+                    Math.abs(deltaX) <= Math.abs(deltaY)
                 ) {
                     return;
                 }
 
 
-                if (
-                    Math.abs(diffX) <=
-                    Math.abs(diffY)
-                ) {
-                    return;
-                }
+                if (deltaX < 0) {
 
-
-                if (diffX < 0) {
-
-                    goNext();
+                    move(1);
 
                 } else {
 
-                    goPrevious();
+                    move(-1);
 
                 }
 
@@ -460,27 +414,19 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /* -----------------------------------------------------
-           初始化
-        ----------------------------------------------------- */
+        /* 初始位置 */
 
-        updatePosition(false);
+        setPosition(false);
 
-        updateDots();
     }
 
 
-    /* =========================================================
-       3. 沉香树与工厂轮播
-       
-       tree-01
-       tree-02
-       tree-03
-       tree-04
-       tree-05
-    ========================================================= */
+    /* =====================================================
+       沉香树与工厂轮播
+       独立 5 张
+    ===================================================== */
 
-    createSlider({
+    initSlider({
 
         slider: ".tree-slider",
 
@@ -492,16 +438,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         next: ".slider-next",
 
+        dots: ".slider-dots",
+
         dot: ".slider-dot"
 
     });
 
 
-    /* =========================================================
-       4. 客户反馈轮播
-    ========================================================= */
+    /* =====================================================
+       客户反馈轮播
+       独立 3 张
+    ===================================================== */
 
-    createSlider({
+    initSlider({
 
         slider: ".review-slider",
 
@@ -513,46 +462,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
         next: ".review-next",
 
+        dots: ".review-dots",
+
         dot: ".review-dot"
 
     });
 
 
-    /* =========================================================
-       5. 图片放大系统
+    /* =====================================================
+       图片放大系统
        
-       每个区域独立：
-       
-       tree
-       product
-       shipping
-       review
-    ========================================================= */
+       重点：
+       每一个图片区域都是独立图片组
+    ===================================================== */
 
     const lightbox =
-        document.getElementById(
-            "imageLightbox"
-        );
+        document.getElementById("imageLightbox");
 
     const lightboxImage =
-        document.getElementById(
-            "lightboxImage"
-        );
+        document.getElementById("lightboxImage");
 
     const lightboxClose =
-        document.getElementById(
-            "lightboxClose"
-        );
+        document.getElementById("lightboxClose");
 
     const lightboxPrev =
-        document.getElementById(
-            "lightboxPrev"
-        );
+        document.getElementById("lightboxPrev");
 
     const lightboxNext =
-        document.getElementById(
-            "lightboxNext"
-        );
+        document.getElementById("lightboxNext");
 
 
     if (
@@ -563,382 +500,365 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    let currentGallery = [];
+    /* =====================================================
+       图片组
+    ===================================================== */
 
-    let currentImageIndex = 0;
-
-
-    /* =========================================================
-       6. 获取指定图库
-    ========================================================= */
-
-    function getGallery(
-        galleryType
-    ) {
-
-        let selector = "";
+    const imageGroups = [];
 
 
-        if (
-            galleryType === "tree"
-        ) {
+    /* -----------------------------
+       沉香树与工厂
+       只使用原始 5 张
+       不使用轮播克隆图片
+    ----------------------------- */
 
-            selector =
-                ".tree-slide img";
-
-        } else if (
-            galleryType === "product"
-        ) {
-
-            selector =
-                ".product-image img";
-
-        } else if (
-            galleryType === "shipping"
-        ) {
-
-            selector =
-                ".shipping-promotion-image img";
-
-        } else if (
-            galleryType === "review"
-        ) {
-
-            selector =
-                ".review-slide img";
-        }
-
-
-        if (!selector) {
-            return [];
-        }
-
-
-        const images =
-            Array.from(
-                document.querySelectorAll(
-                    selector
-                )
-            );
-
-
-        /*
-         * 只使用已经正常加载的图片。
-         *
-         * 因此：
-         * tree-04.jpg
-         * tree-05.jpg
-         * shipping-01.jpg
-         *
-         * 暂时不存在时不会导致报错。
-         */
-
-        return images.filter(
-            function (image) {
-
-                return (
-                    image &&
-                    image.complete &&
-                    image.naturalWidth > 0
-                );
-
-            }
+    const treeImages =
+        Array.from(
+            document.querySelectorAll(
+                ".tree-slide:not(.slider-clone) img"
+            )
         );
+
+    if (treeImages.length > 0) {
+
+        imageGroups.push({
+            name: "trees",
+            images: treeImages
+        });
+
     }
 
 
-    /* =========================================================
-       7. 更新放大图片
-    ========================================================= */
+    /* -----------------------------
+       产品
+    ----------------------------- */
+
+    const productImages =
+        Array.from(
+            document.querySelectorAll(
+                ".product-image img"
+            )
+        );
+
+    if (productImages.length > 0) {
+
+        imageGroups.push({
+            name: "products",
+            images: productImages
+        });
+
+    }
+
+
+    /* -----------------------------
+       客户反馈
+       只使用原始图片
+    ----------------------------- */
+
+    const reviewImages =
+        Array.from(
+            document.querySelectorAll(
+                ".review-slide:not(.slider-clone) img"
+            )
+        );
+
+    if (reviewImages.length > 0) {
+
+        imageGroups.push({
+            name: "reviews",
+            images: reviewImages
+        });
+
+    }
+
+
+    /* -----------------------------
+       配送活动
+    ----------------------------- */
+
+    const shippingImages =
+        Array.from(
+            document.querySelectorAll(
+                ".shipping-promotion-image img"
+            )
+        );
+
+    if (shippingImages.length > 0) {
+
+        imageGroups.push({
+            name: "shipping",
+            images: shippingImages
+        });
+
+    }
+
+
+    let currentGroup = null;
+    let currentImageIndex = 0;
+
+
+    /* =====================================================
+       获取图片组
+    ===================================================== */
+
+    function findImageGroup(image) {
+
+        for (
+            let groupIndex = 0;
+            groupIndex < imageGroups.length;
+            groupIndex++
+        ) {
+
+            const group =
+                imageGroups[groupIndex];
+
+            const imageIndex =
+                group.images.indexOf(image);
+
+            if (imageIndex !== -1) {
+
+                return {
+                    group: group,
+                    index: imageIndex
+                };
+
+            }
+
+        }
+
+        return null;
+    }
+
+
+    /* =====================================================
+       更新放大图片
+    ===================================================== */
 
     function updateLightboxImage() {
 
         if (
-            currentGallery.length === 0
+            !currentGroup ||
+            !currentGroup.images ||
+            currentGroup.images.length === 0
         ) {
             return;
         }
 
-
         const image =
-            currentGallery[
-                currentImageIndex
-            ];
-
+            currentGroup.images[currentImageIndex];
 
         if (!image) {
             return;
         }
 
+        /*
+           使用 currentSrc 优先，
+           避免部分浏览器 lazy loading
+           导致 src 状态异常。
+        */
 
         lightboxImage.src =
             image.currentSrc ||
             image.src;
 
-
         lightboxImage.alt =
-            image.alt ||
-            "图片放大查看";
+            image.alt || "图片放大查看";
+
+
+        /*
+           如果当前组只有一张图片，
+           隐藏左右按钮。
+        */
+
+        if (currentGroup.images.length <= 1) {
+
+            if (lightboxPrev) {
+                lightboxPrev.style.display =
+                    "none";
+            }
+
+            if (lightboxNext) {
+                lightboxNext.style.display =
+                    "none";
+            }
+
+        } else {
+
+            if (lightboxPrev) {
+                lightboxPrev.style.display =
+                    "flex";
+            }
+
+            if (lightboxNext) {
+                lightboxNext.style.display =
+                    "flex";
+            }
+
+        }
+
     }
 
 
-    /* =========================================================
-       8. 打开图片
-    ========================================================= */
+    /* =====================================================
+       打开图片
+    ===================================================== */
 
-    function openLightbox(
-        galleryType,
-        imageElement
-    ) {
+    function openLightbox(image) {
 
-        if (!imageElement) {
+        const result =
+            findImageGroup(image);
+
+        if (!result) {
             return;
         }
 
-
-        const gallery =
-            getGallery(
-                galleryType
-            );
-
-
-        if (
-            gallery.length === 0
-        ) {
-            return;
-        }
-
-
-        const imageIndex =
-            gallery.indexOf(
-                imageElement
-            );
-
-
-        if (
-            imageIndex === -1
-        ) {
-            return;
-        }
-
-
-        currentGallery =
-            gallery;
+        currentGroup =
+            result.group;
 
         currentImageIndex =
-            imageIndex;
-
+            result.index;
 
         updateLightboxImage();
 
-
-        lightbox.classList.add(
-            "active"
-        );
-
+        lightbox.classList.add("active");
 
         lightbox.setAttribute(
             "aria-hidden",
             "false"
         );
 
+        document.body.classList.add(
+            "lightbox-open"
+        );
 
         document.body.style.overflow =
             "hidden";
+
     }
 
 
-    /* =========================================================
-       9. 关闭图片
-    ========================================================= */
+    /* =====================================================
+       关闭图片
+    ===================================================== */
 
     function closeLightbox() {
 
-        lightbox.classList.remove(
-            "active"
-        );
-
+        lightbox.classList.remove("active");
 
         lightbox.setAttribute(
             "aria-hidden",
             "true"
         );
 
+        document.body.classList.remove(
+            "lightbox-open"
+        );
 
         document.body.style.overflow =
             "";
+
+        /*
+           清空 src，避免关闭后继续占用图片资源
+        */
+
+        setTimeout(function () {
+
+            if (
+                !lightbox.classList.contains("active")
+            ) {
+
+                lightboxImage.src = "";
+
+            }
+
+        }, 200);
+
     }
 
 
-    /* =========================================================
-       10. 放大图片下一张
-    ========================================================= */
-
-    function showNextImage() {
-
-        if (
-            currentGallery.length <= 1
-        ) {
-            return;
-        }
-
-
-        currentImageIndex++;
-
-
-        if (
-            currentImageIndex >=
-            currentGallery.length
-        ) {
-
-            currentImageIndex = 0;
-        }
-
-
-        updateLightboxImage();
-    }
-
-
-    /* =========================================================
-       11. 放大图片上一张
-    ========================================================= */
+    /* =====================================================
+       放大图片上一张
+    ===================================================== */
 
     function showPreviousImage() {
 
         if (
-            currentGallery.length <= 1
+            !currentGroup ||
+            currentGroup.images.length <= 1
         ) {
             return;
         }
 
-
         currentImageIndex--;
 
-
-        if (
-            currentImageIndex < 0
-        ) {
+        if (currentImageIndex < 0) {
 
             currentImageIndex =
-                currentGallery.length - 1;
-        }
+                currentGroup.images.length - 1;
 
+        }
 
         updateLightboxImage();
     }
 
 
-    /* =========================================================
-       12. 图片点击事件
-       
-       使用事件委托。
-       
-       这样即使轮播发生移动，
-       手机端也可以正常点击图片。
-    ========================================================= */
+    /* =====================================================
+       放大图片下一张
+    ===================================================== */
 
-    document.addEventListener(
-        "click",
-        function (event) {
+    function showNextImage() {
 
-            const image =
-                event.target.closest(
-                    ".tree-slide img, " +
-                    ".product-image img, " +
-                    ".shipping-promotion-image img, " +
-                    ".review-slide img"
-                );
+        if (
+            !currentGroup ||
+            currentGroup.images.length <= 1
+        ) {
+            return;
+        }
 
+        currentImageIndex++;
 
-            if (!image) {
-                return;
-            }
+        if (
+            currentImageIndex >=
+            currentGroup.images.length
+        ) {
 
-
-            /*
-             * 如果点击的是轮播按钮，
-             * 不打开图片。
-             */
-
-            if (
-                event.target.closest(
-                    ".slider-button"
-                )
-            ) {
-                return;
-            }
-
-
-            if (
-                event.target.closest(
-                    ".review-button"
-                )
-            ) {
-                return;
-            }
-
-
-            let galleryType = "";
-
-
-            if (
-                image.closest(
-                    ".tree-slide"
-                )
-            ) {
-
-                galleryType =
-                    "tree";
-
-            } else if (
-                image.closest(
-                    ".product-image"
-                )
-            ) {
-
-                galleryType =
-                    "product";
-
-            } else if (
-                image.closest(
-                    ".shipping-promotion-image"
-                )
-            ) {
-
-                galleryType =
-                    "shipping";
-
-            } else if (
-                image.closest(
-                    ".review-slide"
-                )
-            ) {
-
-                galleryType =
-                    "review";
-            }
-
-
-            if (!galleryType) {
-                return;
-            }
-
-
-            event.preventDefault();
-
-
-            openLightbox(
-                galleryType,
-                image
-            );
+            currentImageIndex = 0;
 
         }
-    );
+
+        updateLightboxImage();
+    }
 
 
-    /* =========================================================
-       13. 关闭按钮
-    ========================================================= */
+    /* =====================================================
+       给所有图片绑定点击事件
+    ===================================================== */
+
+    imageGroups.forEach(function (group) {
+
+        group.images.forEach(function (image) {
+
+            image.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    openLightbox(image);
+
+                }
+            );
+
+        });
+
+    });
+
+
+    /* =====================================================
+       关闭按钮
+    ===================================================== */
 
     if (lightboxClose) {
 
@@ -953,12 +873,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
         );
+
     }
 
 
-    /* =========================================================
-       14. Lightbox 上一张
-    ========================================================= */
+    /* =====================================================
+       放大图片上一张
+    ===================================================== */
 
     if (lightboxPrev) {
 
@@ -973,12 +894,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
         );
+
     }
 
 
-    /* =========================================================
-       15. Lightbox 下一张
-    ========================================================= */
+    /* =====================================================
+       放大图片下一张
+    ===================================================== */
 
     if (lightboxNext) {
 
@@ -993,20 +915,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
         );
+
     }
 
 
-    /* =========================================================
-       16. 点击黑色背景关闭
-    ========================================================= */
+    /* =====================================================
+       点击黑色背景关闭
+    ===================================================== */
 
     lightbox.addEventListener(
         "click",
         function (event) {
 
             if (
+                event.target === lightbox ||
                 event.target ===
-                lightbox
+                document.querySelector(
+                    ".lightbox-image-wrap"
+                )
             ) {
 
                 closeLightbox();
@@ -1017,14 +943,12 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
-    /* =========================================================
-       17. 手机端放大图片左右滑动
-    ========================================================= */
+    /* =====================================================
+       手机端放大图片左右滑动
+    ===================================================== */
 
     let lightboxStartX = 0;
-
     let lightboxStartY = 0;
-
     let lightboxTouching = false;
 
 
@@ -1034,11 +958,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (
                 !event.touches ||
-                event.touches.length === 0
+                event.touches.length !== 1
             ) {
                 return;
             }
-
 
             lightboxStartX =
                 event.touches[0].clientX;
@@ -1059,24 +982,18 @@ document.addEventListener("DOMContentLoaded", function () {
         "touchend",
         function (event) {
 
-            if (
-                !lightboxTouching
-            ) {
+            if (!lightboxTouching) {
                 return;
             }
 
-
-            lightboxTouching =
-                false;
-
+            lightboxTouching = false;
 
             if (
                 !event.changedTouches ||
-                event.changedTouches.length === 0
+                event.changedTouches.length !== 1
             ) {
                 return;
             }
-
 
             const endX =
                 event.changedTouches[0].clientX;
@@ -1084,34 +1001,22 @@ document.addEventListener("DOMContentLoaded", function () {
             const endY =
                 event.changedTouches[0].clientY;
 
+            const deltaX =
+                endX - lightboxStartX;
 
-            const diffX =
-                endX -
-                lightboxStartX;
-
-            const diffY =
-                endY -
-                lightboxStartY;
+            const deltaY =
+                endY - lightboxStartY;
 
 
             if (
-                Math.abs(diffX) < 50
+                Math.abs(deltaX) < 50 ||
+                Math.abs(deltaX) <= Math.abs(deltaY)
             ) {
                 return;
             }
 
 
-            if (
-                Math.abs(diffX) <=
-                Math.abs(diffY)
-            ) {
-                return;
-            }
-
-
-            if (
-                diffX < 0
-            ) {
+            if (deltaX < 0) {
 
                 showNextImage();
 
@@ -1128,68 +1033,39 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
-    /* =========================================================
-       18. 键盘控制
-    ========================================================= */
+    /* =====================================================
+       ESC / 键盘控制
+    ===================================================== */
 
     document.addEventListener(
         "keydown",
         function (event) {
 
             if (
-                !lightbox.classList.contains(
-                    "active"
-                )
+                !lightbox.classList.contains("active")
             ) {
                 return;
             }
 
-
-            if (
-                event.key === "Escape"
-            ) {
+            if (event.key === "Escape") {
 
                 closeLightbox();
 
-                return;
             }
 
-
-            if (
-                event.key === "ArrowLeft"
-            ) {
+            if (event.key === "ArrowLeft") {
 
                 showPreviousImage();
 
-                return;
             }
 
-
-            if (
-                event.key === "ArrowRight"
-            ) {
+            if (event.key === "ArrowRight") {
 
                 showNextImage();
 
-                return;
             }
 
         }
-    );
-
-
-    /* =========================================================
-       19. 初始化 Lightbox
-    ========================================================= */
-
-    lightbox.classList.remove(
-        "active"
-    );
-
-
-    lightbox.setAttribute(
-        "aria-hidden",
-        "true"
     );
 
 });
