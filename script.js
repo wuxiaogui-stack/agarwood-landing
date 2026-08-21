@@ -1,12 +1,16 @@
-```javascript
 document.addEventListener("DOMContentLoaded", function () {
 
-    /* =========================
-       手机端导航
-    ========================= */
 
-    const menuToggle = document.getElementById("menuToggle");
-    const mainNav = document.getElementById("mainNav");
+    /* =====================================================
+       手机端导航
+    ===================================================== */
+
+    const menuToggle =
+        document.getElementById("menuToggle");
+
+    const mainNav =
+        document.getElementById("mainNav");
+
 
     function closeMenu() {
 
@@ -14,8 +18,13 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        mainNav.classList.remove("mobile-open");
-        menuToggle.classList.remove("active");
+        mainNav.classList.remove(
+            "mobile-open"
+        );
+
+        menuToggle.classList.remove(
+            "active"
+        );
 
         menuToggle.setAttribute(
             "aria-expanded",
@@ -23,61 +32,99 @@ document.addEventListener("DOMContentLoaded", function () {
         );
     }
 
+
     if (menuToggle && mainNav) {
 
-        menuToggle.addEventListener("click", function (event) {
+        menuToggle.addEventListener(
+            "click",
+            function (event) {
 
-            event.stopPropagation();
+                event.preventDefault();
 
-            const isOpen =
-                mainNav.classList.toggle("mobile-open");
-
-            menuToggle.classList.toggle(
-                "active",
-                isOpen
-            );
-
-            menuToggle.setAttribute(
-                "aria-expanded",
-                isOpen ? "true" : "false"
-            );
-        });
+                event.stopPropagation();
 
 
-        mainNav.querySelectorAll("a").forEach(function (link) {
+                const open =
+                    mainNav.classList.toggle(
+                        "mobile-open"
+                    );
 
-            link.addEventListener("click", function () {
-                closeMenu();
+
+                menuToggle.classList.toggle(
+                    "active",
+                    open
+                );
+
+
+                menuToggle.setAttribute(
+                    "aria-expanded",
+                    open
+                        ? "true"
+                        : "false"
+                );
+
+            }
+        );
+
+
+        mainNav
+            .querySelectorAll("a")
+            .forEach(function (link) {
+
+                link.addEventListener(
+                    "click",
+                    function () {
+
+                        closeMenu();
+
+                    }
+                );
+
             });
 
-        });
 
+        document.addEventListener(
+            "click",
+            function (event) {
 
-        document.addEventListener("click", function (event) {
+                if (
+                    !mainNav.contains(
+                        event.target
+                    ) &&
+                    !menuToggle.contains(
+                        event.target
+                    )
+                ) {
 
-            if (
-                !mainNav.contains(event.target) &&
-                !menuToggle.contains(event.target)
-            ) {
-                closeMenu();
+                    closeMenu();
+
+                }
+
             }
+        );
 
-        });
     }
 
 
-    /* =========================
-       无限循环轮播
-    ========================= */
+    /* =====================================================
+       通用轮播
+       不使用克隆
+       不使用无限循环
+       更稳定
+    ===================================================== */
 
-    function createInfiniteSlider(options) {
+    function createSlider(options) {
 
         const track =
-            document.querySelector(options.track);
+            document.querySelector(
+                options.track
+            );
+
 
         if (!track) {
             return;
         }
+
 
         const slides =
             Array.from(
@@ -86,193 +133,200 @@ document.addEventListener("DOMContentLoaded", function () {
                 )
             );
 
-        const prev =
-            document.querySelector(options.prev);
 
-        const next =
-            document.querySelector(options.next);
+        const prevButton =
+            document.querySelector(
+                options.prev
+            );
+
+
+        const nextButton =
+            document.querySelector(
+                options.next
+            );
+
 
         const dots =
             Array.from(
-                document.querySelectorAll(options.dot)
+                document.querySelectorAll(
+                    options.dot
+                )
             );
+
 
         if (slides.length === 0) {
             return;
         }
 
-        if (slides.length === 1) {
 
-            if (prev) {
-                prev.style.display = "none";
-            }
-
-            if (next) {
-                next.style.display = "none";
-            }
-
-            dots.forEach(function (dot) {
-                dot.style.display = "none";
-            });
-
-            return;
-        }
+        let currentIndex = 0;
 
 
-        const firstClone =
-            slides[0].cloneNode(true);
+        let startX = 0;
+        let startY = 0;
 
-        const lastClone =
-            slides[slides.length - 1].cloneNode(true);
-
-        firstClone.classList.add("slider-clone");
-        lastClone.classList.add("slider-clone");
-
-        track.insertBefore(
-            lastClone,
-            track.firstChild
-        );
-
-        track.appendChild(firstClone);
+        let touching = false;
 
 
-        const total = slides.length;
-
-        let index = 1;
-
-        let locked = false;
-
-
-        function updateDots() {
-
-            let realIndex = index - 1;
-
-            if (realIndex < 0) {
-                realIndex = total - 1;
-            }
-
-            if (realIndex >= total) {
-                realIndex = 0;
-            }
-
-            dots.forEach(function (dot, i) {
-
-                dot.classList.toggle(
-                    "active",
-                    i === realIndex
-                );
-
-            });
-        }
-
-
-        function setPosition(animate) {
+        function updateSlider(
+            animate
+        ) {
 
             track.style.transition =
                 animate
                     ? "transform 0.45s ease"
                     : "none";
 
+
             track.style.transform =
                 "translate3d(-" +
-                (index * 100) +
-                "%,0,0)";
+                (
+                    currentIndex * 100
+                ) +
+                "%, 0, 0)";
 
-            updateDots();
+
+            dots.forEach(
+                function (dot, index) {
+
+                    dot.classList.toggle(
+                        "active",
+                        index ===
+                        currentIndex
+                    );
+
+                }
+            );
+
         }
 
 
-        function move(direction) {
+        function nextSlide() {
 
-            if (locked) {
+            if (slides.length <= 1) {
                 return;
             }
 
-            locked = true;
 
-            index += direction;
+            currentIndex++;
 
-            setPosition(true);
+
+            if (
+                currentIndex >=
+                slides.length
+            ) {
+
+                currentIndex = 0;
+
+            }
+
+
+            updateSlider(true);
+
         }
 
 
-        track.addEventListener(
-            "transitionend",
-            function (event) {
+        function previousSlide() {
 
-                if (
-                    event.propertyName &&
-                    event.propertyName !== "transform"
-                ) {
-                    return;
+            if (slides.length <= 1) {
+                return;
+            }
+
+
+            currentIndex--;
+
+
+            if (
+                currentIndex < 0
+            ) {
+
+                currentIndex =
+                    slides.length - 1;
+
+            }
+
+
+            updateSlider(true);
+
+        }
+
+
+        /* 下一张 */
+
+        if (nextButton) {
+
+            nextButton.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                    nextSlide();
+
                 }
+            );
 
-                if (index === total + 1) {
+        }
 
-                    index = 1;
 
-                    setPosition(false);
+        /* 上一张 */
 
-                } else if (index === 0) {
+        if (prevButton) {
 
-                    index = total;
+            prevButton.addEventListener(
+                "click",
+                function (event) {
 
-                    setPosition(false);
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                    previousSlide();
+
                 }
+            );
 
-                locked = false;
+        }
+
+
+        /* 圆点 */
+
+        dots.forEach(
+            function (dot, index) {
+
+                dot.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+
+                        if (
+                            index >=
+                            slides.length
+                        ) {
+                            return;
+                        }
+
+
+                        currentIndex =
+                            index;
+
+
+                        updateSlider(true);
+
+                    }
+                );
+
             }
         );
 
 
-        if (next) {
-
-            next.addEventListener(
-                "click",
-                function () {
-                    move(1);
-                }
-            );
-        }
-
-
-        if (prev) {
-
-            prev.addEventListener(
-                "click",
-                function () {
-                    move(-1);
-                }
-            );
-        }
-
-
-        dots.forEach(function (dot, dotIndex) {
-
-            dot.addEventListener(
-                "click",
-                function () {
-
-                    if (locked) {
-                        return;
-                    }
-
-                    index = dotIndex + 1;
-
-                    setPosition(true);
-                }
-            );
-
-        });
-
-
-        /* =========================
-           手机左右滑动
-        ========================= */
-
-        let startX = 0;
-        let startY = 0;
-        let touching = false;
+        /* 手机左右滑动 */
 
         track.addEventListener(
             "touchstart",
@@ -280,18 +334,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (
                     !event.touches ||
-                    event.touches.length === 0
+                    event.touches.length !== 1
                 ) {
                     return;
                 }
 
+
                 startX =
-                    event.touches[0].clientX;
+                    event.touches[0]
+                        .clientX;
 
                 startY =
-                    event.touches[0].clientY;
+                    event.touches[0]
+                        .clientY;
+
 
                 touching = true;
+
             },
             {
                 passive: true
@@ -307,20 +366,26 @@ document.addEventListener("DOMContentLoaded", function () {
                     return;
                 }
 
+
                 touching = false;
+
 
                 if (
                     !event.changedTouches ||
-                    event.changedTouches.length === 0
+                    event.changedTouches.length !== 1
                 ) {
                     return;
                 }
 
+
                 const endX =
-                    event.changedTouches[0].clientX;
+                    event.changedTouches[0]
+                        .clientX;
 
                 const endY =
-                    event.changedTouches[0].clientY;
+                    event.changedTouches[0]
+                        .clientY;
+
 
                 const diffX =
                     endX - startX;
@@ -328,17 +393,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 const diffY =
                     endY - startY;
 
+
                 if (
                     Math.abs(diffX) > 50 &&
-                    Math.abs(diffX) > Math.abs(diffY)
+                    Math.abs(diffX) >
+                    Math.abs(diffY)
                 ) {
 
                     if (diffX < 0) {
-                        move(1);
+
+                        nextSlide();
+
                     } else {
-                        move(-1);
+
+                        previousSlide();
+
                     }
+
                 }
+
             },
             {
                 passive: true
@@ -346,15 +419,16 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        setPosition(false);
+        updateSlider(false);
+
     }
 
 
-    /* =========================
-       沉香树 + 工厂轮播
-    ========================= */
+    /* =====================================================
+       沉香树 + 工厂
+    ===================================================== */
 
-    createInfiniteSlider({
+    createSlider({
 
         track: ".tree-track",
 
@@ -369,11 +443,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    /* =========================
-       客户反馈轮播
-    ========================= */
+    /* =====================================================
+       客户反馈
+    ===================================================== */
 
-    createInfiniteSlider({
+    createSlider({
 
         track: ".review-track",
 
@@ -388,167 +462,215 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    /* =========================
-       图片放大查看
-    ========================= */
+    /* =====================================================
+       图片放大
+    ===================================================== */
 
     const lightbox =
-        document.getElementById("imageLightbox");
+        document.getElementById(
+            "imageLightbox"
+        );
+
 
     const lightboxImage =
-        document.getElementById("lightboxImage");
+        document.getElementById(
+            "lightboxImage"
+        );
+
 
     const lightboxClose =
-        document.getElementById("lightboxClose");
+        document.getElementById(
+            "lightboxClose"
+        );
+
 
     const lightboxPrev =
-        document.getElementById("lightboxPrev");
+        document.getElementById(
+            "lightboxPrev"
+        );
+
 
     const lightboxNext =
-        document.getElementById("lightboxNext");
-
-
-    /*
-       只获取原始图片。
-       排除轮播程序自动复制的 slider-clone，
-       避免图片放大时出现重复。
-    */
-
-    const zoomImages =
-        Array.from(
-            document.querySelectorAll(
-                ".tree-slide:not(.slider-clone) img, " +
-                ".product-image img, " +
-                ".review-slide:not(.slider-clone) img, " +
-                ".shipping-promotion-image img"
-            )
+        document.getElementById(
+            "lightboxNext"
         );
 
 
-    let currentImage = 0;
-
-
-    function getImageSource(image) {
-
-        if (!image) {
-            return "";
-        }
-
-        return (
-            image.getAttribute("data-full") ||
-            image.currentSrc ||
-            image.src ||
-            ""
-        );
+    if (
+        !lightbox ||
+        !lightboxImage
+    ) {
+        return;
     }
 
 
-    function openLightbox(index) {
+    function getZoomImages() {
+
+        return Array.from(
+            document.querySelectorAll(
+                ".tree-slide img, " +
+                ".product-image img, " +
+                ".shipping-promotion-image img, " +
+                ".review-slide img"
+            )
+        );
+
+    }
+
+
+    let currentImageIndex = 0;
+
+
+    function openLightbox(image) {
+
+        const images =
+            getZoomImages();
+
+
+        const index =
+            images.indexOf(image);
+
 
         if (
-            !lightbox ||
-            !lightboxImage ||
-            !zoomImages[index]
+            index === -1 ||
+            !images[index]
         ) {
             return;
         }
 
-        currentImage = index;
+
+        currentImageIndex =
+            index;
+
 
         lightboxImage.src =
-            getImageSource(
-                zoomImages[currentImage]
-            );
+            images[index].currentSrc ||
+            images[index].src;
+
 
         lightboxImage.alt =
-            zoomImages[currentImage].alt || "";
+            images[index].alt || "";
 
-        lightbox.classList.add("active");
+
+        lightbox.classList.add(
+            "active"
+        );
+
 
         lightbox.setAttribute(
             "aria-hidden",
             "false"
         );
 
-        document.body.style.overflow = "hidden";
+
+        document.body.style.overflow =
+            "hidden";
+
     }
 
 
     function closeLightbox() {
 
-        if (!lightbox) {
-            return;
-        }
+        lightbox.classList.remove(
+            "active"
+        );
 
-        lightbox.classList.remove("active");
 
         lightbox.setAttribute(
             "aria-hidden",
             "true"
         );
 
-        document.body.style.overflow = "";
 
-        setTimeout(function () {
+        document.body.style.overflow =
+            "";
 
-            if (
-                !lightbox.classList.contains("active") &&
-                lightboxImage
-            ) {
-                lightboxImage.src = "";
-            }
-
-        }, 200);
     }
 
 
     function showImage(direction) {
 
-        if (
-            !lightbox ||
-            !lightboxImage ||
-            zoomImages.length === 0
-        ) {
+        const images =
+            getZoomImages();
+
+
+        if (images.length === 0) {
             return;
         }
 
-        currentImage += direction;
 
-        if (currentImage < 0) {
-            currentImage =
-                zoomImages.length - 1;
-        }
+        currentImageIndex +=
+            direction;
+
 
         if (
-            currentImage >=
-            zoomImages.length
+            currentImageIndex < 0
         ) {
-            currentImage = 0;
+
+            currentImageIndex =
+                images.length - 1;
+
         }
 
+
+        if (
+            currentImageIndex >=
+            images.length
+        ) {
+
+            currentImageIndex = 0;
+
+        }
+
+
+        const image =
+            images[currentImageIndex];
+
+
         lightboxImage.src =
-            getImageSource(
-                zoomImages[currentImage]
-            );
+            image.currentSrc ||
+            image.src;
+
 
         lightboxImage.alt =
-            zoomImages[currentImage].alt || "";
+            image.alt || "";
+
     }
 
 
-    zoomImages.forEach(function (image, index) {
+    /* =====================================================
+       图片点击
+       使用事件委托
+       轮播后的图片也能放大
+    ===================================================== */
 
-        image.addEventListener(
-            "click",
-            function () {
+    document.addEventListener(
+        "click",
+        function (event) {
 
-                openLightbox(index);
+            const image =
+                event.target.closest(
+                    ".tree-slide img, " +
+                    ".product-image img, " +
+                    ".shipping-promotion-image img, " +
+                    ".review-slide img"
+                );
 
+
+            if (!image) {
+                return;
             }
-        );
 
-    });
 
+            openLightbox(image);
+
+        }
+    );
+
+
+    /* =====================================================
+       关闭
+    ===================================================== */
 
     if (lightboxClose) {
 
@@ -556,14 +678,21 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             function (event) {
 
+                event.preventDefault();
+
                 event.stopPropagation();
 
                 closeLightbox();
 
             }
         );
+
     }
 
+
+    /* =====================================================
+       Lightbox 上一张
+    ===================================================== */
 
     if (lightboxPrev) {
 
@@ -571,14 +700,21 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             function (event) {
 
+                event.preventDefault();
+
                 event.stopPropagation();
 
                 showImage(-1);
 
             }
         );
+
     }
 
+
+    /* =====================================================
+       Lightbox 下一张
+    ===================================================== */
 
     if (lightboxNext) {
 
@@ -586,138 +722,178 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             function (event) {
 
+                event.preventDefault();
+
                 event.stopPropagation();
 
                 showImage(1);
 
             }
         );
+
     }
 
 
-    /* =========================
-       点击黑色区域关闭
-    ========================= */
+    /* =====================================================
+       点击黑色背景关闭
+    ===================================================== */
 
-    if (lightbox) {
+    lightbox.addEventListener(
+        "click",
+        function (event) {
 
-        lightbox.addEventListener(
-            "click",
-            function (event) {
+            if (
+                event.target ===
+                lightbox
+            ) {
 
-                if (
-                    event.target === lightbox ||
-                    event.target ===
-                    document.querySelector(".lightbox-image-wrap")
-                ) {
-                    closeLightbox();
-                }
+                closeLightbox();
 
             }
-        );
-    }
+
+        }
+    );
 
 
-    /* =========================
-       放大图片手机左右滑动
-    ========================= */
+    /* =====================================================
+       手机图片左右滑动
+    ===================================================== */
 
     let lightboxStartX = 0;
     let lightboxStartY = 0;
 
-    if (lightbox) {
+    let lightboxTouching = false;
 
-        lightbox.addEventListener(
-            "touchstart",
-            function (event) {
 
-                if (
-                    !event.touches ||
-                    event.touches.length === 0
-                ) {
-                    return;
-                }
+    lightbox.addEventListener(
+        "touchstart",
+        function (event) {
 
-                lightboxStartX =
-                    event.touches[0].clientX;
-
-                lightboxStartY =
-                    event.touches[0].clientY;
-
-            },
-            {
-                passive: true
+            if (
+                !event.touches ||
+                event.touches.length !== 1
+            ) {
+                return;
             }
-        );
 
 
-        lightbox.addEventListener(
-            "touchend",
-            function (event) {
+            lightboxStartX =
+                event.touches[0]
+                    .clientX;
 
-                if (
-                    !event.changedTouches ||
-                    event.changedTouches.length === 0
-                ) {
-                    return;
-                }
+            lightboxStartY =
+                event.touches[0]
+                    .clientY;
 
-                const endX =
-                    event.changedTouches[0].clientX;
 
-                const endY =
-                    event.changedTouches[0].clientY;
+            lightboxTouching = true;
 
-                const diffX =
-                    endX - lightboxStartX;
+        },
+        {
+            passive: true
+        }
+    );
 
-                const diffY =
-                    endY - lightboxStartY;
 
-                if (
-                    Math.abs(diffX) > 50 &&
-                    Math.abs(diffX) > Math.abs(diffY)
-                ) {
+    lightbox.addEventListener(
+        "touchend",
+        function (event) {
 
-                    if (diffX < 0) {
-                        showImage(1);
-                    } else {
-                        showImage(-1);
-                    }
-                }
-
-            },
-            {
-                passive: true
+            if (!lightboxTouching) {
+                return;
             }
-        );
-    }
 
 
-    /* =========================
-       ESC + 键盘左右键
-    ========================= */
+            lightboxTouching = false;
+
+
+            if (
+                !event.changedTouches ||
+                event.changedTouches.length !== 1
+            ) {
+                return;
+            }
+
+
+            const endX =
+                event.changedTouches[0]
+                    .clientX;
+
+            const endY =
+                event.changedTouches[0]
+                    .clientY;
+
+
+            const diffX =
+                endX - lightboxStartX;
+
+            const diffY =
+                endY - lightboxStartY;
+
+
+            if (
+                Math.abs(diffX) > 50 &&
+                Math.abs(diffX) >
+                Math.abs(diffY)
+            ) {
+
+                if (diffX < 0) {
+
+                    showImage(1);
+
+                } else {
+
+                    showImage(-1);
+
+                }
+
+            }
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+    /* =====================================================
+       ESC
+    ===================================================== */
 
     document.addEventListener(
         "keydown",
         function (event) {
 
             if (
-                !lightbox ||
-                !lightbox.classList.contains("active")
+                !lightbox.classList.contains(
+                    "active"
+                )
             ) {
                 return;
             }
 
-            if (event.key === "Escape") {
+
+            if (
+                event.key === "Escape"
+            ) {
 
                 closeLightbox();
 
-            } else if (event.key === "ArrowLeft") {
+            }
+
+
+            if (
+                event.key === "ArrowLeft"
+            ) {
 
                 showImage(-1);
 
-            } else if (event.key === "ArrowRight") {
+            }
+
+
+            if (
+                event.key === "ArrowRight"
+            ) {
 
                 showImage(1);
 
@@ -726,23 +902,4 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     );
 
-
-    /* =========================
-       防止图片拖动造成页面异常
-    ========================= */
-
-    document.querySelectorAll("img").forEach(
-        function (image) {
-
-            image.addEventListener(
-                "dragstart",
-                function (event) {
-                    event.preventDefault();
-                }
-            );
-
-        }
-    );
-
 });
-```
