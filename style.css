@@ -29,8 +29,8 @@ body {
 }
 
 img {
-    display: block;
     max-width: 100%;
+    display: block;
 }
 
 a {
@@ -59,17 +59,16 @@ button {
 
     display: flex;
     align-items: center;
-    justify-content: space-between;
 
     padding: 14px 6%;
 
-    background: rgba(47, 42, 34, 0.96);
+    background: rgba(47, 42, 34, 0.94);
 
     color: #fff;
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
 }
 
 .logo {
@@ -80,17 +79,17 @@ button {
 
     letter-spacing: 2px;
 
-    color: #fff;
+    white-space: nowrap;
 }
 
 .nav {
     display: flex;
     align-items: center;
 
-    gap: 30px;
+    gap: 26px;
 
     margin-left: auto;
-    margin-right: 30px;
+    margin-right: 28px;
 }
 
 .nav a {
@@ -102,14 +101,11 @@ button {
 
     opacity: 0.9;
 
-    transition:
-        opacity 0.2s ease,
-        color 0.2s ease;
+    transition: opacity 0.2s ease;
 }
 
 .nav a:hover {
     opacity: 1;
-    color: #c4a979;
 }
 
 .nav a::after {
@@ -141,25 +137,15 @@ button {
 
     min-height: 44px;
 
-    padding: 10px 24px;
+    padding: 10px 22px;
 
     border-radius: 30px;
 
     background: #25d366;
-
     color: #fff;
 
     font-size: 14px;
     font-weight: 700;
-
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease;
-}
-
-.header-button:hover {
-    background: #128c7e;
-    transform: translateY(-2px);
 }
 
 .menu-toggle {
@@ -168,7 +154,7 @@ button {
     width: 42px;
     height: 42px;
 
-    padding: 8px;
+    margin-left: 8px;
 
     border: 0;
     border-radius: 8px;
@@ -178,15 +164,13 @@ button {
     cursor: pointer;
 
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
     gap: 5px;
 }
 
 .menu-toggle span {
-    display: block;
-
     width: 23px;
     height: 2px;
 
@@ -219,7 +203,6 @@ button {
 .hero {
     position: relative;
 
-    min-height: 100vh;
     min-height: 100svh;
 
     display: flex;
@@ -229,12 +212,13 @@ button {
     overflow: hidden;
 
     background-image: url("images/hero.jpg");
-
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 
     color: #fff;
+
+    isolation: isolate;
 }
 
 .hero::before {
@@ -246,38 +230,30 @@ button {
     background:
         linear-gradient(
             90deg,
-            rgba(0, 0, 0, 0.62),
-            rgba(0, 0, 0, 0.34),
-            rgba(0, 0, 0, 0.16)
+            rgba(0,0,0,0.62),
+            rgba(0,0,0,0.32),
+            rgba(0,0,0,0.18)
         );
 
-    z-index: 1;
+    z-index: -1;
 }
 
 .hero-content {
-    position: relative;
-
-    z-index: 2;
-
     width: 100%;
     max-width: 900px;
 
-    margin: 0 auto;
+    padding: 90px 6% 40px;
 
-    padding:
-        100px 6% 60px;
-
-    text-align: left;
+    text-align: center;
 }
 
 .eyebrow {
     margin-bottom: 18px;
 
     font-size: 13px;
+    font-weight: 600;
 
     letter-spacing: 3px;
-
-    font-weight: 600;
 }
 
 .hero h1 {
@@ -287,19 +263,17 @@ button {
 
     line-height: 1.2;
 
-    font-weight: 700;
-
     letter-spacing: 2px;
 }
 
 .hero-description {
-    max-width: 560px;
+    max-width: 580px;
+
+    margin: 0 auto;
 
     font-size: 18px;
 
     line-height: 2;
-
-    opacity: 0.95;
 }
 
 
@@ -309,7 +283,6 @@ button {
 
 .features {
     display: grid;
-
     grid-template-columns: repeat(4, 1fr);
 
     background: #fff;
@@ -334,11 +307,11 @@ button {
 
     margin-bottom: 12px;
 
+    color: #8b7655;
+
     font-size: 13px;
 
     letter-spacing: 2px;
-
-    color: #8b7655;
 }
 
 .feature h3 {
@@ -348,14 +321,14 @@ button {
 }
 
 .feature p {
-    font-size: 14px;
-
     color: #777064;
+
+    font-size: 14px;
 }
 
 
 /* =========================
-   Section Heading
+   Section
 ========================= */
 
 .section-heading {
@@ -369,15 +342,15 @@ button {
 .section-heading h2 {
     margin-bottom: 20px;
 
-    font-size: clamp(32px, 4vw, 48px);
+    font-size: clamp(32px,4vw,48px);
 
     line-height: 1.3;
 }
 
 .section-heading p {
-    font-size: 16px;
-
     color: #716b61;
+
+    font-size: 16px;
 }
 
 
@@ -404,8 +377,7 @@ button {
 
     background: #e8e3d8;
 
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
 
     touch-action: pan-y;
 }
@@ -415,17 +387,15 @@ button {
 
     width: 100%;
 
-    transform: translate3d(-100%, 0, 0);
-
-    will-change: transform;
+    transform: translate3d(-100%,0,0);
 
     transition: transform 0.45s ease;
+
+    will-change: transform;
 }
 
 .tree-slide {
     flex: 0 0 100%;
-
-    min-width: 100%;
 
     aspect-ratio: 1 / 1;
 
@@ -441,48 +411,30 @@ button {
     object-fit: cover;
 }
 
-
-/* =========================
-   Slider Buttons
-========================= */
-
-.slider-button,
-.review-button {
+.slider-button {
     position: absolute;
 
     top: 50%;
 
-    transform: translateY(-50%);
-
     z-index: 10;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 48px;
+    height: 48px;
+
+    transform: translateY(-50%);
 
     border: 0;
     border-radius: 50%;
 
-    background: rgba(47, 42, 34, 0.78);
+    background: rgba(47,42,34,0.78);
 
     color: #fff;
 
-    cursor: pointer;
-
-    -webkit-tap-highlight-color: transparent;
-}
-
-.slider-button {
-    width: 48px;
-    height: 48px;
-
     font-size: 34px;
-}
 
-.slider-button:hover,
-.review-button:hover {
-    background: #c4a979;
-    color: #28241e;
+    line-height: 1;
+
+    cursor: pointer;
 }
 
 .slider-prev {
@@ -493,13 +445,7 @@ button {
     right: 18px;
 }
 
-
-/* =========================
-   Slider Dots
-========================= */
-
-.slider-dots,
-.review-dots {
+.slider-dots {
     display: flex;
 
     justify-content: center;
@@ -509,8 +455,7 @@ button {
     margin-top: 25px;
 }
 
-.slider-dot,
-.review-dot {
+.slider-dot {
     width: 9px;
     height: 9px;
 
@@ -524,8 +469,7 @@ button {
     cursor: pointer;
 }
 
-.slider-dot.active,
-.review-dot.active {
+.slider-dot.active {
     width: 28px;
 
     border-radius: 10px;
@@ -567,11 +511,11 @@ button {
 .video-content h2 {
     margin-bottom: 18px;
 
-    font-size: clamp(32px, 4vw, 48px);
+    font-size: clamp(32px,4vw,48px);
 }
 
 .video-content p:last-child {
-    color: rgba(255, 255, 255, 0.72);
+    color: rgba(255,255,255,0.72);
 
     font-size: 15px;
 }
@@ -587,9 +531,6 @@ button {
     border-radius: 14px;
 
     background: #000;
-
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.25);
 }
 
 .video-placeholder video {
@@ -597,8 +538,6 @@ button {
 
     width: 100%;
     height: auto;
-
-    max-height: 600px;
 
     background: #000;
 }
@@ -617,7 +556,7 @@ button {
 .product-grid {
     display: grid;
 
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2,1fr);
 
     gap: 24px;
 
@@ -653,7 +592,8 @@ button {
     object-fit: cover;
 }
 
-.section-cta {
+.section-cta,
+.shipping-cta {
     display: flex;
 
     justify-content: center;
@@ -663,6 +603,7 @@ button {
 
 .secondary-cta {
     display: inline-flex;
+
     align-items: center;
     justify-content: center;
 
@@ -678,13 +619,108 @@ button {
 
     font-size: 16px;
     font-weight: 700;
-
-    box-shadow:
-        0 8px 22px rgba(37, 211, 102, 0.25);
 }
 
-.secondary-cta:hover {
-    background: #128c7e;
+
+/* =========================
+   Shipping
+========================= */
+
+.shipping-section {
+    padding: 100px 7%;
+
+    background: #f7f5ef;
+}
+
+.shipping-eyebrow {
+    margin-bottom: 12px !important;
+
+    color: #8b7655 !important;
+
+    font-size: 12px !important;
+
+    letter-spacing: 3px;
+}
+
+.shipping-content {
+    display: grid;
+
+    grid-template-columns: 1.1fr 0.9fr;
+
+    gap: 55px;
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    align-items: center;
+}
+
+.shipping-image {
+    overflow: hidden;
+
+    border-radius: 14px;
+
+    background: #e8e3d8;
+
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+.shipping-image img {
+    width: 100%;
+    height: auto;
+
+    aspect-ratio: 3 / 2;
+
+    object-fit: cover;
+}
+
+.shipping-info {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 28px;
+}
+
+.shipping-item {
+    display: flex;
+
+    gap: 18px;
+
+    padding-bottom: 24px;
+
+    border-bottom: 1px solid #ded8cc;
+}
+
+.shipping-item:last-child {
+    padding-bottom: 0;
+
+    border-bottom: 0;
+}
+
+.shipping-number {
+    flex-shrink: 0;
+
+    color: #8b7655;
+
+    font-size: 13px;
+
+    letter-spacing: 2px;
+}
+
+.shipping-item h3 {
+    margin-bottom: 6px;
+
+    font-size: 19px;
+}
+
+.shipping-item p {
+    color: #716b61;
+
+    font-size: 14px;
+
+    line-height: 1.8;
 }
 
 
@@ -711,8 +747,7 @@ button {
 
     background: #fff;
 
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
 
     touch-action: pan-y;
 }
@@ -722,22 +757,20 @@ button {
 
     width: 100%;
 
-    transform: translate3d(-100%, 0, 0);
-
-    will-change: transform;
+    transform: translate3d(-100%,0,0);
 
     transition: transform 0.45s ease;
+
+    will-change: transform;
 }
 
 .review-slide {
     flex: 0 0 100%;
 
-    min-width: 100%;
-
     display: flex;
 
-    align-items: center;
     justify-content: center;
+    align-items: center;
 
     background: #fff;
 }
@@ -746,17 +779,33 @@ button {
     display: block;
 
     width: 100%;
-
     max-height: 700px;
 
     object-fit: contain;
 }
 
 .review-button {
+    position: absolute;
+
+    top: 50%;
+
+    z-index: 10;
+
     width: 45px;
     height: 45px;
 
+    transform: translateY(-50%);
+
+    border: 0;
+    border-radius: 50%;
+
+    background: rgba(47,42,34,0.78);
+
+    color: #fff;
+
     font-size: 30px;
+
+    cursor: pointer;
 }
 
 .review-prev {
@@ -765,6 +814,38 @@ button {
 
 .review-next {
     right: 15px;
+}
+
+.review-dots {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 22px;
+}
+
+.review-dot {
+    width: 9px;
+    height: 9px;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: #cfc7b8;
+
+    cursor: pointer;
+}
+
+.review-dot.active {
+    width: 28px;
+
+    border-radius: 10px;
+
+    background: #8b7655;
 }
 
 
@@ -801,17 +882,18 @@ button {
 .contact-content h2 {
     margin-bottom: 20px;
 
-    font-size: clamp(34px, 4vw, 52px);
+    font-size: clamp(34px,4vw,52px);
 }
 
 .contact-content p {
     margin-bottom: 35px;
 
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255,255,255,0.75);
 }
 
 .whatsapp-button {
     display: inline-flex;
+
     align-items: center;
     justify-content: center;
 
@@ -828,13 +910,6 @@ button {
 
     font-size: 19px;
     font-weight: 700;
-
-    box-shadow:
-        0 10px 30px rgba(37, 211, 102, 0.3);
-}
-
-.whatsapp-button:hover {
-    background: #128c7e;
 }
 
 
@@ -847,7 +922,7 @@ button {
 
     background: #1d1a16;
 
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255,255,255,0.7);
 
     text-align: center;
 }
@@ -858,6 +933,7 @@ button {
     color: #fff;
 
     font-size: 20px;
+
     font-weight: 700;
 }
 
@@ -865,8 +941,6 @@ button {
     display: flex;
 
     justify-content: center;
-
-    flex-wrap: wrap;
 
     gap: 25px;
 
@@ -877,14 +951,10 @@ button {
     font-size: 13px;
 }
 
-.footer-links a:hover {
-    color: #c4a979;
-}
-
 .footer p {
-    font-size: 12px;
+    color: rgba(255,255,255,0.45);
 
-    color: rgba(255, 255, 255, 0.45);
+    font-size: 12px;
 }
 
 
@@ -899,7 +969,7 @@ button {
     }
 
     .nav {
-        gap: 18px;
+        gap: 16px;
         margin-right: 18px;
     }
 
@@ -908,16 +978,22 @@ button {
     }
 
     .header-button {
-        padding: 9px 18px;
+        padding: 9px 17px;
         font-size: 13px;
     }
 
     .features {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2,1fr);
     }
 
     .feature:nth-child(2) {
         border-right: 0;
+    }
+
+    .shipping-content {
+        grid-template-columns: 1fr;
+
+        max-width: 800px;
     }
 }
 
@@ -940,12 +1016,11 @@ button {
         min-height: 64px;
 
         padding: 10px 4%;
-
-        background: rgba(47, 42, 34, 0.98);
     }
 
     .logo {
         font-size: 17px;
+
         letter-spacing: 1px;
     }
 
@@ -958,27 +1033,16 @@ button {
         width: 100%;
 
         display: flex;
-
         flex-direction: column;
-
-        align-items: stretch;
 
         gap: 0;
 
         margin: 0;
-
         padding: 8px 0;
 
-        background: #2f2a22;
-
-        border-top:
-            1px solid rgba(255, 255, 255, 0.08);
-
-        box-shadow:
-            0 12px 25px rgba(0, 0, 0, 0.18);
+        background: rgba(47,42,34,0.98);
 
         opacity: 0;
-
         visibility: hidden;
 
         transform: translateY(-8px);
@@ -986,9 +1050,9 @@ button {
         pointer-events: none;
 
         transition:
-            opacity 0.18s ease,
-            transform 0.18s ease,
-            visibility 0.18s ease;
+            opacity 0.2s ease,
+            transform 0.2s ease,
+            visibility 0.2s ease;
     }
 
     .nav.mobile-open {
@@ -1010,12 +1074,7 @@ button {
 
         font-size: 15px;
 
-        border-bottom:
-            1px solid rgba(255, 255, 255, 0.07);
-    }
-
-    .nav a:last-child {
-        border-bottom: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
     }
 
     .nav a::after {
@@ -1025,28 +1084,20 @@ button {
     .header-button {
         min-height: 40px;
 
-        padding: 8px 15px;
-
-        border-radius: 24px;
+        padding: 8px 14px;
 
         font-size: 12px;
     }
 
     .menu-toggle {
         display: flex;
-
-        margin-left: 8px;
     }
 
 
     /* Hero */
 
     .hero {
-        min-height: 100vh;
         min-height: 100svh;
-
-        align-items: center;
-        justify-content: center;
 
         background-position: center center;
     }
@@ -1055,20 +1106,16 @@ button {
         background:
             linear-gradient(
                 180deg,
-                rgba(0, 0, 0, 0.34),
-                rgba(0, 0, 0, 0.62)
+                rgba(0,0,0,0.45),
+                rgba(0,0,0,0.58)
             );
     }
 
     .hero-content {
-        width: 100%;
-
-        max-width: 700px;
-
-        margin: 0 auto;
+        max-width: 100%;
 
         padding:
-            90px 6% 50px;
+            90px 7% 40px;
 
         text-align: center;
     }
@@ -1084,18 +1131,14 @@ button {
     .hero h1 {
         margin-bottom: 20px;
 
-        font-size: 36px;
+        font-size: 38px;
 
-        line-height: 1.3;
+        line-height: 1.25;
 
         letter-spacing: 1px;
     }
 
     .hero-description {
-        max-width: 500px;
-
-        margin: 0 auto;
-
         font-size: 15px;
 
         line-height: 1.8;
@@ -1127,6 +1170,7 @@ button {
 
     .feature p {
         font-size: 12px;
+
         line-height: 1.6;
     }
 
@@ -1139,6 +1183,7 @@ button {
 
     .trees-section,
     .products-section,
+    .shipping-section,
     .reviews-section {
         padding: 70px 5%;
     }
@@ -1153,6 +1198,7 @@ button {
 
     .section-heading p {
         font-size: 14px;
+
         line-height: 1.8;
     }
 
@@ -1199,16 +1245,12 @@ button {
 
     .video-content p:last-child {
         font-size: 14px;
+
         line-height: 1.8;
     }
 
     .video-placeholder {
         border-radius: 10px;
-    }
-
-    .video-placeholder video {
-        width: 100%;
-        max-height: none;
     }
 
 
@@ -1218,15 +1260,14 @@ button {
         grid-template-columns: 1fr 1fr;
 
         gap: 12px;
-
-        width: 100%;
     }
 
     .product-card {
         border-radius: 10px;
     }
 
-    .section-cta {
+    .section-cta,
+    .shipping-cta {
         margin-top: 30px;
     }
 
@@ -1234,8 +1275,25 @@ button {
         width: 100%;
 
         min-height: 56px;
+    }
 
-        font-size: 16px;
+
+    /* Shipping */
+
+    .shipping-content {
+        gap: 30px;
+    }
+
+    .shipping-image {
+        border-radius: 10px;
+    }
+
+    .shipping-item h3 {
+        font-size: 17px;
+    }
+
+    .shipping-item p {
+        font-size: 13px;
     }
 
 
@@ -1273,6 +1331,7 @@ button {
 
     .contact-content p {
         font-size: 14px;
+
         line-height: 1.8;
     }
 
@@ -1296,6 +1355,8 @@ button {
     }
 
     .footer-links {
+        flex-wrap: wrap;
+
         gap: 12px 18px;
     }
 
@@ -1306,7 +1367,7 @@ button {
 
 
 /* =========================
-   Small Mobile
+   Small phones
 ========================= */
 
 @media (max-width: 380px) {
@@ -1316,12 +1377,13 @@ button {
     }
 
     .header-button {
-        padding: 7px 12px;
+        padding: 7px 11px;
+
         font-size: 11px;
     }
 
     .hero h1 {
-        font-size: 32px;
+        font-size: 34px;
     }
 
     .hero-description {
@@ -1347,7 +1409,7 @@ button {
 
 
 /* =========================
-   Reduced Motion
+   Reduce motion
 ========================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1362,6 +1424,5 @@ button {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
     }
 }

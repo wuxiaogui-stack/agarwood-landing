@@ -7,14 +7,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const menuToggle = document.getElementById("menuToggle");
     const mainNav = document.getElementById("mainNav");
 
-    function closeMobileMenu() {
+    function closeMenu() {
 
         if (!menuToggle || !mainNav) {
             return;
         }
 
         mainNav.classList.remove("mobile-open");
-
         menuToggle.classList.remove("active");
 
         menuToggle.setAttribute(
@@ -23,24 +22,23 @@ document.addEventListener("DOMContentLoaded", function () {
         );
     }
 
-
     if (menuToggle && mainNav) {
 
         menuToggle.addEventListener("click", function (event) {
 
             event.stopPropagation();
 
-            const isOpen =
+            const open =
                 mainNav.classList.toggle("mobile-open");
 
             menuToggle.classList.toggle(
                 "active",
-                isOpen
+                open
             );
 
             menuToggle.setAttribute(
                 "aria-expanded",
-                isOpen ? "true" : "false"
+                open ? "true" : "false"
             );
         });
 
@@ -48,7 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
         mainNav.querySelectorAll("a").forEach(function (link) {
 
             link.addEventListener("click", function () {
-                closeMobileMenu();
+
+                closeMenu();
+
             });
 
         });
@@ -60,11 +60,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 !mainNav.contains(event.target) &&
                 !menuToggle.contains(event.target)
             ) {
-                closeMobileMenu();
+                closeMenu();
             }
 
         });
-
     }
 
 
@@ -72,71 +71,63 @@ document.addEventListener("DOMContentLoaded", function () {
        无限循环轮播
     ========================= */
 
-    function createInfiniteSlider(options) {
+    function createInfiniteSlider(config) {
+
+        const slider =
+            document.querySelector(config.slider);
 
         const track =
-            document.querySelector(options.track);
+            document.querySelector(config.track);
 
-        const slides =
-            Array.from(
-                document.querySelectorAll(options.slide)
-            );
+        const prev =
+            document.querySelector(config.prev);
 
-        const prevButton =
-            document.querySelector(options.prev);
-
-        const nextButton =
-            document.querySelector(options.next);
+        const next =
+            document.querySelector(config.next);
 
         const dots =
             Array.from(
-                document.querySelectorAll(options.dot)
+                document.querySelectorAll(config.dot)
+            );
+
+        if (!slider || !track) {
+            return;
+        }
+
+
+        const slides =
+            Array.from(
+                track.children
             );
 
 
-        if (
-            !track ||
-            slides.length === 0
-        ) {
+        if (slides.length <= 1) {
             return;
         }
 
 
-        /* =========================
-           单张图片
-        ========================= */
-
-        if (slides.length === 1) {
-
-            if (prevButton) {
-                prevButton.style.display = "none";
-            }
-
-            if (nextButton) {
-                nextButton.style.display = "none";
-            }
-
-            dots.forEach(function (dot) {
-                dot.style.display = "none";
-            });
-
-            return;
-        }
+        const total =
+            slides.length;
 
 
-        /* =========================
-           创建首尾克隆
-        ========================= */
+        /* 创建首尾克隆 */
 
         const firstClone =
             slides[0].cloneNode(true);
 
         const lastClone =
-            slides[slides.length - 1].cloneNode(true);
+            slides[total - 1].cloneNode(true);
 
 
-        firstClone.classList.add("slider-clone");
-        lastClone.classList.add("slider-clone");
+        firstClone.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        lastClone.setAttribute(
+            "aria-hidden",
+            "true"
+        );
 
 
         track.insertBefore(
@@ -144,71 +135,46 @@ document.addEventListener("DOMContentLoaded", function () {
             track.firstChild
         );
 
-        track.appendChild(firstClone);
+        track.appendChild(
+            firstClone
+        );
 
 
-        const total =
-            slides.length;
+        let index = 1;
 
+        let locked = false;
 
-        let currentIndex = 1;
-
-        let isAnimating = false;
-
-
-        /* =========================
-           初始位置
-        ========================= */
-
-        track.style.transition = "none";
-
-        track.style.transform =
-            "translate3d(-100%, 0, 0)";
-
-
-        /* =========================
-           更新圆点
-        ========================= */
 
         function updateDots() {
 
-            let realIndex =
-                currentIndex - 1;
-
+            let realIndex = index - 1;
 
             if (realIndex < 0) {
                 realIndex = total - 1;
             }
-
 
             if (realIndex >= total) {
                 realIndex = 0;
             }
 
 
-            dots.forEach(function (dot, index) {
+            dots.forEach(function (dot, i) {
 
                 dot.classList.toggle(
                     "active",
-                    index === realIndex
+                    i === realIndex
                 );
 
             });
-
         }
 
 
-        /* =========================
-           移动
-        ========================= */
-
-        function moveTo(
-            index,
+        function setPosition(
+            newIndex,
             animate
         ) {
 
-            currentIndex = index;
-
+            index = newIndex;
 
             if (animate) {
 
@@ -219,13 +185,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 track.style.transition =
                     "none";
-
             }
 
 
             track.style.transform =
                 "translate3d(-" +
-                (currentIndex * 100) +
+                (index * 100) +
                 "%, 0, 0)";
 
 
@@ -233,142 +198,118 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* =========================
-           下一张
-        ========================= */
+        function nextSlide() {
 
-        function next() {
-
-            if (isAnimating) {
+            if (locked) {
                 return;
             }
 
-            isAnimating = true;
+            locked = true;
 
-            moveTo(
-                currentIndex + 1,
+            setPosition(
+                index + 1,
                 true
             );
         }
 
 
-        /* =========================
-           上一张
-        ========================= */
+        function previousSlide() {
 
-        function previous() {
-
-            if (isAnimating) {
+            if (locked) {
                 return;
             }
 
-            isAnimating = true;
+            locked = true;
 
-            moveTo(
-                currentIndex - 1,
+            setPosition(
+                index - 1,
                 true
             );
         }
 
-
-        /* =========================
-           动画结束
-        ========================= */
 
         track.addEventListener(
             "transitionend",
             function (event) {
 
                 if (
-                    event.propertyName !==
-                    "transform"
+                    event.propertyName !== "transform"
                 ) {
                     return;
                 }
 
 
-                if (
-                    currentIndex ===
-                    total + 1
-                ) {
+                if (index === total + 1) {
 
-                    moveTo(
+                    setPosition(
                         1,
                         false
                     );
 
-                }
+                } else if (index === 0) {
 
-
-                else if (
-                    currentIndex === 0
-                ) {
-
-                    moveTo(
+                    setPosition(
                         total,
                         false
                     );
-
                 }
 
 
-                isAnimating = false;
+                requestAnimationFrame(function () {
+
+                    locked = false;
+
+                });
+
+            }
+        );
+
+
+        if (next) {
+
+            next.addEventListener(
+                "click",
+                nextSlide
+            );
+
+        }
+
+
+        if (prev) {
+
+            prev.addEventListener(
+                "click",
+                previousSlide
+            );
+
+        }
+
+
+        dots.forEach(
+            function (dot, dotIndex) {
+
+                dot.addEventListener(
+                    "click",
+                    function () {
+
+                        if (locked) {
+                            return;
+                        }
+
+                        setPosition(
+                            dotIndex + 1,
+                            true
+                        );
+
+                    }
+                );
 
             }
         );
 
 
         /* =========================
-           左右按钮
-        ========================= */
-
-        if (nextButton) {
-
-            nextButton.addEventListener(
-                "click",
-                next
-            );
-
-        }
-
-
-        if (prevButton) {
-
-            prevButton.addEventListener(
-                "click",
-                previous
-            );
-
-        }
-
-
-        /* =========================
-           圆点
-        ========================= */
-
-        dots.forEach(function (dot, index) {
-
-            dot.addEventListener(
-                "click",
-                function () {
-
-                    if (isAnimating) {
-                        return;
-                    }
-
-                    moveTo(
-                        index + 1,
-                        true
-                    );
-
-                }
-            );
-
-        });
-
-
-        /* =========================
-           手机滑动
+           手机左右滑动
         ========================= */
 
         let startX = 0;
@@ -376,17 +317,16 @@ document.addEventListener("DOMContentLoaded", function () {
         let touching = false;
 
 
-        track.addEventListener(
+        slider.addEventListener(
             "touchstart",
             function (event) {
 
                 if (
                     !event.touches ||
-                    event.touches.length === 0
+                    event.touches.length !== 1
                 ) {
                     return;
                 }
-
 
                 startX =
                     event.touches[0].clientX;
@@ -403,7 +343,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        track.addEventListener(
+        slider.addEventListener(
             "touchend",
             function (event) {
 
@@ -416,7 +356,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (
                     !event.changedTouches ||
-                    event.changedTouches.length === 0
+                    event.changedTouches.length !== 1
                 ) {
                     return;
                 }
@@ -443,11 +383,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 ) {
 
                     if (deltaX < 0) {
-                        next();
-                    } else {
-                        previous();
-                    }
 
+                        nextSlide();
+
+                    } else {
+
+                        previousSlide();
+
+                    }
                 }
 
             },
@@ -457,20 +400,25 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        updateDots();
+        /* 初始位置 */
+
+        setPosition(
+            1,
+            false
+        );
 
     }
 
 
     /* =========================
-       沉香树轮播
+       沉香树与工厂轮播
     ========================= */
 
     createInfiniteSlider({
 
-        track: ".tree-track",
+        slider: ".tree-slider",
 
-        slide: ".tree-slide",
+        track: ".tree-track",
 
         prev: ".slider-prev",
 
@@ -487,9 +435,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     createInfiniteSlider({
 
-        track: ".review-track",
+        slider: ".review-slider",
 
-        slide: ".review-slide",
+        track: ".review-track",
 
         prev: ".review-prev",
 
@@ -501,69 +449,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================
-       产品图片格式兼容
+       防止菜单打开后滚动异常
     ========================= */
 
-    const productImages =
-        document.querySelectorAll(
-            ".product-image img[data-image-base]"
-        );
+    window.addEventListener(
+        "resize",
+        function () {
 
-
-    productImages.forEach(function (image) {
-
-        const base =
-            image.getAttribute(
-                "data-image-base"
-            );
-
-
-        if (!base) {
-            return;
-        }
-
-
-        const extensions = [
-            ".jpg",
-            ".jpeg",
-            ".png",
-            ".webp"
-        ];
-
-
-        let current = 0;
-
-
-        image.addEventListener(
-            "error",
-            function () {
-
-                current++;
-
-
-                if (
-                    current <
-                    extensions.length
-                ) {
-
-                    image.src =
-                        base +
-                        extensions[current];
-
-                }
-
+            if (
+                window.innerWidth > 700
+            ) {
+                closeMenu();
             }
-        );
 
-    });
-
-
-    /* =========================
-       页面准备完成
-    ========================= */
-
-    document.documentElement.classList.add(
-        "page-ready"
+        },
+        {
+            passive: true
+        }
     );
 
 });
