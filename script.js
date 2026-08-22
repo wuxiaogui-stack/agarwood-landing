@@ -1,11 +1,11 @@
-```javascript
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
        TikTok Pixel
-       基础代码已经放在 index.html
        Pixel ID:
        DA4P6OBC77UES973S3SG
+
+       基础 Pixel 代码已经放在 index.html
     ===================================================== */
 
     function trackTikTokEvent(eventName, properties = {}) {
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 console.log(
-                    "TikTok事件：",
+                    "TikTok Event:",
                     eventName,
                     properties
                 );
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
 
                 console.warn(
-                    "TikTok Pixel 尚未加载，无法发送事件：",
+                    "TikTok Pixel 尚未加载：",
                     eventName
                 );
 
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
 
             console.error(
-                "TikTok事件发送失败：",
+                "TikTok Event Error:",
                 error
             );
 
@@ -50,18 +50,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       TikTok - 页面访问
-       ViewContent
+       TikTok PageView
+       
+       index.html 基础代码本身已经执行 ttq.page()
+       这里不再次发送 PageView，避免重复统计。
     ===================================================== */
-
-    trackTikTokEvent(
-        "ViewContent",
-        {
-            content_type: "product",
-            content_name: "天然沉香"
-        }
-    );
-
 
 
     /* =====================================================
@@ -165,11 +158,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =====================================================
        通用轮播
-       保持 HTML 中原始图片顺序
-       支持 PC + 手机
+       支持：
+       PC
+       手机
+       左右按钮
+       圆点
+       手机左右滑动
+       无缝循环
+       
+       注意：
+       不改变 HTML 中图片原始顺序
     ===================================================== */
 
     function initSlider(config) {
@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         /* =================================================
-           强制加载轮播图片
+           强制加载图片
         ================================================= */
 
         slides.forEach(function (slide) {
@@ -252,21 +252,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
             img.decoding = "async";
 
+
             if (
                 img.dataset &&
                 img.dataset.src &&
-                !img.getAttribute("src")
+                (
+                    !img.getAttribute("src") ||
+                    img.getAttribute("src") === ""
+                )
             ) {
 
-                img.setAttribute(
-                    "src",
-                    img.dataset.src
-                );
+                img.src =
+                    img.dataset.src;
 
             }
 
         });
-
 
 
         /* =================================================
@@ -275,34 +276,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (slides.length === 1) {
 
+            track.style.transition =
+                "none";
+
             track.style.transform =
                 "translate3d(0,0,0)";
 
+
             if (prev) {
-                prev.style.display = "none";
+                prev.style.display =
+                    "none";
             }
 
+
             if (next) {
-                next.style.display = "none";
+                next.style.display =
+                    "none";
             }
+
 
             dots.forEach(function (dot) {
 
-                dot.style.display = "none";
+                dot.style.display =
+                    "none";
 
             });
+
 
             return;
         }
 
 
-
         /* =================================================
-           创建首尾克隆
+           创建首尾克隆图
         ================================================= */
 
         const firstClone =
             slides[0].cloneNode(true);
+
 
         const lastClone =
             slides[
@@ -313,6 +324,7 @@ document.addEventListener("DOMContentLoaded", function () {
         firstClone.classList.add(
             "slider-clone"
         );
+
 
         lastClone.classList.add(
             "slider-clone"
@@ -329,9 +341,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (img) {
 
-                img.loading = "eager";
+                img.loading =
+                    "eager";
 
-                img.decoding = "async";
+                img.decoding =
+                    "async";
 
             }
 
@@ -354,6 +368,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         /*
+         * 位置：
+         *
          * 0 = 最后一张克隆图
          * 1 = 第一张真实图片
          * 2 = 第二张真实图片
@@ -367,15 +383,25 @@ document.addEventListener("DOMContentLoaded", function () {
         let isMoving = false;
 
 
-
         /* =================================================
-           更新圆点
+           圆点
         ================================================= */
 
         function updateDots() {
 
-            const realIndex =
+            let realIndex =
                 current - 1;
+
+
+            if (realIndex < 0) {
+                realIndex =
+                    total - 1;
+            }
+
+
+            if (realIndex >= total) {
+                realIndex = 0;
+            }
 
 
             dots.forEach(
@@ -395,26 +421,18 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-
         /* =================================================
-           设置轮播位置
+           设置位置
         ================================================= */
 
         function setPosition(
             animated
         ) {
 
-            if (animated) {
-
-                track.style.transition =
-                    "transform 0.45s ease";
-
-            } else {
-
-                track.style.transition =
-                    "none";
-
-            }
+            track.style.transition =
+                animated
+                    ? "transform 0.45s ease"
+                    : "none";
 
 
             track.style.transform =
@@ -430,9 +448,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-
         /* =================================================
-           移动轮播
+           移动
         ================================================= */
 
         function move(
@@ -443,14 +460,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+
             isMoving = true;
 
-            current += direction;
+
+            current +=
+                direction;
+
 
             setPosition(true);
 
         }
-
 
 
         /* =================================================
@@ -466,7 +486,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     event.propertyName !==
                     "transform"
                 ) {
+
                     return;
+
                 }
 
 
@@ -480,6 +502,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     setPosition(false);
 
                 }
+
 
                 else if (
                     current === 0
@@ -496,7 +519,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
         );
-
 
 
         /* =================================================
@@ -521,7 +543,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-
         /* =================================================
            下一张
         ================================================= */
@@ -544,9 +565,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-
         /* =================================================
-           圆点
+           圆点点击
         ================================================= */
 
         dots.forEach(
@@ -573,16 +593,16 @@ document.addEventListener("DOMContentLoaded", function () {
                             index + 1;
 
 
-                        setPosition(true);
-
                         isMoving = true;
+
+
+                        setPosition(true);
 
                     }
                 );
 
             }
         );
-
 
 
         /* =================================================
@@ -604,15 +624,19 @@ document.addEventListener("DOMContentLoaded", function () {
                     !event.touches ||
                     event.touches.length !== 1
                 ) {
+
                     return;
+
                 }
 
 
                 startX =
                     event.touches[0].clientX;
 
+
                 startY =
                     event.touches[0].clientY;
+
 
                 isTouching = true;
 
@@ -639,12 +663,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     !event.changedTouches ||
                     event.changedTouches.length !== 1
                 ) {
+
                     return;
+
                 }
 
 
                 const endX =
                     event.changedTouches[0].clientX;
+
 
                 const endY =
                     event.changedTouches[0].clientY;
@@ -652,6 +679,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const deltaX =
                     endX - startX;
+
 
                 const deltaY =
                     endY - startY;
@@ -662,7 +690,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     Math.abs(deltaX) <=
                     Math.abs(deltaY)
                 ) {
+
                     return;
+
                 }
 
 
@@ -683,7 +713,6 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-
         /* =================================================
            初始化
         ================================================= */
@@ -691,7 +720,6 @@ document.addEventListener("DOMContentLoaded", function () {
         setPosition(false);
 
     }
-
 
 
     /* =====================================================
@@ -724,7 +752,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-
     /* =====================================================
        客户评价轮播
     ===================================================== */
@@ -753,7 +780,6 @@ document.addEventListener("DOMContentLoaded", function () {
             ".review-dot"
 
     });
-
 
 
     /* =====================================================
@@ -906,10 +932,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        let currentGroup = null;
+        let currentGroup =
+            null;
 
-        let currentImageIndex = 0;
 
+        let currentImageIndex =
+            0;
 
 
         /* =================================================
@@ -963,7 +991,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-
         /* =================================================
            更新放大图片
         ================================================= */
@@ -975,7 +1002,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 !currentGroup.images ||
                 currentGroup.images.length === 0
             ) {
+
                 return;
+
             }
 
 
@@ -1011,6 +1040,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 }
 
+
                 if (lightboxNext) {
 
                     lightboxNext.style.display =
@@ -1027,6 +1057,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 }
 
+
                 if (lightboxNext) {
 
                     lightboxNext.style.display =
@@ -1039,9 +1070,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-
         /* =================================================
-           打开图片
+           打开 Lightbox
         ================================================= */
 
         function openLightbox(
@@ -1092,9 +1122,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-
         /* =================================================
-           关闭图片
+           关闭 Lightbox
         ================================================= */
 
         function closeLightbox() {
@@ -1140,7 +1169,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-
         /* =================================================
            上一张
         ================================================= */
@@ -1151,7 +1179,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 !currentGroup ||
                 currentGroup.images.length <= 1
             ) {
+
                 return;
+
             }
 
 
@@ -1173,7 +1203,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-
         /* =================================================
            下一张
         ================================================= */
@@ -1184,7 +1213,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 !currentGroup ||
                 currentGroup.images.length <= 1
             ) {
+
                 return;
+
             }
 
 
@@ -1196,7 +1227,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentGroup.images.length
             ) {
 
-                currentImageIndex = 0;
+                currentImageIndex =
+                    0;
 
             }
 
@@ -1204,7 +1236,6 @@ document.addEventListener("DOMContentLoaded", function () {
             updateLightboxImage();
 
         }
-
 
 
         /* =================================================
@@ -1225,6 +1256,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 event.stopPropagation();
 
+
                                 openLightbox(
                                     image
                                 );
@@ -1237,7 +1269,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
         );
-
 
 
         /* =================================================
@@ -1262,9 +1293,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-
         /* =================================================
-           放大图片上一张
+           放大图上一张
         ================================================= */
 
         if (lightboxPrev) {
@@ -1285,9 +1315,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-
         /* =================================================
-           放大图片下一张
+           放大图下一张
         ================================================= */
 
         if (lightboxNext) {
@@ -1306,7 +1335,6 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
         }
-
 
 
         /* =================================================
@@ -1336,16 +1364,20 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-
         /* =================================================
-           手机放大图片左右滑动
+           手机 Lightbox 滑动
         ================================================= */
 
-        let lightboxStartX = 0;
+        let lightboxStartX =
+            0;
 
-        let lightboxStartY = 0;
 
-        let lightboxTouching = false;
+        let lightboxStartY =
+            0;
+
+
+        let lightboxTouching =
+            false;
 
 
         lightbox.addEventListener(
@@ -1356,7 +1388,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     !event.touches ||
                     event.touches.length !== 1
                 ) {
+
                     return;
+
                 }
 
 
@@ -1368,7 +1402,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     event.touches[0].clientY;
 
 
-                lightboxTouching = true;
+                lightboxTouching =
+                    true;
 
             },
             {
@@ -1386,14 +1421,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                lightboxTouching = false;
+                lightboxTouching =
+                    false;
 
 
                 if (
                     !event.changedTouches ||
                     event.changedTouches.length !== 1
                 ) {
+
                     return;
+
                 }
 
 
@@ -1406,11 +1444,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 const deltaX =
-                    endX - lightboxStartX;
+                    endX -
+                    lightboxStartX;
 
 
                 const deltaY =
-                    endY - lightboxStartY;
+                    endY -
+                    lightboxStartY;
 
 
                 if (
@@ -1418,7 +1458,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     Math.abs(deltaX) <=
                     Math.abs(deltaY)
                 ) {
+
                     return;
+
                 }
 
 
@@ -1439,9 +1481,8 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-
         /* =================================================
-           键盘操作
+           键盘
         ================================================= */
 
         document.addEventListener(
@@ -1453,7 +1494,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         "active"
                     )
                 ) {
+
                     return;
+
                 }
 
 
@@ -1489,7 +1532,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =====================================================
        Supabase 客服系统
     ===================================================== */
@@ -1500,7 +1542,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const SUPABASE_KEY =
         "sb_publishable_SMgtLo5Zh15EWzVgTKoKHg_ci8lOFp6";
-
 
 
     /* =====================================================
@@ -1603,12 +1644,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =====================================================
        WhatsApp
     ===================================================== */
 
     async function openWhatsApp() {
+
+        /*
+         * TikTok Contact 事件
+         *
+         * 这里先记录用户点击 WhatsApp 的行为。
+         */
+
+        trackTikTokEvent(
+            "Contact",
+            {
+                contact_method:
+                    "WhatsApp"
+            }
+        );
+
 
         const customerService =
             await getNextWhatsAppNumber();
@@ -1646,21 +1701,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /*
-         * 只有在成功获得在线客服号码之后，
-         * 才发送 TikTok Contact 事件。
-         */
-
-        trackTikTokEvent(
-            "Contact",
-            {
-                content_type: "product",
-                content_name: "天然沉香",
-                contact_method: "WhatsApp"
-            }
-        );
-
-
         const whatsappUrl =
             "https://wa.me/" +
             phone;
@@ -1668,8 +1708,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log(
             "正在打开在线客服：",
-            customerService.name || "",
+            customerService.name ||
+            "",
             phone
+        );
+
+
+        /*
+         * TikTok Lead 事件
+         *
+         * 用户已经点击联系客服，
+         * 可以作为潜在客户转化。
+         */
+
+        trackTikTokEvent(
+            "Lead",
+            {
+                contact_method:
+                    "WhatsApp"
+            }
         );
 
 
@@ -1680,7 +1737,6 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
     }
-
 
 
     /* =====================================================
@@ -1762,9 +1818,8 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
-
     /* =====================================================
-       提供给 HTML onclick 使用
+       提供给 HTML onclick
     ===================================================== */
 
     window.openWhatsApp =
@@ -1772,4 +1827,3 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 });
-```
