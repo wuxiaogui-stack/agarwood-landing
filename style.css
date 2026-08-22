@@ -1755,4 +1755,488 @@ button {
         transition-duration:
             0.01ms !important;
     }
+}/* =========================
+   Arabic RTL Support
+========================= */
+
+html[dir="rtl"] {
+    direction: rtl;
+}
+
+html[dir="rtl"] body {
+    direction: rtl;
+    text-align: right;
+}
+
+
+/* =========================
+   Header RTL
+========================= */
+
+html[dir="rtl"] .header {
+    direction: rtl;
+}
+
+html[dir="rtl"] .nav {
+    margin-left: 30px;
+    margin-right: auto;
+}
+
+html[dir="rtl"] .nav a::after {
+    left: auto;
+    right: 0;
+}
+
+html[dir="rtl"] .header-button {
+    margin-left: 0;
+}
+
+html[dir="rtl"] .menu-toggle {
+    margin-left: 0;
+}
+
+
+/* =========================
+   Hero RTL
+========================= */
+
+html[dir="rtl"] .hero {
+    direction: rtl;
+}
+
+html[dir="rtl"] .hero::before {
+    background:
+        linear-gradient(
+            270deg,
+            rgba(0, 0, 0, 0.64),
+            rgba(0, 0, 0, 0.34),
+            rgba(0, 0, 0, 0.12)
+        );
+}
+
+html[dir="rtl"] .hero-content {
+    margin-left: 8%;
+    margin-right: 8%;
+}
+
+html[dir="rtl"] .hero h1,
+html[dir="rtl"] .hero-description {
+    text-align: right;
+}
+
+
+/* =========================
+   Features RTL
+========================= */
+
+html[dir="rtl"] .feature {
+    border-right: 0;
+    border-left: 1px solid #e5e1d8;
+}
+
+html[dir="rtl"] .feature:last-child {
+    border-left: 0;
+}
+
+
+/* =========================
+   Section Heading RTL
+========================= */
+
+html[dir="rtl"] .section-heading {
+    direction: rtl;
+}
+
+
+/* =========================
+   Tree Slider RTL
+========================= */
+
+html[dir="rtl"] .tree-slider {
+    direction: ltr;
+}
+
+html[dir="rtl"] .tree-track {
+    direction: ltr;
+}
+
+html[dir="rtl"] .slider-prev {
+    left: auto;
+    right: 18px;
+}
+
+html[dir="rtl"] .slider-next {
+    right: auto;
+    left: 18px;
+}
+
+
+/* =========================
+   Products RTL
+========================= */
+
+html[dir="rtl"] .product-grid {
+    direction: rtl;
+}
+
+html[dir="rtl"] .product-card {
+    direction: rtl;
+}
+
+
+/* =========================
+   Shipping RTL
+========================= */
+
+html[dir="rtl"] .shipping-content {
+    direction: rtl;
+}
+
+html[dir="rtl"] .shipping-info {
+    direction: rtl;
+}
+
+html[dir="rtl"] .shipping-item {
+    text-align: right;
+}
+
+html[dir="rtl"] .shipping-promotion {
+    direction: rtl;
+}
+
+html[dir="rtl"] .shipping-promotion-text {
+    text-align: right;
+}
+
+
+/* =========================
+   Reviews RTL
+========================= */
+
+html[dir="rtl"] .review-slider {
+    direction: ltr;
+}
+
+html[dir="rtl"] .review-track {
+    direction: ltr;
+}
+
+html[dir="rtl"] .review-prev {
+    left: auto;
+    right: 15px;
+}
+
+html[dir="rtl"] .review-next {
+    right: auto;
+    left: 15px;
+}
+
+
+/* =========================
+   Contact RTL
+========================= */
+
+html[dir="rtl"] .contact-section {
+    direction: rtl;
+}
+
+html[dir="rtl"] .contact-content {
+    direction: rtl;
+}
+
+
+/* =========================
+   Footer RTL
+========================= */
+
+html[dir="rtl"] .footer {
+    direction: rtl;
+}
+
+html[dir="rtl"] .footer-links {
+    direction: rtl;
+}
+
+
+/* =========================
+   Lightbox RTL
+========================= */
+
+html[dir="rtl"] .lightbox-prev {
+    left: auto;
+    right: 18px;
+}
+
+html[dir="rtl"] .lightbox-next {
+    right: auto;
+    left: 18px;
+}
+
+
+/* =========================
+   Arabic Font
+========================= */
+
+html[dir="rtl"] body {
+    font-family:
+        "Tahoma",
+        "Arial",
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* =========================
+   Arabic Mobile
+========================= */
+
+@media (max-width: 700px) {
+
+    html[dir="rtl"] {
+        scroll-padding-top: 64px;
+    }
+
+    html[dir="rtl"] body {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+
+    /* Header */
+
+    html[dir="rtl"] .header {
+        direction: rtl;
+        padding: 10px 4%;
+    }
+
+    html[dir="rtl"] .logo {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .header-button {
+        margin-right: auto;
+        margin-left: 0;
+    }
+
+    html[dir="rtl"] .menu-toggle {
+        margin-right: 8px;
+        margin-left: 0;
+    }
+
+
+    /* Mobile Navigation */
+
+    html[dir="rtl"] .nav {
+        top: 64px;
+        left: 0;
+        right: 0;
+
+        width: 100%;
+
+        margin: 0;
+
+        direction: rtl;
+
+        text-align: right;
+    }
+
+    html[dir="rtl"] .nav a {
+        padding:
+            14px 6%;
+
+        text-align: right;
+    }
+
+
+    /* Hero */
+
+    html[dir="rtl"] .hero {
+        direction: rtl;
+        background-position: center center;
+    }
+
+    html[dir="rtl"] .hero::before {
+        background:
+            linear-gradient(
+                270deg,
+                rgba(0, 0, 0, 0.68),
+                rgba(0, 0, 0, 0.38)
+            );
+    }
+
+    html[dir="rtl"] .hero-content {
+        margin: 0;
+
+        padding:
+            80px 6% 40px;
+
+        text-align: right;
+    }
+
+    html[dir="rtl"] .eyebrow {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .hero h1 {
+        text-align: right;
+
+        line-height: 1.5;
+
+        letter-spacing: 0;
+    }
+
+    html[dir="rtl"] .hero-description {
+        text-align: right;
+
+        line-height: 2;
+    }
+
+
+    /* Features */
+
+    html[dir="rtl"] .features {
+        direction: rtl;
+    }
+
+    html[dir="rtl"] .feature {
+        border-left:
+            1px solid #e5e1d8;
+
+        border-right: 0;
+    }
+
+    html[dir="rtl"] .feature:nth-child(2) {
+        border-left: 0;
+    }
+
+    html[dir="rtl"] .feature:nth-child(3) {
+        border-left:
+            1px solid #e5e1d8;
+
+        border-right: 0;
+    }
+
+    html[dir="rtl"] .feature:nth-child(3),
+    html[dir="rtl"] .feature:nth-child(4) {
+        border-top:
+            1px solid #e5e1d8;
+    }
+
+
+    /* Sections */
+
+    html[dir="rtl"] .section-heading {
+        text-align: center;
+    }
+
+
+    /* Tree Slider */
+
+    html[dir="rtl"] .tree-slider {
+        direction: ltr;
+    }
+
+    html[dir="rtl"] .slider-prev {
+        left: auto;
+        right: 10px;
+    }
+
+    html[dir="rtl"] .slider-next {
+        right: auto;
+        left: 10px;
+    }
+
+
+    /* Products */
+
+    html[dir="rtl"] .product-grid {
+        direction: rtl;
+    }
+
+
+    /* Shipping */
+
+    html[dir="rtl"] .shipping-content {
+        direction: rtl;
+    }
+
+    html[dir="rtl"] .shipping-item {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .shipping-promotion-text {
+        text-align: right;
+    }
+
+
+    /* Reviews */
+
+    html[dir="rtl"] .review-slider {
+        direction: ltr;
+    }
+
+    html[dir="rtl"] .review-prev {
+        left: auto;
+        right: 8px;
+    }
+
+    html[dir="rtl"] .review-next {
+        right: auto;
+        left: 8px;
+    }
+
+
+    /* Contact */
+
+    html[dir="rtl"] .contact-content {
+        text-align: center;
+    }
+
+
+    /* Footer */
+
+    html[dir="rtl"] .footer {
+        direction: rtl;
+        text-align: center;
+    }
+
+    html[dir="rtl"] .footer-links {
+        direction: rtl;
+    }
+
+
+    /* Lightbox */
+
+    html[dir="rtl"] .lightbox-prev {
+        left: auto;
+        right: 5px;
+    }
+
+    html[dir="rtl"] .lightbox-next {
+        right: auto;
+        left: 5px;
+    }
+}
+
+
+/* =========================
+   Small Arabic Mobile
+========================= */
+
+@media (max-width: 380px) {
+
+    html[dir="rtl"] .hero h1 {
+        font-size: 33px;
+        line-height: 1.5;
+    }
+
+    html[dir="rtl"] .hero-description {
+        font-size: 14px;
+        line-height: 2;
+    }
+
+    html[dir="rtl"] .logo {
+        font-size: 15px;
+    }
+
 }
