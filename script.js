@@ -1,8 +1,8 @@
-document.addEventListener("DOMContentLoaded", function () {
+;window.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
        TikTok Pixel + Events API
-       
+
        Pixel ID:
        DA4P6OBC77UES973S3SG
 
@@ -64,9 +64,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (key === name) {
 
-                return decodeURIComponent(
-                    value || ""
-                );
+                try {
+
+                    return decodeURIComponent(
+                        value || ""
+                    );
+
+                } catch (error) {
+
+                    return value || "";
+
+                }
 
             }
 
@@ -78,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       获取 ttclid
+       获取 TikTok Click ID
     ===================================================== */
 
     function getTikTokClickId() {
@@ -238,9 +246,9 @@ document.addEventListener("DOMContentLoaded", function () {
             };
 
 
-            /*
-             * 只有存在时才加入这些参数
-             */
+            /* =============================================
+               TikTok Click ID
+            ============================================= */
 
             if (ttclid) {
 
@@ -250,6 +258,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
+            /* =============================================
+               TikTok Browser ID
+            ============================================= */
+
             if (ttp) {
 
                 serverEvent.user.ttp =
@@ -258,11 +270,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            /*
-             * 使用 fetch + keepalive
-             *
-             * 不阻塞 WhatsApp 跳转
-             */
+            /* =============================================
+               发送 Events API
+
+               keepalive:
+               防止用户点击 WhatsApp 后页面跳转，
+               导致请求被浏览器取消。
+            ============================================= */
 
             fetch(
                 TIKTOK_EVENTS_API,
@@ -450,6 +464,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
        通用轮播
+       
+       支持：
+       PC
+       手机
+       左右按钮
+       圆点
+       手机左右滑动
+       无缝循环
     ===================================================== */
 
     function initSlider(config) {
@@ -666,6 +688,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     img.loading =
                         "eager";
+
 
                     img.decoding =
                         "async";
@@ -1082,7 +1105,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       工厂 / 沉香树轮播
+       沉香树轮播
     ===================================================== */
 
     initSlider({
@@ -1185,7 +1208,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         /* =================================================
-           工厂图片
+           沉香树图片
         ================================================= */
 
         const treeImages =
@@ -2037,10 +2060,7 @@ document.addEventListener("DOMContentLoaded", function () {
     async function openWhatsApp() {
 
         /*
-         * 发送 Contact 事件
-         *
-         * 注意：
-         * 这里只发送 Contact
+         * 只发送 Contact
          * 不再发送 Lead
          */
 
