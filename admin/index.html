@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="theme-color"
+        content="#2f2a22">
+
+    <title>客服号码池 · 管理后台</title>
+
+    <meta
+        name="robots"
+        content="noindex,nofollow">
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+</head>
+
+
+<body>
+
+    <main class="admin-page">
+
+        <section class="login-card">
+
+            <div class="login-logo">
+                ROYAL KYNAM
+            </div>
+
+            <p class="login-eyebrow">
+                WHATSAPP SERVICE CENTER
+            </p>
+
+            <h1>
+                客服号码池
+            </h1>
+
+            <p class="login-description">
+                内部管理后台
+            </p>
+
+
+            <form
+                id="loginForm"
+                class="login-form"
+                autocomplete="on">
+
+
+                <div class="form-group">
+
+                    <label for="username">
+                        管理员账号
+                    </label>
+
+                    <input
+                        type="email"
+                        id="username"
+                        name="username"
+                        placeholder="请输入管理员邮箱"
+                        autocomplete="username"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        管理员密码
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="请输入管理员密码"
+                        autocomplete="current-password"
+                        required>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-button"
+                    id="loginButton">
+
+                    登录后台
+
+                </button>
+
+
+                <p
+                    id="loginMessage"
+                    class="login-message"
+                    aria-live="polite">
+                </p>
+
+            </form>
+
+
+            <div class="login-security">
+
+                <span class="security-dot"></span>
+
+                <span>
+                    安全连接 · 内部管理系统
+                </span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+</body>
+
+</html>

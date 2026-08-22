@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="theme-color"
+        content="#2f2a22">
+
+    <title>客服号码池 · 管理后台</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+</head>
+
+<body>
+
+    <main class="admin-page">
+
+        <section class="dashboard-card">
+
+            <div class="login-logo">
+                ROYAL KYNAM
+            </div>
+
+            <p class="login-eyebrow">
+                WHATSAPP SERVICE CENTER
+            </p>
+
+            <h1>
+                客服号码池
+            </h1>
+
+            <p class="login-description">
+                WhatsApp 客服号码管理
+            </p>
+
+
+            <!-- 当前登录账号 -->
+
+            <div class="dashboard-top">
+
+                <div>
+
+                    <span class="dashboard-label">
+                        当前登录账号
+                    </span>
+
+                    <strong id="userEmail">
+                        正在读取...
+                    </strong>
+
+                </div>
+
+
+                <button
+                    id="logoutButton"
+                    class="logout-button"
+                    type="button">
+
+                    退出登录
+
+                </button>
+
+            </div>
+
+
+            <!-- 添加客服号码 -->
+
+            <div class="number-form-card">
+
+                <h2>
+                    添加客服号码
+                </h2>
+
+
+                <form id="numberForm">
+
+                    <div class="form-group">
+
+                        <label for="name">
+                            客服名称
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            placeholder="例如：China客服"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="phone">
+                            WhatsApp号码
+                        </label>
+
+                        <input
+                            type="text"
+                            id="phone"
+                            placeholder="例如：8613800138000"
+                            inputmode="numeric"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="country">
+                            国家 / 地区
+                        </label>
+
+                        <input
+                            type="text"
+                            id="country"
+                            placeholder="例如：China">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="priority">
+                            优先级
+                        </label>
+
+                        <input
+                            type="number"
+                            id="priority"
+                            value="1"
+                            min="1"
+                            max="999">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="note">
+                            备注
+                        </label>
+
+                        <input
+                            type="text"
+                            id="note"
+                            placeholder="可选">
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="login-button">
+
+                        添加客服号码
+
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- 系统消息 -->
+
+            <p
+                id="dashboardMessage"
+                class="login-message">
+            </p>
+
+
+            <!-- 客服号码列表 -->
+
+            <div class="number-list-section">
+
+                <div class="number-list-header">
+
+                    <h2>
+                        当前客服号码
+                    </h2>
+
+
+                    <button
+                        id="refreshButton"
+                        class="refresh-button"
+                        type="button">
+
+                        刷新
+
+                    </button>
+
+                </div>
+
+
+                <div id="numberList">
+
+                    <div class="loading">
+                        正在读取客服号码...
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- 安全提示 -->
+
+            <div class="login-security">
+
+                <span class="security-dot"></span>
+
+                <span>
+                    Supabase 安全认证
+                </span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Supabase -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+    <script>
+
+        /* =========================================
+           Supabase 配置
+        ========================================= */
+
+        const SUPABASE_URL =
+            "https://tvythmezaecdtqlqtwnh.supabase.co";
+
+        const SUPABASE_KEY =
+            "sb_publishable_SMgtLo5Zh15EWzVgTKoKHg_ci8lOFp6";
+
+
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
+            );
+
+
+        /* =========================================
+           页面元素
+        ========================================= */
+
+        const userEmail =
+            document.getElementById("userEmail");
+
+        const logoutButton =
+            document.getElementById("logoutButton");
+
+        const numberForm =
+            document.getElementById("numberForm");
+
+        const numberList =
+            document.getElementById("numberList");
+
+        const dashboardMessage =
+            document.getElementById(
+                "dashboardMessage"
+            );
+
+        const refreshButton =
+            document.getElementById(
+                "refreshButton"
+            );
+
+
+        /* =========================================
+           显示错误
+        ========================================= */
+
+        function showError(
+            title,
+            error
+        ) {
+
+            console.error(
+                title,
+                error
+            );
+
+            let message = title;
+
+            if (error) {
+
+                if (error.code) {
+
+                    message +=
+                        "\nCode: " +
+                        error.code;
+
+                }
+
+                if (error.message) {
+
+                    message +=
+                        "\nMessage: " +
+                        error.message;
+
+                }
+
+                if (error.details) {
+
+                    message +=
+                        "\nDetails: " +
+                        error.details;
+
+                }
+
+                if (error.hint) {
+
+                    message +=
+                        "\nHint: " +
+                        error.hint;
+
+                }
+
+            }
+
+            dashboardMessage.textContent =
+                message;
+
+        }
+
+
+        /* =========================================
+           检查登录状态
+        ========================================= */
+
+        async function checkLogin() {
+
+            try {
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient.auth.getUser();
+
+
+                if (error) {
+
+                    console.error(
+                        "读取登录状态失败：",
+                        error
+                    );
+
+                    dashboardMessage.textContent =
+                        "读取登录状态失败，请重新登录。";
+
+                    setTimeout(
+                        function () {
+
+                            window.location.href =
+                                "index.html";
+
+                        },
+                        2000
+                    );
+
+                    return false;
+
+                }
+
+
+                if (
+                    !data ||
+                    !data.user
+                ) {
+
+                    window.location.href =
+                        "index.html";
+
+                    return false;
+
+                }
+
+
+                userEmail.textContent =
+                    data.user.email || "管理员";
+
+
+                return true;
+
+            } catch (error) {
+
+                console.error(
+                    "检查登录状态异常：",
+                    error
+                );
+
+                dashboardMessage.textContent =
+                    "登录状态异常，请重新登录。";
+
+                setTimeout(
+                    function () {
+
+                        window.location.href =
+                            "index.html";
+
+                    },
+                    2000
+                );
+
+                return false;
+
+            }
+
+        }
+
+
+        /* =========================================
+           读取客服号码
+        ========================================= */
+
+        async function loadNumbers() {
+
+            numberList.innerHTML =
+                '<div class="loading">正在读取客服号码...</div>';
+
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("whatsapp_numbers")
+                    .select("*")
+                    .order(
+                        "priority",
+                        {
+                            ascending: true
+                        }
+                    )
+                    .order(
+                        "created_at",
+                        {
+                            ascending: false
+                        }
+                    );
+
+
+            if (error) {
+
+                showError(
+                    "读取客服号码失败：",
+                    error
+                );
+
+                numberList.innerHTML =
+                    '<div class="empty-message">读取失败，请查看上面的错误信息。</div>';
+
+                return;
+
+            }
+
+
+            if (
+                !data ||
+                data.length === 0
+            ) {
+
+                numberList.innerHTML =
+                    '<div class="empty-message">目前还没有客服号码。</div>';
+
+                return;
+
+            }
+
+
+            numberList.innerHTML = "";
+
+
+            data.forEach(
+                function (item) {
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "number-item";
+
+
+                    const statusText =
+                        item.is_active
+                            ? "已启用"
+                            : "已停用";
+
+
+                    const statusClass =
+                        item.is_active
+                            ? "status-active"
+                            : "status-disabled";
+
+
+                    card.innerHTML = `
+
+                        <div class="number-main">
+
+                            <div class="number-name">
+                                ${escapeHtml(item.name)}
+                            </div>
+
+                            <div class="number-phone">
+                                +${escapeHtml(item.phone)}
+                            </div>
+
+                            <div class="number-meta">
+
+                                <span>
+                                    ${escapeHtml(
+                                        item.country ||
+                                        "未设置国家"
+                                    )}
+                                </span>
+
+                                <span>
+                                    优先级：
+                                    ${item.priority}
+                                </span>
+
+                                <span class="${statusClass}">
+                                    ${statusText}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="number-actions">
+
+                            <button
+                                class="small-button"
+                                type="button"
+                                onclick="toggleNumber(
+                                    ${item.id},
+                                    ${item.is_active}
+                                )">
+
+                                ${
+                                    item.is_active
+                                        ? "停用"
+                                        : "启用"
+                                }
+
+                            </button>
+
+
+                            <button
+                                class="small-button delete-button"
+                                type="button"
+                                onclick="deleteNumber(
+                                    ${item.id}
+                                )">
+
+                                删除
+
+                            </button>
+
+                        </div>
+
+                    `;
+
+
+                    numberList.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =========================================
+           添加客服号码
+        ========================================= */
+
+        numberForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                dashboardMessage.textContent =
+                    "正在添加客服号码...";
+
+
+                const name =
+                    document.getElementById(
+                        "name"
+                    )
+                    .value
+                    .trim();
+
+
+                const phone =
+                    document.getElementById(
+                        "phone"
+                    )
+                    .value
+                    .trim()
+                    .replace(
+                        /\D/g,
+                        ""
+                    );
+
+
+                const country =
+                    document.getElementById(
+                        "country"
+                    )
+                    .value
+                    .trim();
+
+
+                const priority =
+                    parseInt(
+                        document.getElementById(
+                            "priority"
+                        ).value,
+                        10
+                    ) || 1;
+
+
+                const note =
+                    document.getElementById(
+                        "note"
+                    )
+                    .value
+                    .trim();
+
+
+                if (!name) {
+
+                    dashboardMessage.textContent =
+                        "请输入客服名称。";
+
+                    return;
+
+                }
+
+
+                if (!phone) {
+
+                    dashboardMessage.textContent =
+                        "请输入 WhatsApp 号码。";
+
+                    return;
+
+                }
+
+
+                if (
+                    phone.length < 8 ||
+                    phone.length > 15
+                ) {
+
+                    dashboardMessage.textContent =
+                        "WhatsApp号码格式不正确，请使用国际号码。";
+
+                    return;
+
+                }
+
+
+                const whatsappUrl =
+                    "https://wa.me/" +
+                    phone;
+
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient
+                        .from(
+                            "whatsapp_numbers"
+                        )
+                        .insert({
+
+                            name:
+                                name,
+
+                            phone:
+                                phone,
+
+                            country:
+                                country,
+
+                            whatsapp_url:
+                                whatsappUrl,
+
+                            is_active:
+                                true,
+
+                            priority:
+                                priority,
+
+                            note:
+                                note
+
+                        })
+                        .select();
+
+
+                if (error) {
+
+                    showError(
+                        "添加客服号码失败：",
+                        error
+                    );
+
+                    return;
+
+                }
+
+
+                console.log(
+                    "添加成功：",
+                    data
+                );
+
+
+                dashboardMessage.textContent =
+                    "客服号码添加成功。";
+
+
+                numberForm.reset();
+
+
+                document.getElementById(
+                    "priority"
+                ).value = "1";
+
+
+                await loadNumbers();
+
+            }
+        );
+
+
+        /* =========================================
+           启用 / 停用
+        ========================================= */
+
+        async function toggleNumber(
+            id,
+            currentStatus
+        ) {
+
+            dashboardMessage.textContent =
+                "正在修改号码状态...";
+
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from(
+                        "whatsapp_numbers"
+                    )
+                    .update({
+
+                        is_active:
+                            !currentStatus
+
+                    })
+                    .eq(
+                        "id",
+                        id
+                    );
+
+
+            if (error) {
+
+                showError(
+                    "修改号码状态失败：",
+                    error
+                );
+
+                return;
+
+            }
+
+
+            dashboardMessage.textContent =
+                currentStatus
+                    ? "客服号码已停用。"
+                    : "客服号码已启用。";
+
+
+            await loadNumbers();
+
+        }
+
+
+        /* =========================================
+           删除号码
+        ========================================= */
+
+        async function deleteNumber(
+            id
+        ) {
+
+            const confirmed =
+                confirm(
+                    "确定要删除这个客服号码吗？"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            dashboardMessage.textContent =
+                "正在删除客服号码...";
+
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from(
+                        "whatsapp_numbers"
+                    )
+                    .delete()
+                    .eq(
+                        "id",
+                        id
+                    );
+
+
+            if (error) {
+
+                showError(
+                    "删除客服号码失败：",
+                    error
+                );
+
+                return;
+
+            }
+
+
+            dashboardMessage.textContent =
+                "客服号码已删除。";
+
+
+            await loadNumbers();
+
+        }
+
+
+        /* =========================================
+           HTML 安全处理
+        ========================================= */
+
+        function escapeHtml(
+            value
+        ) {
+
+            return String(value)
+
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        /* =========================================
+           刷新
+        ========================================= */
+
+        refreshButton.addEventListener(
+            "click",
+            async function () {
+
+                dashboardMessage.textContent =
+                    "";
+
+                await loadNumbers();
+
+            }
+        );
+
+
+        /* =========================================
+           退出登录
+        ========================================= */
+
+        logoutButton.addEventListener(
+            "click",
+            async function () {
+
+                dashboardMessage.textContent =
+                    "正在退出登录...";
+
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .auth
+                        .signOut();
+
+
+                if (error) {
+
+                    showError(
+                        "退出登录失败：",
+                        error
+                    );
+
+                    return;
+
+                }
+
+
+                window.location.href =
+                    "index.html";
+
+            }
+        );
+
+
+        /* =========================================
+           初始化
+        ========================================= */
+
+        async function init() {
+
+            const loggedIn =
+                await checkLogin();
+
+
+            if (!loggedIn) {
+                return;
+            }
+
+
+            await loadNumbers();
+
+        }
+
+
+        init();
+
+    </script>
+
+</body>
+
+</html>

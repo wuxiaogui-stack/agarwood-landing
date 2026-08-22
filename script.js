@@ -1,111 +1,170 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+
     /* =====================================================
        手机端导航
     ===================================================== */
 
-    const menuToggle = document.getElementById("menuToggle");
-    const mainNav = document.getElementById("mainNav");
+    const menuToggle =
+        document.getElementById("menuToggle");
+
+    const mainNav =
+        document.getElementById("mainNav");
+
 
     function closeMenu() {
+
         if (!menuToggle || !mainNav) {
             return;
         }
 
-        mainNav.classList.remove("mobile-open");
-        menuToggle.classList.remove("active");
-        menuToggle.setAttribute("aria-expanded", "false");
+        mainNav.classList.remove(
+            "mobile-open"
+        );
+
+        menuToggle.classList.remove(
+            "active"
+        );
+
+        menuToggle.setAttribute(
+            "aria-expanded",
+            "false"
+        );
     }
+
 
     if (menuToggle && mainNav) {
 
-        menuToggle.addEventListener("click", function (event) {
+        menuToggle.addEventListener(
+            "click",
+            function (event) {
 
-            event.stopPropagation();
+                event.stopPropagation();
 
-            const isOpen =
-                mainNav.classList.toggle("mobile-open");
+                const isOpen =
+                    mainNav.classList.toggle(
+                        "mobile-open"
+                    );
 
-            menuToggle.classList.toggle(
-                "active",
-                isOpen
-            );
+                menuToggle.classList.toggle(
+                    "active",
+                    isOpen
+                );
 
-            menuToggle.setAttribute(
-                "aria-expanded",
-                isOpen ? "true" : "false"
-            );
-        });
+                menuToggle.setAttribute(
+                    "aria-expanded",
+                    isOpen
+                        ? "true"
+                        : "false"
+                );
+            }
+        );
 
 
-        mainNav.querySelectorAll("a").forEach(function (link) {
+        mainNav
+            .querySelectorAll("a")
+            .forEach(function (link) {
 
-            link.addEventListener("click", function () {
-                closeMenu();
+                link.addEventListener(
+                    "click",
+                    function () {
+                        closeMenu();
+                    }
+                );
+
             });
 
-        });
 
+        document.addEventListener(
+            "click",
+            function (event) {
 
-        document.addEventListener("click", function (event) {
+                if (
+                    !mainNav.contains(
+                        event.target
+                    ) &&
+                    !menuToggle.contains(
+                        event.target
+                    )
+                ) {
 
-            if (
-                !mainNav.contains(event.target) &&
-                !menuToggle.contains(event.target)
-            ) {
-                closeMenu();
+                    closeMenu();
+
+                }
+
             }
-
-        });
+        );
 
     }
+
 
 
     /* =====================================================
        通用轮播
-       每个轮播完全独立
     ===================================================== */
 
     function initSlider(config) {
 
-        const slider = document.querySelector(config.slider);
+        const slider =
+            document.querySelector(
+                config.slider
+            );
 
         if (!slider) {
             return;
         }
 
-        const track =
-            slider.querySelector(config.track);
 
-        const slides =
-            Array.from(
-                track.querySelectorAll(config.slide)
+        const track =
+            slider.querySelector(
+                config.track
             );
 
-        const prev =
-            slider.querySelector(config.prev);
-
-        const next =
-            slider.querySelector(config.next);
-
-        const dotsContainer =
-            document.querySelector(config.dots);
-
-        const dots =
-            dotsContainer
-                ? Array.from(
-                    dotsContainer.querySelectorAll(config.dot)
-                )
-                : [];
-
-        if (!track || slides.length === 0) {
+        if (!track) {
             return;
         }
 
 
-        /* -----------------------------
-           单张图片
-        ----------------------------- */
+        const slides =
+            Array.from(
+                track.querySelectorAll(
+                    config.slide
+                )
+            );
+
+
+        const prev =
+            slider.querySelector(
+                config.prev
+            );
+
+
+        const next =
+            slider.querySelector(
+                config.next
+            );
+
+
+        const dotsContainer =
+            document.querySelector(
+                config.dots
+            );
+
+
+        const dots =
+            dotsContainer
+                ? Array.from(
+                    dotsContainer.querySelectorAll(
+                        config.dot
+                    )
+                )
+                : [];
+
+
+        if (slides.length === 0) {
+            return;
+        }
+
 
         if (slides.length === 1) {
 
@@ -128,60 +187,71 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* -----------------------------
-           克隆首尾图片
-        ----------------------------- */
-
         const firstClone =
             slides[0].cloneNode(true);
 
-        const lastClone =
-            slides[slides.length - 1].cloneNode(true);
 
-        firstClone.classList.add("slider-clone");
-        lastClone.classList.add("slider-clone");
+        const lastClone =
+            slides[
+                slides.length - 1
+            ].cloneNode(true);
+
+
+        firstClone.classList.add(
+            "slider-clone"
+        );
+
+
+        lastClone.classList.add(
+            "slider-clone"
+        );
+
 
         track.insertBefore(
             lastClone,
             track.firstChild
         );
 
-        track.appendChild(firstClone);
+
+        track.appendChild(
+            firstClone
+        );
 
 
-        const total = slides.length;
+        const total =
+            slides.length;
+
 
         let current = 1;
 
         let isMoving = false;
 
 
-        /* -----------------------------
-           更新圆点
-        ----------------------------- */
-
         function updateDots() {
 
             const realIndex =
                 current - 1;
 
-            dots.forEach(function (dot, index) {
 
-                dot.classList.toggle(
-                    "active",
-                    index === realIndex
-                );
+            dots.forEach(
+                function (
+                    dot,
+                    index
+                ) {
 
-            });
+                    dot.classList.toggle(
+                        "active",
+                        index === realIndex
+                    );
 
+                }
+            );
         }
 
 
-        /* -----------------------------
-           设置位置
-        ----------------------------- */
-
-        function setPosition(animated) {
+        function setPosition(
+            animated
+        ) {
 
             if (animated) {
 
@@ -195,24 +265,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
+
             track.style.transform =
                 "translate3d(-" +
-                (current * 100) +
+                (
+                    current * 100
+                ) +
                 "%, 0, 0)";
+
 
             updateDots();
         }
 
 
-        /* -----------------------------
-           移动
-        ----------------------------- */
-
-        function move(direction) {
+        function move(
+            direction
+        ) {
 
             if (isMoving) {
                 return;
             }
+
 
             isMoving = true;
 
@@ -222,42 +295,42 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* -----------------------------
-           处理无限循环
-        ----------------------------- */
-
         track.addEventListener(
             "transitionend",
             function (event) {
 
                 if (
                     event.propertyName &&
-                    event.propertyName !== "transform"
+                    event.propertyName !==
+                    "transform"
                 ) {
                     return;
                 }
 
-                if (current === total + 1) {
+
+                if (
+                    current ===
+                    total + 1
+                ) {
 
                     current = 1;
 
                     setPosition(false);
 
-                } else if (current === 0) {
+                } else if (
+                    current === 0
+                ) {
 
                     current = total;
 
                     setPosition(false);
                 }
 
+
                 isMoving = false;
             }
         );
 
-
-        /* -----------------------------
-           上一张
-        ----------------------------- */
 
         if (prev) {
 
@@ -271,13 +344,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     move(-1);
                 }
             );
-
         }
 
-
-        /* -----------------------------
-           下一张
-        ----------------------------- */
 
         if (next) {
 
@@ -291,45 +359,47 @@ document.addEventListener("DOMContentLoaded", function () {
                     move(1);
                 }
             );
-
         }
 
 
-        /* -----------------------------
-           圆点
-        ----------------------------- */
+        dots.forEach(
+            function (
+                dot,
+                index
+            ) {
 
-        dots.forEach(function (dot, index) {
+                dot.addEventListener(
+                    "click",
+                    function (event) {
 
-            dot.addEventListener(
-                "click",
-                function (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
 
-                    event.preventDefault();
-                    event.stopPropagation();
 
-                    if (isMoving) {
-                        return;
+                        if (isMoving) {
+                            return;
+                        }
+
+
+                        current =
+                            index + 1;
+
+
+                        setPosition(true);
+
+                        isMoving = true;
                     }
+                );
+            }
+        );
 
-                    current = index + 1;
-
-                    setPosition(true);
-
-                    isMoving = true;
-                }
-            );
-
-        });
-
-
-        /* -----------------------------
-           手机左右滑动
-        ----------------------------- */
 
         let startX = 0;
+
         let startY = 0;
+
         let isTouching = false;
+
 
         track.addEventListener(
             "touchstart",
@@ -342,14 +412,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     return;
                 }
 
+
                 startX =
                     event.touches[0].clientX;
+
 
                 startY =
                     event.touches[0].clientY;
 
-                isTouching = true;
 
+                isTouching = true;
             },
             {
                 passive: true
@@ -365,7 +437,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     return;
                 }
 
+
                 isTouching = false;
+
 
                 if (
                     !event.changedTouches ||
@@ -374,24 +448,27 @@ document.addEventListener("DOMContentLoaded", function () {
                     return;
                 }
 
+
                 const endX =
                     event.changedTouches[0].clientX;
+
 
                 const endY =
                     event.changedTouches[0].clientY;
 
+
                 const deltaX =
                     endX - startX;
+
 
                 const deltaY =
                     endY - startY;
 
 
-                /* 只处理水平滑动 */
-
                 if (
                     Math.abs(deltaX) < 50 ||
-                    Math.abs(deltaX) <= Math.abs(deltaY)
+                    Math.abs(deltaX) <=
+                    Math.abs(deltaY)
                 ) {
                     return;
                 }
@@ -404,9 +481,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 } else {
 
                     move(-1);
-
                 }
-
             },
             {
                 passive: true
@@ -414,658 +489,943 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /* 初始位置 */
-
         setPosition(false);
-
     }
 
 
+
     /* =====================================================
-       沉香树与工厂轮播
-       独立 5 张
+       沉香树轮播
     ===================================================== */
 
     initSlider({
 
-        slider: ".tree-slider",
+        slider:
+            ".tree-slider",
 
-        track: ".tree-track",
+        track:
+            ".tree-track",
 
-        slide: ".tree-slide",
+        slide:
+            ".tree-slide",
 
-        prev: ".slider-prev",
+        prev:
+            ".slider-prev",
 
-        next: ".slider-next",
+        next:
+            ".slider-next",
 
-        dots: ".slider-dots",
+        dots:
+            ".slider-dots",
 
-        dot: ".slider-dot"
+        dot:
+            ".slider-dot"
 
     });
+
 
 
     /* =====================================================
        客户反馈轮播
-       独立 3 张
     ===================================================== */
 
     initSlider({
 
-        slider: ".review-slider",
+        slider:
+            ".review-slider",
 
-        track: ".review-track",
+        track:
+            ".review-track",
 
-        slide: ".review-slide",
+        slide:
+            ".review-slide",
 
-        prev: ".review-prev",
+        prev:
+            ".review-prev",
 
-        next: ".review-next",
+        next:
+            ".review-next",
 
-        dots: ".review-dots",
+        dots:
+            ".review-dots",
 
-        dot: ".review-dot"
+        dot:
+            ".review-dot"
 
     });
 
 
+
     /* =====================================================
-       图片放大系统
-       
-       重点：
-       每一个图片区域都是独立图片组
+       图片放大
     ===================================================== */
 
     const lightbox =
-        document.getElementById("imageLightbox");
+        document.getElementById(
+            "imageLightbox"
+        );
+
 
     const lightboxImage =
-        document.getElementById("lightboxImage");
+        document.getElementById(
+            "lightboxImage"
+        );
+
 
     const lightboxClose =
-        document.getElementById("lightboxClose");
+        document.getElementById(
+            "lightboxClose"
+        );
+
 
     const lightboxPrev =
-        document.getElementById("lightboxPrev");
+        document.getElementById(
+            "lightboxPrev"
+        );
+
 
     const lightboxNext =
-        document.getElementById("lightboxNext");
+        document.getElementById(
+            "lightboxNext"
+        );
 
 
     if (
-        !lightbox ||
-        !lightboxImage
+        lightbox &&
+        lightboxImage
     ) {
-        return;
-    }
+
+        const imageGroups = [];
 
 
-    /* =====================================================
-       图片组
-    ===================================================== */
-
-    const imageGroups = [];
-
-
-    /* -----------------------------
-       沉香树与工厂
-       只使用原始 5 张
-       不使用轮播克隆图片
-    ----------------------------- */
-
-    const treeImages =
-        Array.from(
-            document.querySelectorAll(
-                ".tree-slide:not(.slider-clone) img"
-            )
-        );
-
-    if (treeImages.length > 0) {
-
-        imageGroups.push({
-            name: "trees",
-            images: treeImages
-        });
-
-    }
+        const treeImages =
+            Array.from(
+                document.querySelectorAll(
+                    ".tree-slide:not(.slider-clone) img"
+                )
+            );
 
 
-    /* -----------------------------
-       产品
-    ----------------------------- */
+        if (treeImages.length > 0) {
 
-    const productImages =
-        Array.from(
-            document.querySelectorAll(
-                ".product-image img"
-            )
-        );
+            imageGroups.push({
 
-    if (productImages.length > 0) {
+                name:
+                    "trees",
 
-        imageGroups.push({
-            name: "products",
-            images: productImages
-        });
+                images:
+                    treeImages
 
-    }
+            });
+        }
 
 
-    /* -----------------------------
-       客户反馈
-       只使用原始图片
-    ----------------------------- */
-
-    const reviewImages =
-        Array.from(
-            document.querySelectorAll(
-                ".review-slide:not(.slider-clone) img"
-            )
-        );
-
-    if (reviewImages.length > 0) {
-
-        imageGroups.push({
-            name: "reviews",
-            images: reviewImages
-        });
-
-    }
+        const productImages =
+            Array.from(
+                document.querySelectorAll(
+                    ".product-image img"
+                )
+            );
 
 
-    /* -----------------------------
-       配送活动
-    ----------------------------- */
+        if (productImages.length > 0) {
 
-    const shippingImages =
-        Array.from(
-            document.querySelectorAll(
-                ".shipping-promotion-image img"
-            )
-        );
+            imageGroups.push({
 
-    if (shippingImages.length > 0) {
+                name:
+                    "products",
 
-        imageGroups.push({
-            name: "shipping",
-            images: shippingImages
-        });
+                images:
+                    productImages
 
-    }
+            });
+        }
 
 
-    let currentGroup = null;
-    let currentImageIndex = 0;
+        const reviewImages =
+            Array.from(
+                document.querySelectorAll(
+                    ".review-slide:not(.slider-clone) img"
+                )
+            );
 
 
-    /* =====================================================
-       获取图片组
-    ===================================================== */
+        if (reviewImages.length > 0) {
 
-    function findImageGroup(image) {
+            imageGroups.push({
 
-        for (
-            let groupIndex = 0;
-            groupIndex < imageGroups.length;
-            groupIndex++
+                name:
+                    "reviews",
+
+                images:
+                    reviewImages
+
+            });
+        }
+
+
+        const shippingImages =
+            Array.from(
+                document.querySelectorAll(
+                    ".shipping-promotion-image img"
+                )
+            );
+
+
+        if (shippingImages.length > 0) {
+
+            imageGroups.push({
+
+                name:
+                    "shipping",
+
+                images:
+                    shippingImages
+
+            });
+        }
+
+
+        let currentGroup = null;
+
+        let currentImageIndex = 0;
+
+
+        function findImageGroup(
+            image
         ) {
 
-            const group =
-                imageGroups[groupIndex];
-
-            const imageIndex =
-                group.images.indexOf(image);
-
-            if (imageIndex !== -1) {
-
-                return {
-                    group: group,
-                    index: imageIndex
-                };
-
-            }
-
-        }
-
-        return null;
-    }
-
-
-    /* =====================================================
-       更新放大图片
-    ===================================================== */
-
-    function updateLightboxImage() {
-
-        if (
-            !currentGroup ||
-            !currentGroup.images ||
-            currentGroup.images.length === 0
-        ) {
-            return;
-        }
-
-        const image =
-            currentGroup.images[currentImageIndex];
-
-        if (!image) {
-            return;
-        }
-
-        /*
-           使用 currentSrc 优先，
-           避免部分浏览器 lazy loading
-           导致 src 状态异常。
-        */
-
-        lightboxImage.src =
-            image.currentSrc ||
-            image.src;
-
-        lightboxImage.alt =
-            image.alt || "图片放大查看";
-
-
-        /*
-           如果当前组只有一张图片，
-           隐藏左右按钮。
-        */
-
-        if (currentGroup.images.length <= 1) {
-
-            if (lightboxPrev) {
-                lightboxPrev.style.display =
-                    "none";
-            }
-
-            if (lightboxNext) {
-                lightboxNext.style.display =
-                    "none";
-            }
-
-        } else {
-
-            if (lightboxPrev) {
-                lightboxPrev.style.display =
-                    "flex";
-            }
-
-            if (lightboxNext) {
-                lightboxNext.style.display =
-                    "flex";
-            }
-
-        }
-
-    }
-
-
-    /* =====================================================
-       打开图片
-    ===================================================== */
-
-    function openLightbox(image) {
-
-        const result =
-            findImageGroup(image);
-
-        if (!result) {
-            return;
-        }
-
-        currentGroup =
-            result.group;
-
-        currentImageIndex =
-            result.index;
-
-        updateLightboxImage();
-
-        lightbox.classList.add("active");
-
-        lightbox.setAttribute(
-            "aria-hidden",
-            "false"
-        );
-
-        document.body.classList.add(
-            "lightbox-open"
-        );
-
-        document.body.style.overflow =
-            "hidden";
-
-    }
-
-
-    /* =====================================================
-       关闭图片
-    ===================================================== */
-
-    function closeLightbox() {
-
-        lightbox.classList.remove("active");
-
-        lightbox.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-        document.body.classList.remove(
-            "lightbox-open"
-        );
-
-        document.body.style.overflow =
-            "";
-
-        /*
-           清空 src，避免关闭后继续占用图片资源
-        */
-
-        setTimeout(function () {
-
-            if (
-                !lightbox.classList.contains("active")
+            for (
+                let groupIndex = 0;
+                groupIndex <
+                imageGroups.length;
+                groupIndex++
             ) {
 
-                lightboxImage.src = "";
+                const group =
+                    imageGroups[
+                        groupIndex
+                    ];
 
+
+                const imageIndex =
+                    group.images.indexOf(
+                        image
+                    );
+
+
+                if (
+                    imageIndex !== -1
+                ) {
+
+                    return {
+
+                        group:
+                            group,
+
+                        index:
+                            imageIndex
+
+                    };
+                }
             }
 
-        }, 200);
 
-    }
-
-
-    /* =====================================================
-       放大图片上一张
-    ===================================================== */
-
-    function showPreviousImage() {
-
-        if (
-            !currentGroup ||
-            currentGroup.images.length <= 1
-        ) {
-            return;
+            return null;
         }
 
-        currentImageIndex--;
 
-        if (currentImageIndex < 0) {
+        function updateLightboxImage() {
+
+            if (
+                !currentGroup ||
+                !currentGroup.images ||
+                currentGroup.images.length === 0
+            ) {
+                return;
+            }
+
+
+            const image =
+                currentGroup.images[
+                    currentImageIndex
+                ];
+
+
+            if (!image) {
+                return;
+            }
+
+
+            lightboxImage.src =
+                image.currentSrc ||
+                image.src;
+
+
+            lightboxImage.alt =
+                image.alt ||
+                "图片放大查看";
+
+
+            if (
+                currentGroup.images.length <= 1
+            ) {
+
+                if (lightboxPrev) {
+                    lightboxPrev.style.display =
+                        "none";
+                }
+
+                if (lightboxNext) {
+                    lightboxNext.style.display =
+                        "none";
+                }
+
+            } else {
+
+                if (lightboxPrev) {
+                    lightboxPrev.style.display =
+                        "flex";
+                }
+
+                if (lightboxNext) {
+                    lightboxNext.style.display =
+                        "flex";
+                }
+            }
+        }
+
+
+        function openLightbox(
+            image
+        ) {
+
+            const result =
+                findImageGroup(
+                    image
+                );
+
+
+            if (!result) {
+                return;
+            }
+
+
+            currentGroup =
+                result.group;
+
 
             currentImageIndex =
-                currentGroup.images.length - 1;
+                result.index;
 
+
+            updateLightboxImage();
+
+
+            lightbox.classList.add(
+                "active"
+            );
+
+
+            lightbox.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+
+            document.body.classList.add(
+                "lightbox-open"
+            );
+
+
+            document.body.style.overflow =
+                "hidden";
         }
 
-        updateLightboxImage();
-    }
+
+        function closeLightbox() {
+
+            lightbox.classList.remove(
+                "active"
+            );
 
 
-    /* =====================================================
-       放大图片下一张
-    ===================================================== */
+            lightbox.setAttribute(
+                "aria-hidden",
+                "true"
+            );
 
-    function showNextImage() {
 
-        if (
-            !currentGroup ||
-            currentGroup.images.length <= 1
-        ) {
-            return;
+            document.body.classList.remove(
+                "lightbox-open"
+            );
+
+
+            document.body.style.overflow =
+                "";
+
+
+            setTimeout(
+                function () {
+
+                    if (
+                        !lightbox.classList.contains(
+                            "active"
+                        )
+                    ) {
+
+                        lightboxImage.src =
+                            "";
+                    }
+
+                },
+                200
+            );
         }
 
-        currentImageIndex++;
 
-        if (
-            currentImageIndex >=
-            currentGroup.images.length
-        ) {
+        function showPreviousImage() {
 
-            currentImageIndex = 0;
+            if (
+                !currentGroup ||
+                currentGroup.images.length <= 1
+            ) {
+                return;
+            }
 
+
+            currentImageIndex--;
+
+
+            if (
+                currentImageIndex < 0
+            ) {
+
+                currentImageIndex =
+                    currentGroup.images.length - 1;
+            }
+
+
+            updateLightboxImage();
         }
 
-        updateLightboxImage();
-    }
+
+        function showNextImage() {
+
+            if (
+                !currentGroup ||
+                currentGroup.images.length <= 1
+            ) {
+                return;
+            }
 
 
-    /* =====================================================
-       给所有图片绑定点击事件
-    ===================================================== */
+            currentImageIndex++;
 
-    imageGroups.forEach(function (group) {
 
-        group.images.forEach(function (image) {
+            if (
+                currentImageIndex >=
+                currentGroup.images.length
+            ) {
 
-            image.addEventListener(
+                currentImageIndex = 0;
+            }
+
+
+            updateLightboxImage();
+        }
+
+
+        imageGroups.forEach(
+            function (group) {
+
+                group.images.forEach(
+                    function (image) {
+
+                        image.addEventListener(
+                            "click",
+                            function (event) {
+
+                                event.preventDefault();
+                                event.stopPropagation();
+
+                                openLightbox(
+                                    image
+                                );
+                            }
+                        );
+                    }
+                );
+            }
+        );
+
+
+        if (lightboxClose) {
+
+            lightboxClose.addEventListener(
                 "click",
                 function (event) {
 
                     event.preventDefault();
                     event.stopPropagation();
 
-                    openLightbox(image);
-
+                    closeLightbox();
                 }
             );
-
-        });
-
-    });
+        }
 
 
-    /* =====================================================
-       关闭按钮
-    ===================================================== */
+        if (lightboxPrev) {
 
-    if (lightboxClose) {
+            lightboxPrev.addEventListener(
+                "click",
+                function (event) {
 
-        lightboxClose.addEventListener(
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    showPreviousImage();
+                }
+            );
+        }
+
+
+        if (lightboxNext) {
+
+            lightboxNext.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    showNextImage();
+                }
+            );
+        }
+
+
+        lightbox.addEventListener(
             "click",
             function (event) {
 
-                event.preventDefault();
-                event.stopPropagation();
+                const imageWrap =
+                    document.querySelector(
+                        ".lightbox-image-wrap"
+                    );
 
-                closeLightbox();
 
+                if (
+                    event.target === lightbox ||
+                    event.target === imageWrap
+                ) {
+
+                    closeLightbox();
+                }
             }
         );
 
-    }
+
+        let lightboxStartX = 0;
+
+        let lightboxStartY = 0;
+
+        let lightboxTouching = false;
 
 
-    /* =====================================================
-       放大图片上一张
-    ===================================================== */
-
-    if (lightboxPrev) {
-
-        lightboxPrev.addEventListener(
-            "click",
+        lightbox.addEventListener(
+            "touchstart",
             function (event) {
 
-                event.preventDefault();
-                event.stopPropagation();
+                if (
+                    !event.touches ||
+                    event.touches.length !== 1
+                ) {
+                    return;
+                }
 
-                showPreviousImage();
 
+                lightboxStartX =
+                    event.touches[0].clientX;
+
+
+                lightboxStartY =
+                    event.touches[0].clientY;
+
+
+                lightboxTouching = true;
+            },
+            {
+                passive: true
             }
         );
 
-    }
 
-
-    /* =====================================================
-       放大图片下一张
-    ===================================================== */
-
-    if (lightboxNext) {
-
-        lightboxNext.addEventListener(
-            "click",
+        lightbox.addEventListener(
+            "touchend",
             function (event) {
 
-                event.preventDefault();
-                event.stopPropagation();
+                if (!lightboxTouching) {
+                    return;
+                }
 
-                showNextImage();
 
+                lightboxTouching = false;
+
+
+                if (
+                    !event.changedTouches ||
+                    event.changedTouches.length !== 1
+                ) {
+                    return;
+                }
+
+
+                const endX =
+                    event.changedTouches[0].clientX;
+
+
+                const endY =
+                    event.changedTouches[0].clientY;
+
+
+                const deltaX =
+                    endX - lightboxStartX;
+
+
+                const deltaY =
+                    endY - lightboxStartY;
+
+
+                if (
+                    Math.abs(deltaX) < 50 ||
+                    Math.abs(deltaX) <=
+                    Math.abs(deltaY)
+                ) {
+                    return;
+                }
+
+
+                if (deltaX < 0) {
+
+                    showNextImage();
+
+                } else {
+
+                    showPreviousImage();
+                }
+            },
+            {
+                passive: true
             }
         );
 
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    !lightbox.classList.contains(
+                        "active"
+                    )
+                ) {
+                    return;
+                }
+
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    closeLightbox();
+                }
+
+
+                if (
+                    event.key === "ArrowLeft"
+                ) {
+
+                    showPreviousImage();
+                }
+
+
+                if (
+                    event.key === "ArrowRight"
+                ) {
+
+                    showNextImage();
+                }
+            }
+        );
     }
 
 
+
     /* =====================================================
-       点击黑色背景关闭
+       Supabase 客服系统
     ===================================================== */
 
-    lightbox.addEventListener(
-        "click",
-        function (event) {
+    const SUPABASE_URL =
+        "https://tvythmezaecdtqlqtwnh.supabase.co";
 
-            if (
-                event.target === lightbox ||
-                event.target ===
-                document.querySelector(
-                    ".lightbox-image-wrap"
-                )
-            ) {
 
-                closeLightbox();
+    const SUPABASE_KEY =
+        "sb_publishable_SMgtLo5Zh15EWzVgTKoKHg_ci8lOFp6";
 
-            }
-
-        }
-    );
 
 
     /* =====================================================
-       手机端放大图片左右滑动
+       获取在线客服
+       
+       重点：
+
+       只允许：
+
+       status = online
+
+       的客服参与分配。
+
+       offline 客服不会被返回。
     ===================================================== */
 
-    let lightboxStartX = 0;
-    let lightboxStartY = 0;
-    let lightboxTouching = false;
+    async function getNextWhatsAppNumber() {
+
+        try {
+
+            const response =
+                await fetch(
+
+                    SUPABASE_URL +
+                    "/rest/v1/rpc/get_next_whatsapp",
+
+                    {
+                        method:
+                            "POST",
+
+                        headers: {
+
+                            "apikey":
+                                SUPABASE_KEY,
+
+                            "Authorization":
+                                "Bearer " +
+                                SUPABASE_KEY,
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            "{}"
+
+                    }
+                );
 
 
-    lightbox.addEventListener(
-        "touchstart",
-        function (event) {
+            if (!response.ok) {
 
-            if (
-                !event.touches ||
-                event.touches.length !== 1
-            ) {
-                return;
+                const errorText =
+                    await response.text();
+
+
+                console.error(
+                    "Supabase客服轮询失败：",
+                    response.status,
+                    errorText
+                );
+
+
+                throw new Error(
+                    "客服轮询请求失败"
+                );
             }
 
-            lightboxStartX =
-                event.touches[0].clientX;
 
-            lightboxStartY =
-                event.touches[0].clientY;
+            const result =
+                await response.json();
 
-            lightboxTouching = true;
 
-        },
-        {
-            passive: true
+            console.log(
+                "Supabase返回客服：",
+                result
+            );
+
+
+            if (
+                !result ||
+                result.success !== true ||
+                !result.phone
+            ) {
+
+                throw new Error(
+                    "目前没有在线客服"
+                );
+            }
+
+
+            return result;
+
+        } catch (error) {
+
+            console.error(
+                "获取客服号码失败：",
+                error
+            );
+
+
+            return null;
         }
-    );
+    }
 
-
-    lightbox.addEventListener(
-        "touchend",
-        function (event) {
-
-            if (!lightboxTouching) {
-                return;
-            }
-
-            lightboxTouching = false;
-
-            if (
-                !event.changedTouches ||
-                event.changedTouches.length !== 1
-            ) {
-                return;
-            }
-
-            const endX =
-                event.changedTouches[0].clientX;
-
-            const endY =
-                event.changedTouches[0].clientY;
-
-            const deltaX =
-                endX - lightboxStartX;
-
-            const deltaY =
-                endY - lightboxStartY;
-
-
-            if (
-                Math.abs(deltaX) < 50 ||
-                Math.abs(deltaX) <= Math.abs(deltaY)
-            ) {
-                return;
-            }
-
-
-            if (deltaX < 0) {
-
-                showNextImage();
-
-            } else {
-
-                showPreviousImage();
-
-            }
-
-        },
-        {
-            passive: true
-        }
-    );
 
 
     /* =====================================================
-       ESC / 键盘控制
+       打开 WhatsApp
+    ===================================================== */
+
+    async function openWhatsApp() {
+
+        const customerService =
+            await getNextWhatsAppNumber();
+
+
+        if (!customerService) {
+
+            alert(
+                "客服暂时无法接通，请稍后再试。"
+            );
+
+            return;
+        }
+
+
+        const phone =
+            String(
+                customerService.phone || ""
+            )
+            .replace(
+                /\D/g,
+                ""
+            );
+
+
+        if (!phone) {
+
+            alert(
+                "客服号码配置错误，请联系客服。"
+            );
+
+            return;
+        }
+
+
+        const whatsappUrl =
+            "https://wa.me/" +
+            phone;
+
+
+        console.log(
+            "正在打开在线客服：",
+            customerService.name ||
+            "",
+            phone
+        );
+
+
+        window.open(
+            whatsappUrl,
+            "_blank",
+            "noopener,noreferrer"
+        );
+    }
+
+
+
+    /* =====================================================
+       自动接管所有 WhatsApp 链接
     ===================================================== */
 
     document.addEventListener(
-        "keydown",
+        "click",
         function (event) {
 
+            const target =
+                event.target.closest(
+                    "a, button"
+                );
+
+
+            if (!target) {
+                return;
+            }
+
+
+            const href =
+                target.getAttribute(
+                    "href"
+                );
+
+
+            const hasWhatsAppHref =
+                href &&
+                (
+                    href.includes(
+                        "wa.me"
+                    ) ||
+                    href.includes(
+                        "whatsapp.com"
+                    )
+                );
+
+
+            const hasWhatsAppAttribute =
+                target.hasAttribute(
+                    "data-whatsapp"
+                );
+
+
+            const buttonText =
+                (
+                    target.textContent ||
+                    ""
+                ).toLowerCase();
+
+
+            const hasWhatsAppText =
+                buttonText.includes(
+                    "whatsapp"
+                );
+
+
             if (
-                !lightbox.classList.contains("active")
+                !hasWhatsAppHref &&
+                !hasWhatsAppAttribute &&
+                !hasWhatsAppText
             ) {
                 return;
             }
 
-            if (event.key === "Escape") {
 
-                closeLightbox();
+            event.preventDefault();
 
-            }
+            event.stopPropagation();
 
-            if (event.key === "ArrowLeft") {
 
-                showPreviousImage();
+            openWhatsApp();
 
-            }
-
-            if (event.key === "ArrowRight") {
-
-                showNextImage();
-
-            }
-
-        }
+        },
+        true
     );
+
+
+
+    /* =====================================================
+       提供给 HTML onclick 使用
+    ===================================================== */
+
+    window.openWhatsApp =
+        openWhatsApp;
 
 });
