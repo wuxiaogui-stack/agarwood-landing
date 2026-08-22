@@ -1,18 +1,28 @@
-;window.addEventListener("DOMContentLoaded", function () {
+
+window.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
-       TikTok Pixel + Events API
+       网站数据追踪系统
 
+       TikTok Pixel
        Pixel ID:
        DA4P6OBC77UES973S3SG
 
+       TikTok Events API
        Cloudflare Worker:
        https://tiktok-events-api.717560552.workers.dev/
 
-       说明：
-       1. 浏览器 Pixel 发送 Contact
-       2. Cloudflare Worker 发送服务器 Contact
-       3. 两边使用相同 event_id，便于 TikTok 去重
+       Meta Pixel
+       Pixel ID:
+       882833290918835
+
+       Supabase
+       用于自动轮询在线 WhatsApp 客服
+    ===================================================== */
+
+
+    /* =====================================================
+       TikTok 配置
     ===================================================== */
 
     const TIKTOK_PIXEL_ID =
@@ -23,10 +33,29 @@
 
 
     /* =====================================================
-       生成 TikTok Event ID
+       Meta Pixel 配置
     ===================================================== */
 
-    function generateTikTokEventId() {
+    const META_PIXEL_ID =
+        "882833290918835";
+
+
+    /* =====================================================
+       Supabase 配置
+    ===================================================== */
+
+    const SUPABASE_URL =
+        "https://tvythmezaecdtqlqtwnh.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_SMgtLo5Zh15EWzVgTKoKHg_ci8lOFp6";
+
+
+    /* =====================================================
+       生成唯一 Event ID
+    ===================================================== */
+
+    function generateEventId() {
 
         return (
             "contact_" +
@@ -113,20 +142,85 @@
 
 
     /* =====================================================
-       TikTok Contact 事件
-       
-       同时发送：
-       
-       ① TikTok Pixel
-       ② Cloudflare Events API
-       
-       使用相同 event_id
+       Meta Pixel Contact
+    ===================================================== */
+
+    function trackMetaContact(eventId) {
+
+        try {
+
+            if (
+                typeof window.fbq === "function"
+            ) {
+
+                window.fbq(
+                    "track",
+                    "Contact",
+                    {
+                        content_name:
+                            "WhatsApp Contact",
+
+                        content_category:
+                            "agarwood",
+
+                        contact_method:
+                            "WhatsApp",
+
+                        eventID:
+                            eventId
+                    }
+                );
+
+
+                console.log(
+                    "Meta Pixel Contact:",
+                    {
+                        content_name:
+                            "WhatsApp Contact",
+
+                        content_category:
+                            "agarwood",
+
+                        contact_method:
+                            "WhatsApp",
+
+                        eventID:
+                            eventId
+                    }
+                );
+
+            } else {
+
+                console.warn(
+                    "Meta Pixel 尚未加载，Contact 未发送"
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Meta Pixel Contact Error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       TikTok Contact
+
+       浏览器 Pixel
+       +
+       Cloudflare Events API
     ===================================================== */
 
     function trackTikTokContact() {
 
         const eventId =
-            generateTikTokEventId();
+            generateEventId();
 
 
         const ttclid =
@@ -165,7 +259,7 @@
 
 
         /* =================================================
-           ① TikTok Pixel
+           TikTok Pixel
         ================================================= */
 
         try {
@@ -205,7 +299,7 @@
 
 
         /* =================================================
-           ② Cloudflare Events API
+           Cloudflare Events API
         ================================================= */
 
         try {
@@ -246,9 +340,7 @@
             };
 
 
-            /* =============================================
-               TikTok Click ID
-            ============================================= */
+            /* TikTok Click ID */
 
             if (ttclid) {
 
@@ -258,9 +350,7 @@
             }
 
 
-            /* =============================================
-               TikTok Browser ID
-            ============================================= */
+            /* TikTok Browser ID */
 
             if (ttp) {
 
@@ -270,17 +360,10 @@
             }
 
 
-            /* =============================================
-               发送 Events API
-
-               keepalive:
-               防止用户点击 WhatsApp 后页面跳转，
-               导致请求被浏览器取消。
-            ============================================= */
-
             fetch(
                 TIKTOK_EVENTS_API,
                 {
+
                     method:
                         "POST",
 
@@ -327,7 +410,6 @@
                 }
             );
 
-
         } catch (error) {
 
             console.error(
@@ -336,6 +418,13 @@
             );
 
         }
+
+
+        /* =================================================
+           返回 Event ID
+        ================================================= */
+
+        return eventId;
 
     }
 
@@ -464,14 +553,6 @@
 
     /* =====================================================
        通用轮播
-       
-       支持：
-       PC
-       手机
-       左右按钮
-       圆点
-       手机左右滑动
-       无缝循环
     ===================================================== */
 
     function initSlider(config) {
@@ -548,7 +629,7 @@
 
 
         /* =================================================
-           强制加载图片
+           强制图片加载
         ================================================= */
 
         slides.forEach(
@@ -688,7 +769,6 @@
 
                     img.loading =
                         "eager";
-
 
                     img.decoding =
                         "async";
@@ -979,10 +1059,8 @@
         let startX =
             0;
 
-
         let startY =
             0;
-
 
         let isTouching =
             false;
@@ -1165,7 +1243,7 @@
 
 
     /* =====================================================
-       图片放大 Lightbox
+       图片 Lightbox
     ===================================================== */
 
     const lightbox =
@@ -1207,9 +1285,7 @@
             [];
 
 
-        /* =================================================
-           沉香树图片
-        ================================================= */
+        /* 沉香树 */
 
         const treeImages =
             Array.from(
@@ -1236,9 +1312,7 @@
         }
 
 
-        /* =================================================
-           产品图片
-        ================================================= */
+        /* 产品 */
 
         const productImages =
             Array.from(
@@ -1265,9 +1339,7 @@
         }
 
 
-        /* =================================================
-           客户评价图片
-        ================================================= */
+        /* 客户评价 */
 
         const reviewImages =
             Array.from(
@@ -1294,9 +1366,7 @@
         }
 
 
-        /* =================================================
-           活动图片
-        ================================================= */
+        /* 活动图片 */
 
         const shippingImages =
             Array.from(
@@ -1330,10 +1400,6 @@
         let currentImageIndex =
             0;
 
-
-        /* =================================================
-           查找图片分组
-        ================================================= */
 
         function findImageGroup(
             image
@@ -1382,10 +1448,6 @@
         }
 
 
-        /* =================================================
-           更新 Lightbox 图片
-        ================================================= */
-
         function updateLightboxImage() {
 
             if (
@@ -1422,50 +1484,31 @@
                 "图片放大查看";
 
 
-            if (
-                currentGroup.images.length <= 1
-            ) {
-
-                if (lightboxPrev) {
-
-                    lightboxPrev.style.display =
-                        "none";
-
-                }
+            const showNavigation =
+                currentGroup.images.length > 1;
 
 
-                if (lightboxNext) {
+            if (lightboxPrev) {
 
-                    lightboxNext.style.display =
-                        "none";
+                lightboxPrev.style.display =
+                    showNavigation
+                        ? "flex"
+                        : "none";
 
-                }
-
-            } else {
-
-                if (lightboxPrev) {
-
-                    lightboxPrev.style.display =
-                        "flex";
-
-                }
+            }
 
 
-                if (lightboxNext) {
+            if (lightboxNext) {
 
-                    lightboxNext.style.display =
-                        "flex";
-
-                }
+                lightboxNext.style.display =
+                    showNavigation
+                        ? "flex"
+                        : "none";
 
             }
 
         }
 
-
-        /* =================================================
-           打开 Lightbox
-        ================================================= */
 
         function openLightbox(
             image
@@ -1517,10 +1560,6 @@
         }
 
 
-        /* =================================================
-           关闭 Lightbox
-        ================================================= */
-
         function closeLightbox() {
 
             lightbox.classList.remove(
@@ -1564,10 +1603,6 @@
         }
 
 
-        /* =================================================
-           上一张
-        ================================================= */
-
         function showPreviousImage() {
 
             if (
@@ -1598,10 +1633,6 @@
 
         }
 
-
-        /* =================================================
-           下一张
-        ================================================= */
 
         function showNextImage() {
 
@@ -1634,10 +1665,6 @@
         }
 
 
-        /* =================================================
-           图片点击
-        ================================================= */
-
         imageGroups.forEach(
             function (group) {
 
@@ -1667,10 +1694,6 @@
         );
 
 
-        /* =================================================
-           关闭按钮
-        ================================================= */
-
         if (lightboxClose) {
 
             lightboxClose.addEventListener(
@@ -1688,10 +1711,6 @@
 
         }
 
-
-        /* =================================================
-           放大图上一张
-        ================================================= */
 
         if (lightboxPrev) {
 
@@ -1711,10 +1730,6 @@
         }
 
 
-        /* =================================================
-           放大图下一张
-        ================================================= */
-
         if (lightboxNext) {
 
             lightboxNext.addEventListener(
@@ -1732,10 +1747,6 @@
 
         }
 
-
-        /* =================================================
-           点击背景关闭
-        ================================================= */
 
         lightbox.addEventListener(
             "click",
@@ -1767,10 +1778,8 @@
         let lightboxStartX =
             0;
 
-
         let lightboxStartY =
             0;
-
 
         let lightboxTouching =
             false;
@@ -1884,7 +1893,7 @@
 
 
         /* =================================================
-           键盘
+           键盘控制
         ================================================= */
 
         document.addEventListener(
@@ -1903,7 +1912,8 @@
 
 
                 if (
-                    event.key === "Escape"
+                    event.key ===
+                    "Escape"
                 ) {
 
                     closeLightbox();
@@ -1912,7 +1922,8 @@
 
 
                 if (
-                    event.key === "ArrowLeft"
+                    event.key ===
+                    "ArrowLeft"
                 ) {
 
                     showPreviousImage();
@@ -1921,7 +1932,8 @@
 
 
                 if (
-                    event.key === "ArrowRight"
+                    event.key ===
+                    "ArrowRight"
                 ) {
 
                     showNextImage();
@@ -1935,19 +1947,7 @@
 
 
     /* =====================================================
-       Supabase 客服系统
-    ===================================================== */
-
-    const SUPABASE_URL =
-        "https://tvythmezaecdtqlqtwnh.supabase.co";
-
-
-    const SUPABASE_KEY =
-        "sb_publishable_SMgtLo5Zh15EWzVgTKoKHg_ci8lOFp6";
-
-
-    /* =====================================================
-       获取在线客服
+       Supabase 获取在线 WhatsApp 客服
     ===================================================== */
 
     async function getNextWhatsAppNumber() {
@@ -1961,6 +1961,7 @@
                     "/rest/v1/rpc/get_next_whatsapp",
 
                     {
+
                         method:
                             "POST",
 
@@ -2047,25 +2048,48 @@
 
 
     /* =====================================================
-       WhatsApp
-       
-       客户点击 WhatsApp：
-       
-       1. TikTok Pixel Contact
-       2. Cloudflare Events API Contact
-       3. 获取在线客服
-       4. 跳转 WhatsApp
+       WhatsApp 核心功能
+
+       点击 WhatsApp 后：
+
+       ① Meta Pixel Contact
+       ② TikTok Pixel Contact
+       ③ TikTok Events API Contact
+       ④ Supabase 获取在线客服
+       ⑤ 跳转 WhatsApp
     ===================================================== */
 
     async function openWhatsApp() {
 
-        /*
-         * 只发送 Contact
-         * 不再发送 Lead
-         */
+        /* ---------------------------------------------
+           生成本次 Contact 的唯一 Event ID
+        --------------------------------------------- */
+
+        const eventId =
+            generateEventId();
+
+
+        /* ---------------------------------------------
+           Meta Pixel
+        --------------------------------------------- */
+
+        trackMetaContact(
+            eventId
+        );
+
+
+        /* ---------------------------------------------
+           TikTok Pixel + Events API
+
+           使用独立的 TikTok Event ID
+        --------------------------------------------- */
 
         trackTikTokContact();
 
+
+        /* ---------------------------------------------
+           获取在线客服
+        --------------------------------------------- */
 
         const customerService =
             await getNextWhatsAppNumber();
@@ -2081,6 +2105,10 @@
 
         }
 
+
+        /* ---------------------------------------------
+           清理电话号码
+        --------------------------------------------- */
 
         const phone =
             String(
@@ -2104,6 +2132,10 @@
         }
 
 
+        /* ---------------------------------------------
+           WhatsApp URL
+        --------------------------------------------- */
+
         const whatsappUrl =
             "https://wa.me/" +
             phone;
@@ -2116,6 +2148,10 @@
             phone
         );
 
+
+        /* ---------------------------------------------
+           打开 WhatsApp Web / App
+        --------------------------------------------- */
 
         window.open(
             whatsappUrl,
@@ -2208,10 +2244,33 @@
 
 
     /* =====================================================
-       提供给 HTML onclick
+       提供给 HTML onclick 使用
+
+       例如：
+
+       onclick="openWhatsApp()"
     ===================================================== */
 
     window.openWhatsApp =
         openWhatsApp;
+
+
+    /* =====================================================
+       初始化完成
+    ===================================================== */
+
+    console.log(
+        "网站脚本加载完成"
+    );
+
+    console.log(
+        "Meta Pixel ID:",
+        META_PIXEL_ID
+    );
+
+    console.log(
+        "TikTok Pixel ID:",
+        TIKTOK_PIXEL_ID
+    );
 
 });
