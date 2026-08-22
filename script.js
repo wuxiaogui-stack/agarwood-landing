@@ -1,14 +1,164 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
-       TikTok Pixel
+       TikTok Pixel + Events API
+       
        Pixel ID:
        DA4P6OBC77UES973S3SG
 
-       基础 Pixel 代码已经放在 index.html
+       Cloudflare Worker:
+       https://tiktok-events-api.717560552.workers.dev/
+
+       说明：
+       1. 浏览器 Pixel 发送 Contact
+       2. Cloudflare Worker 发送服务器 Contact
+       3. 两边使用相同 event_id，便于 TikTok 去重
     ===================================================== */
 
-    function trackTikTokEvent(eventName, properties = {}) {
+    const TIKTOK_PIXEL_ID =
+        "DA4P6OBC77UES973S3SG";
+
+    const TIKTOK_EVENTS_API =
+        "https://tiktok-events-api.717560552.workers.dev/";
+
+
+    /* =====================================================
+       生成 TikTok Event ID
+    ===================================================== */
+
+    function generateTikTokEventId() {
+
+        return (
+            "contact_" +
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .substring(2, 10)
+        );
+
+    }
+
+
+    /* =====================================================
+       获取 Cookie
+    ===================================================== */
+
+    function getCookie(name) {
+
+        const cookies =
+            document.cookie
+                ? document.cookie.split("; ")
+                : [];
+
+        for (const cookie of cookies) {
+
+            const parts =
+                cookie.split("=");
+
+            const key =
+                parts.shift();
+
+            const value =
+                parts.join("=");
+
+            if (key === name) {
+
+                return decodeURIComponent(
+                    value || ""
+                );
+
+            }
+
+        }
+
+        return "";
+
+    }
+
+
+    /* =====================================================
+       获取 ttclid
+    ===================================================== */
+
+    function getTikTokClickId() {
+
+        try {
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            return (
+                params.get("ttclid") ||
+                ""
+            );
+
+        } catch (error) {
+
+            return "";
+
+        }
+
+    }
+
+
+    /* =====================================================
+       TikTok Contact 事件
+       
+       同时发送：
+       
+       ① TikTok Pixel
+       ② Cloudflare Events API
+       
+       使用相同 event_id
+    ===================================================== */
+
+    function trackTikTokContact() {
+
+        const eventId =
+            generateTikTokEventId();
+
+
+        const ttclid =
+            getTikTokClickId();
+
+
+        const ttp =
+            getCookie("_ttp");
+
+
+        const pageUrl =
+            window.location.href;
+
+
+        const eventTime =
+            Math.floor(
+                Date.now() / 1000
+            );
+
+
+        const pixelProperties = {
+
+            contact_method:
+                "WhatsApp",
+
+            content_name:
+                "WhatsApp Contact",
+
+            content_category:
+                "agarwood",
+
+            event_id:
+                eventId
+
+        };
+
+
+        /* =================================================
+           ① TikTok Pixel
+        ================================================= */
 
         try {
 
@@ -18,21 +168,20 @@ document.addEventListener("DOMContentLoaded", function () {
             ) {
 
                 window.ttq.track(
-                    eventName,
-                    properties
+                    "Contact",
+                    pixelProperties
                 );
 
+
                 console.log(
-                    "TikTok Event:",
-                    eventName,
-                    properties
+                    "TikTok Pixel Contact:",
+                    pixelProperties
                 );
 
             } else {
 
                 console.warn(
-                    "TikTok Pixel 尚未加载：",
-                    eventName
+                    "TikTok Pixel 尚未加载"
                 );
 
             }
@@ -40,7 +189,135 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
 
             console.error(
-                "TikTok Event Error:",
+                "TikTok Pixel Contact Error:",
+                error
+            );
+
+        }
+
+
+        /* =================================================
+           ② Cloudflare Events API
+        ================================================= */
+
+        try {
+
+            const serverEvent = {
+
+                event:
+                    "Contact",
+
+                event_time:
+                    eventTime,
+
+                event_id:
+                    eventId,
+
+                user: {},
+
+                page: {
+
+                    url:
+                        pageUrl
+
+                },
+
+                properties: {
+
+                    contact_method:
+                        "WhatsApp",
+
+                    content_name:
+                        "WhatsApp Contact",
+
+                    content_category:
+                        "agarwood"
+
+                }
+
+            };
+
+
+            /*
+             * 只有存在时才加入这些参数
+             */
+
+            if (ttclid) {
+
+                serverEvent.user.ttclid =
+                    ttclid;
+
+            }
+
+
+            if (ttp) {
+
+                serverEvent.user.ttp =
+                    ttp;
+
+            }
+
+
+            /*
+             * 使用 fetch + keepalive
+             *
+             * 不阻塞 WhatsApp 跳转
+             */
+
+            fetch(
+                TIKTOK_EVENTS_API,
+                {
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            serverEvent
+                        ),
+
+                    keepalive:
+                        true
+
+                }
+            )
+            .then(
+                async function (response) {
+
+                    const text =
+                        await response.text();
+
+
+                    console.log(
+                        "TikTok Events API:",
+                        response.status,
+                        text
+                    );
+
+                }
+            )
+            .catch(
+                function (error) {
+
+                    console.error(
+                        "TikTok Events API Error:",
+                        error
+                    );
+
+                }
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Events API Error:",
                 error
             );
 
@@ -50,37 +327,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       TikTok PageView
-       
-       index.html 基础代码本身已经执行 ttq.page()
-       这里不再次发送 PageView，避免重复统计。
-    ===================================================== */
-
-
-    /* =====================================================
        手机端导航
     ===================================================== */
 
     const menuToggle =
-        document.getElementById("menuToggle");
+        document.getElementById(
+            "menuToggle"
+        );
+
 
     const mainNav =
-        document.getElementById("mainNav");
+        document.getElementById(
+            "mainNav"
+        );
 
 
     function closeMenu() {
 
-        if (!menuToggle || !mainNav) {
+        if (
+            !menuToggle ||
+            !mainNav
+        ) {
+
             return;
+
         }
+
 
         mainNav.classList.remove(
             "mobile-open"
         );
 
+
         menuToggle.classList.remove(
             "active"
         );
+
 
         menuToggle.setAttribute(
             "aria-expanded",
@@ -90,7 +372,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    if (menuToggle && mainNav) {
+    if (
+        menuToggle &&
+        mainNav
+    ) {
 
         menuToggle.addEventListener(
             "click",
@@ -98,15 +383,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 event.stopPropagation();
 
+
                 const isOpen =
                     mainNav.classList.toggle(
                         "mobile-open"
                     );
 
+
                 menuToggle.classList.toggle(
                     "active",
                     isOpen
                 );
+
 
                 menuToggle.setAttribute(
                     "aria-expanded",
@@ -121,18 +409,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         mainNav
             .querySelectorAll("a")
-            .forEach(function (link) {
+            .forEach(
+                function (link) {
 
-                link.addEventListener(
-                    "click",
-                    function () {
+                    link.addEventListener(
+                        "click",
+                        function () {
 
-                        closeMenu();
+                            closeMenu();
 
-                    }
-                );
+                        }
+                    );
 
-            });
+                }
+            );
 
 
         document.addEventListener(
@@ -160,16 +450,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
        通用轮播
-       支持：
-       PC
-       手机
-       左右按钮
-       圆点
-       手机左右滑动
-       无缝循环
-       
-       注意：
-       不改变 HTML 中图片原始顺序
     ===================================================== */
 
     function initSlider(config) {
@@ -179,8 +459,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 config.slider
             );
 
+
         if (!slider) {
+
             return;
+
         }
 
 
@@ -189,8 +472,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 config.track
             );
 
+
         if (!track) {
+
             return;
+
         }
 
 
@@ -230,8 +516,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 : [];
 
 
-        if (slides.length === 0) {
+        if (
+            slides.length === 0
+        ) {
+
             return;
+
         }
 
 
@@ -239,86 +529,115 @@ document.addEventListener("DOMContentLoaded", function () {
            强制加载图片
         ================================================= */
 
-        slides.forEach(function (slide) {
+        slides.forEach(
+            function (slide) {
 
-            const img =
-                slide.querySelector("img");
+                const img =
+                    slide.querySelector(
+                        "img"
+                    );
 
-            if (!img) {
-                return;
+
+                if (!img) {
+
+                    return;
+
+                }
+
+
+                img.loading =
+                    "eager";
+
+
+                img.decoding =
+                    "async";
+
+
+                if (
+                    img.dataset &&
+                    img.dataset.src &&
+                    (
+                        !img.getAttribute(
+                            "src"
+                        ) ||
+                        img.getAttribute(
+                            "src"
+                        ) === ""
+                    )
+                ) {
+
+                    img.src =
+                        img.dataset.src;
+
+                }
+
             }
-
-            img.loading = "eager";
-
-            img.decoding = "async";
-
-
-            if (
-                img.dataset &&
-                img.dataset.src &&
-                (
-                    !img.getAttribute("src") ||
-                    img.getAttribute("src") === ""
-                )
-            ) {
-
-                img.src =
-                    img.dataset.src;
-
-            }
-
-        });
+        );
 
 
         /* =================================================
            只有一张图片
         ================================================= */
 
-        if (slides.length === 1) {
+        if (
+            slides.length === 1
+        ) {
 
             track.style.transition =
                 "none";
+
 
             track.style.transform =
                 "translate3d(0,0,0)";
 
 
             if (prev) {
+
                 prev.style.display =
                     "none";
+
             }
 
 
             if (next) {
+
                 next.style.display =
                     "none";
+
             }
 
 
-            dots.forEach(function (dot) {
+            dots.forEach(
+                function (dot) {
 
-                dot.style.display =
-                    "none";
+                    dot.style.display =
+                        "none";
 
-            });
+                }
+            );
 
 
             return;
+
         }
 
 
         /* =================================================
-           创建首尾克隆图
+           创建首尾克隆
         ================================================= */
 
         const firstClone =
-            slides[0].cloneNode(true);
+            slides[0].cloneNode(
+                true
+            );
 
 
         const lastClone =
             slides[
                 slides.length - 1
-            ].cloneNode(true);
+            ].cloneNode(
+                true
+            );
 
 
         firstClone.classList.add(
@@ -334,22 +653,27 @@ document.addEventListener("DOMContentLoaded", function () {
         [
             firstClone,
             lastClone
-        ].forEach(function (clone) {
+        ].forEach(
+            function (clone) {
 
-            const img =
-                clone.querySelector("img");
+                const img =
+                    clone.querySelector(
+                        "img"
+                    );
 
-            if (img) {
 
-                img.loading =
-                    "eager";
+                if (img) {
 
-                img.decoding =
-                    "async";
+                    img.loading =
+                        "eager";
+
+                    img.decoding =
+                        "async";
+
+                }
 
             }
-
-        });
+        );
 
 
         track.insertBefore(
@@ -367,24 +691,16 @@ document.addEventListener("DOMContentLoaded", function () {
             slides.length;
 
 
-        /*
-         * 位置：
-         *
-         * 0 = 最后一张克隆图
-         * 1 = 第一张真实图片
-         * 2 = 第二张真实图片
-         * ...
-         * total = 最后一张真实图片
-         * total + 1 = 第一张克隆图
-         */
+        let current =
+            1;
 
-        let current = 1;
 
-        let isMoving = false;
+        let isMoving =
+            false;
 
 
         /* =================================================
-           圆点
+           更新圆点
         ================================================= */
 
         function updateDots() {
@@ -393,14 +709,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 current - 1;
 
 
-            if (realIndex < 0) {
+            if (
+                realIndex < 0
+            ) {
+
                 realIndex =
                     total - 1;
+
             }
 
 
-            if (realIndex >= total) {
-                realIndex = 0;
+            if (
+                realIndex >= total
+            ) {
+
+                realIndex =
+                    0;
+
             }
 
 
@@ -457,18 +782,23 @@ document.addEventListener("DOMContentLoaded", function () {
         ) {
 
             if (isMoving) {
+
                 return;
+
             }
 
 
-            isMoving = true;
+            isMoving =
+                true;
 
 
             current +=
                 direction;
 
 
-            setPosition(true);
+            setPosition(
+                true
+            );
 
         }
 
@@ -497,9 +827,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     total + 1
                 ) {
 
-                    current = 1;
+                    current =
+                        1;
 
-                    setPosition(false);
+
+                    setPosition(
+                        false
+                    );
 
                 }
 
@@ -508,14 +842,19 @@ document.addEventListener("DOMContentLoaded", function () {
                     current === 0
                 ) {
 
-                    current = total;
+                    current =
+                        total;
 
-                    setPosition(false);
+
+                    setPosition(
+                        false
+                    );
 
                 }
 
 
-                isMoving = false;
+                isMoving =
+                    false;
 
             }
         );
@@ -566,7 +905,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         /* =================================================
-           圆点点击
+           圆点
         ================================================= */
 
         dots.forEach(
@@ -585,7 +924,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                         if (isMoving) {
+
                             return;
+
                         }
 
 
@@ -593,10 +934,13 @@ document.addEventListener("DOMContentLoaded", function () {
                             index + 1;
 
 
-                        isMoving = true;
+                        isMoving =
+                            true;
 
 
-                        setPosition(true);
+                        setPosition(
+                            true
+                        );
 
                     }
                 );
@@ -609,11 +953,16 @@ document.addEventListener("DOMContentLoaded", function () {
            手机触摸滑动
         ================================================= */
 
-        let startX = 0;
+        let startX =
+            0;
 
-        let startY = 0;
 
-        let isTouching = false;
+        let startY =
+            0;
+
+
+        let isTouching =
+            false;
 
 
         track.addEventListener(
@@ -638,7 +987,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     event.touches[0].clientY;
 
 
-                isTouching = true;
+                isTouching =
+                    true;
 
             },
             {
@@ -652,11 +1002,14 @@ document.addEventListener("DOMContentLoaded", function () {
             function (event) {
 
                 if (!isTouching) {
+
                     return;
+
                 }
 
 
-                isTouching = false;
+                isTouching =
+                    false;
 
 
                 if (
@@ -678,11 +1031,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 const deltaX =
-                    endX - startX;
+                    endX -
+                    startX;
 
 
                 const deltaY =
-                    endY - startY;
+                    endY -
+                    startY;
 
 
                 if (
@@ -696,7 +1051,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                if (deltaX < 0) {
+                if (
+                    deltaX < 0
+                ) {
 
                     move(1);
 
@@ -717,7 +1074,9 @@ document.addEventListener("DOMContentLoaded", function () {
            初始化
         ================================================= */
 
-        setPosition(false);
+        setPosition(
+            false
+        );
 
     }
 
@@ -821,7 +1180,8 @@ document.addEventListener("DOMContentLoaded", function () {
         lightboxImage
     ) {
 
-        const imageGroups = [];
+        const imageGroups =
+            [];
 
 
         /* =================================================
@@ -836,7 +1196,9 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-        if (treeImages.length > 0) {
+        if (
+            treeImages.length > 0
+        ) {
 
             imageGroups.push({
 
@@ -863,7 +1225,9 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-        if (productImages.length > 0) {
+        if (
+            productImages.length > 0
+        ) {
 
             imageGroups.push({
 
@@ -890,7 +1254,9 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-        if (reviewImages.length > 0) {
+        if (
+            reviewImages.length > 0
+        ) {
 
             imageGroups.push({
 
@@ -917,7 +1283,9 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-        if (shippingImages.length > 0) {
+        if (
+            shippingImages.length > 0
+        ) {
 
             imageGroups.push({
 
@@ -992,7 +1360,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         /* =================================================
-           更新放大图片
+           更新 Lightbox 图片
         ================================================= */
 
         function updateLightboxImage() {
@@ -1015,7 +1383,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             if (!image) {
+
                 return;
+
             }
 
 
@@ -1085,7 +1455,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             if (!result) {
+
                 return;
+
             }
 
 
@@ -1193,7 +1565,8 @@ document.addEventListener("DOMContentLoaded", function () {
             ) {
 
                 currentImageIndex =
-                    currentGroup.images.length - 1;
+                    currentGroup.images.length -
+                    1;
 
             }
 
@@ -1416,8 +1789,12 @@ document.addEventListener("DOMContentLoaded", function () {
             "touchend",
             function (event) {
 
-                if (!lightboxTouching) {
+                if (
+                    !lightboxTouching
+                ) {
+
                     return;
+
                 }
 
 
@@ -1464,7 +1841,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                if (deltaX < 0) {
+                if (
+                    deltaX < 0
+                ) {
 
                     showNextImage();
 
@@ -1646,23 +2025,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
        WhatsApp
+       
+       客户点击 WhatsApp：
+       
+       1. TikTok Pixel Contact
+       2. Cloudflare Events API Contact
+       3. 获取在线客服
+       4. 跳转 WhatsApp
     ===================================================== */
 
     async function openWhatsApp() {
 
         /*
-         * TikTok Contact 事件
+         * 发送 Contact 事件
          *
-         * 这里先记录用户点击 WhatsApp 的行为。
+         * 注意：
+         * 这里只发送 Contact
+         * 不再发送 Lead
          */
 
-        trackTikTokEvent(
-            "Contact",
-            {
-                contact_method:
-                    "WhatsApp"
-            }
-        );
+        trackTikTokContact();
 
 
         const customerService =
@@ -1682,7 +2064,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const phone =
             String(
-                customerService.phone || ""
+                customerService.phone ||
+                ""
             )
             .replace(
                 /\D/g,
@@ -1714,22 +2097,6 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /*
-         * TikTok Lead 事件
-         *
-         * 用户已经点击联系客服，
-         * 可以作为潜在客户转化。
-         */
-
-        trackTikTokEvent(
-            "Lead",
-            {
-                contact_method:
-                    "WhatsApp"
-            }
-        );
-
-
         window.open(
             whatsappUrl,
             "_blank",
@@ -1754,7 +2121,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             if (!target) {
+
                 return;
+
             }
 
 
@@ -1824,6 +2193,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.openWhatsApp =
         openWhatsApp;
-
 
 });
