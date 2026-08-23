@@ -1,3 +1,8 @@
+```css
+/* =========================================================
+   基础重置
+========================================================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -7,6 +12,7 @@
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 76px;
+    background: #f7f5ef;
 }
 
 body {
@@ -28,9 +34,16 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+/* 防止页面加载过程中出现明显的布局跳动 */
+html,
+body {
+    min-height: 100%;
+}
+
 img {
     display: block;
     max-width: 100%;
+    height: auto;
 }
 
 a {
@@ -43,9 +56,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Header
-========================= */
+========================================================= */
 
 .header {
     position: fixed;
@@ -216,9 +229,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Hero
-========================= */
+========================================================= */
 
 .hero {
     position: relative;
@@ -230,12 +243,18 @@ button {
 
     overflow: hidden;
 
-    background:
-        url("images/hero.jpg")
-        center center / cover
-        no-repeat;
+    background-color: #2f2a22;
+
+    background-image:
+        url("images/hero.jpg");
+
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
 
     color: #fff;
+
+    contain: paint;
 }
 
 .hero::before {
@@ -243,6 +262,8 @@ button {
 
     position: absolute;
     inset: 0;
+
+    z-index: 1;
 
     background:
         linear-gradient(
@@ -299,9 +320,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Features
-========================= */
+========================================================= */
 
 .features {
     display: grid;
@@ -353,9 +374,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Common
-========================= */
+========================================================= */
 
 .section-heading {
     max-width: 760px;
@@ -382,9 +403,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Trees
-========================= */
+========================================================= */
 
 .trees-section {
     padding: 100px 7%;
@@ -447,6 +468,8 @@ button {
     object-fit: cover;
 
     cursor: zoom-in;
+
+    background: #e8e3d8;
 }
 
 .tree-slide-empty {
@@ -563,9 +586,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Video
-========================= */
+========================================================= */
 
 .video-section {
     padding: 100px 7%;
@@ -636,9 +659,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Products
-========================= */
+========================================================= */
 
 .products-section {
     padding: 100px 7%;
@@ -676,6 +699,8 @@ button {
     aspect-ratio: 1 / 1;
 
     overflow: hidden;
+
+    background: #e8e3d8;
 }
 
 .product-image img {
@@ -685,6 +710,8 @@ button {
     object-fit: cover;
 
     cursor: zoom-in;
+
+    background: #e8e3d8;
 
     transition:
         transform 0.5s ease;
@@ -732,9 +759,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Shipping
-========================= */
+========================================================= */
 
 .shipping-section {
     padding: 100px 7%;
@@ -816,6 +843,8 @@ button {
     aspect-ratio: 4 / 3;
 
     overflow: hidden;
+
+    background: #e8e3d8;
 }
 
 .shipping-promotion-image img {
@@ -825,6 +854,8 @@ button {
     object-fit: cover;
 
     cursor: zoom-in;
+
+    background: #e8e3d8;
 }
 
 .shipping-image-empty {
@@ -874,9 +905,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Reviews
-========================= */
+========================================================= */
 
 .reviews-section {
     padding: 100px 7%;
@@ -938,6 +969,8 @@ button {
     object-fit: contain;
 
     cursor: zoom-in;
+
+    background: #fff;
 }
 
 .review-prev {
@@ -949,9 +982,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Contact
-========================= */
+========================================================= */
 
 .contact-section {
     padding: 110px 7%;
@@ -1014,9 +1047,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Footer
-========================= */
+========================================================= */
 
 .footer {
     padding: 35px 7%;
@@ -1067,9 +1100,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Image Lightbox
-========================= */
+========================================================= */
 
 .image-lightbox {
     position: fixed;
@@ -1199,9 +1232,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Tablet
-========================= */
+========================================================= */
 
 @media (max-width: 1000px) {
 
@@ -1240,9 +1273,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Mobile
-========================= */
+========================================================= */
 
 @media (max-width: 700px) {
 
@@ -1688,9 +1721,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Small Mobile
-========================= */
+========================================================= */
 
 @media (max-width: 380px) {
 
@@ -1733,9 +1766,9 @@ button {
 }
 
 
-/* =========================
+/* =========================================================
    Reduced Motion
-========================= */
+========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -1755,9 +1788,12 @@ button {
         transition-duration:
             0.01ms !important;
     }
-}/* =========================
+}
+
+
+/* =========================================================
    Arabic RTL Support
-========================= */
+========================================================= */
 
 html[dir="rtl"] {
     direction: rtl;
@@ -1769,9 +1805,7 @@ html[dir="rtl"] body {
 }
 
 
-/* =========================
-   Header RTL
-========================= */
+/* Header RTL */
 
 html[dir="rtl"] .header {
     direction: rtl;
@@ -1796,9 +1830,7 @@ html[dir="rtl"] .menu-toggle {
 }
 
 
-/* =========================
-   Hero RTL
-========================= */
+/* Hero RTL */
 
 html[dir="rtl"] .hero {
     direction: rtl;
@@ -1825,9 +1857,7 @@ html[dir="rtl"] .hero-description {
 }
 
 
-/* =========================
-   Features RTL
-========================= */
+/* Features RTL */
 
 html[dir="rtl"] .feature {
     border-right: 0;
@@ -1839,18 +1869,14 @@ html[dir="rtl"] .feature:last-child {
 }
 
 
-/* =========================
-   Section Heading RTL
-========================= */
+/* Section Heading RTL */
 
 html[dir="rtl"] .section-heading {
     direction: rtl;
 }
 
 
-/* =========================
-   Tree Slider RTL
-========================= */
+/* Tree Slider RTL */
 
 html[dir="rtl"] .tree-slider {
     direction: ltr;
@@ -1871,9 +1897,7 @@ html[dir="rtl"] .slider-next {
 }
 
 
-/* =========================
-   Products RTL
-========================= */
+/* Products RTL */
 
 html[dir="rtl"] .product-grid {
     direction: rtl;
@@ -1884,9 +1908,7 @@ html[dir="rtl"] .product-card {
 }
 
 
-/* =========================
-   Shipping RTL
-========================= */
+/* Shipping RTL */
 
 html[dir="rtl"] .shipping-content {
     direction: rtl;
@@ -1909,9 +1931,7 @@ html[dir="rtl"] .shipping-promotion-text {
 }
 
 
-/* =========================
-   Reviews RTL
-========================= */
+/* Reviews RTL */
 
 html[dir="rtl"] .review-slider {
     direction: ltr;
@@ -1932,9 +1952,7 @@ html[dir="rtl"] .review-next {
 }
 
 
-/* =========================
-   Contact RTL
-========================= */
+/* Contact RTL */
 
 html[dir="rtl"] .contact-section {
     direction: rtl;
@@ -1945,9 +1963,7 @@ html[dir="rtl"] .contact-content {
 }
 
 
-/* =========================
-   Footer RTL
-========================= */
+/* Footer RTL */
 
 html[dir="rtl"] .footer {
     direction: rtl;
@@ -1958,9 +1974,7 @@ html[dir="rtl"] .footer-links {
 }
 
 
-/* =========================
-   Lightbox RTL
-========================= */
+/* Lightbox RTL */
 
 html[dir="rtl"] .lightbox-prev {
     left: auto;
@@ -1973,9 +1987,7 @@ html[dir="rtl"] .lightbox-next {
 }
 
 
-/* =========================
-   Arabic Font
-========================= */
+/* Arabic Font */
 
 html[dir="rtl"] body {
     font-family:
@@ -1986,9 +1998,7 @@ html[dir="rtl"] body {
 }
 
 
-/* =========================
-   Arabic Mobile
-========================= */
+/* Arabic Mobile */
 
 @media (max-width: 700px) {
 
@@ -2000,9 +2010,6 @@ html[dir="rtl"] body {
         width: 100%;
         overflow-x: hidden;
     }
-
-
-    /* Header */
 
     html[dir="rtl"] .header {
         direction: rtl;
@@ -2022,9 +2029,6 @@ html[dir="rtl"] body {
         margin-right: 8px;
         margin-left: 0;
     }
-
-
-    /* Mobile Navigation */
 
     html[dir="rtl"] .nav {
         top: 64px;
@@ -2046,9 +2050,6 @@ html[dir="rtl"] body {
 
         text-align: right;
     }
-
-
-    /* Hero */
 
     html[dir="rtl"] .hero {
         direction: rtl;
@@ -2091,9 +2092,6 @@ html[dir="rtl"] body {
         line-height: 2;
     }
 
-
-    /* Features */
-
     html[dir="rtl"] .features {
         direction: rtl;
     }
@@ -2122,15 +2120,9 @@ html[dir="rtl"] body {
             1px solid #e5e1d8;
     }
 
-
-    /* Sections */
-
     html[dir="rtl"] .section-heading {
         text-align: center;
     }
-
-
-    /* Tree Slider */
 
     html[dir="rtl"] .tree-slider {
         direction: ltr;
@@ -2146,15 +2138,9 @@ html[dir="rtl"] body {
         left: 10px;
     }
 
-
-    /* Products */
-
     html[dir="rtl"] .product-grid {
         direction: rtl;
     }
-
-
-    /* Shipping */
 
     html[dir="rtl"] .shipping-content {
         direction: rtl;
@@ -2167,9 +2153,6 @@ html[dir="rtl"] body {
     html[dir="rtl"] .shipping-promotion-text {
         text-align: right;
     }
-
-
-    /* Reviews */
 
     html[dir="rtl"] .review-slider {
         direction: ltr;
@@ -2185,15 +2168,9 @@ html[dir="rtl"] body {
         left: 8px;
     }
 
-
-    /* Contact */
-
     html[dir="rtl"] .contact-content {
         text-align: center;
     }
-
-
-    /* Footer */
 
     html[dir="rtl"] .footer {
         direction: rtl;
@@ -2203,9 +2180,6 @@ html[dir="rtl"] body {
     html[dir="rtl"] .footer-links {
         direction: rtl;
     }
-
-
-    /* Lightbox */
 
     html[dir="rtl"] .lightbox-prev {
         left: auto;
@@ -2219,9 +2193,9 @@ html[dir="rtl"] body {
 }
 
 
-/* =========================
+/* =========================================================
    Small Arabic Mobile
-========================= */
+========================================================= */
 
 @media (max-width: 380px) {
 
@@ -2238,5 +2212,5 @@ html[dir="rtl"] body {
     html[dir="rtl"] .logo {
         font-size: 15px;
     }
-
 }
+```
