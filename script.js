@@ -25,30 +25,20 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       TikTok 配置
+       配置
     ===================================================== */
+
+    const META_PIXEL_ID =
+        "882833290918835";
+
+    const META_CAPI_URL =
+        "https://meta-capi.717560552.workers.dev/";
 
     const TIKTOK_PIXEL_ID =
         "DA4P6OBC77UES973S3SG";
 
     const TIKTOK_EVENTS_API =
         "https://tiktok-events-api.717560552.workers.dev/";
-
-
-    /* =====================================================
-       Meta 配置
-    ===================================================== */
-
-    const META_PIXEL_ID =
-        "882833290918835";
-
-    const META_CAPI_API =
-        "https://meta-capi.717560552.workers.dev/";
-
-
-    /* =====================================================
-       Supabase 配置
-    ===================================================== */
 
     const SUPABASE_URL =
         "https://tvythmezaecdtqlqtwnh.supabase.co";
@@ -61,15 +51,16 @@ window.addEventListener("DOMContentLoaded", function () {
        生成唯一 Event ID
     ===================================================== */
 
-    function generateEventId() {
+    function generateEventId(prefix = "contact") {
 
         return (
-            "contact_" +
+            prefix +
+            "_" +
             Date.now() +
             "_" +
             Math.random()
                 .toString(36)
-                .substring(2, 10)
+                .substring(2, 12)
         );
 
     }
@@ -81,37 +72,48 @@ window.addEventListener("DOMContentLoaded", function () {
 
     function getCookie(name) {
 
-        const cookies =
-            document.cookie
-                ? document.cookie.split("; ")
-                : [];
+        try {
 
-        for (const cookie of cookies) {
+            const cookies =
+                document.cookie
+                    ? document.cookie.split("; ")
+                    : [];
 
-            const parts =
-                cookie.split("=");
+            for (const cookie of cookies) {
 
-            const key =
-                parts.shift();
+                const parts =
+                    cookie.split("=");
 
-            const value =
-                parts.join("=");
+                const key =
+                    parts.shift();
 
-            if (key === name) {
+                const value =
+                    parts.join("=");
 
-                try {
+                if (key === name) {
 
-                    return decodeURIComponent(
-                        value || ""
-                    );
+                    try {
 
-                } catch (error) {
+                        return decodeURIComponent(
+                            value || ""
+                        );
 
-                    return value || "";
+                    } catch (error) {
+
+                        return value || "";
+
+                    }
 
                 }
 
             }
+
+        } catch (error) {
+
+            console.warn(
+                "Cookie读取失败:",
+                error
+            );
 
         }
 
@@ -148,150 +150,105 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       获取 TikTok Click ID
+       获取 Meta fbp
     ===================================================== */
 
-    function getTikTokClickId() {
+    function getMetaFbp() {
 
-        return getUrlParameter("ttclid");
+        return getCookie("_fbp");
 
     }
 
 
     /* =====================================================
-       获取 Meta Click ID
-       fbclid
+       获取 Meta fbc
+
+       优先使用 Cookie
+       如果没有，则根据 fbclid 创建 fbc
     ===================================================== */
 
-    function getMetaClickId() {
+    function getMetaFbc() {
 
-        return getUrlParameter("fbclid");
-
-    }
-
-
-    /* =====================================================
-       获取 Meta Cookie
-       _fbp / _fbc
-    ===================================================== */
-
-    function getMetaBrowserData() {
-
-        const fbp =
-            getCookie("_fbp");
-
-        let fbc =
+        const cookieFbc =
             getCookie("_fbc");
 
+        if (cookieFbc) {
 
-        /*
-         * 如果 URL 中存在 fbclid，
-         * 但是浏览器没有 _fbc，
-         * 自动生成标准 _fbc 格式。
-         */
-
-        const fbclid =
-            getMetaClickId();
-
-
-        if (
-            !fbc &&
-            fbclid
-        ) {
-
-            fbc =
-                "fb.1." +
-                Date.now() +
-                "." +
-                fbclid;
+            return cookieFbc;
 
         }
 
 
-        return {
+        const fbclid =
+            getUrlParameter("fbclid");
 
-            fbp:
-                fbp,
-
-            fbc:
-                fbc,
-
-            fbclid:
-                fbclid
-
-        };
-
-    }
-
-
-    /* =====================================================
-       获取页面 URL
-    ===================================================== */
-
-    function getPageUrl() {
-
-        try {
-
-            return window.location.href;
-
-        } catch (error) {
+        if (!fbclid) {
 
             return "";
 
         }
 
+
+        return (
+            "fb.1." +
+            Date.now() +
+            "." +
+            fbclid
+        );
+
     }
 
 
     /* =====================================================
-       Meta Pixel Contact
-       浏览器端事件
+       Meta Pixel 浏览器 Contact
+
+       注意：
+
+       eventID 必须作为第三个参数传入，
+       不能放进 custom_data。
     ===================================================== */
 
-    function trackMetaContact(eventId) {
+    function trackMetaPixelContact(eventId) {
 
         try {
 
             if (
-                typeof window.fbq === "function"
+                typeof window.fbq !== "function"
             ) {
 
-                window.fbq(
-                    "track",
-                    "Contact",
-                    {
-
-                        content_name:
-                            "WhatsApp Contact",
-
-                        content_category:
-                            "agarwood",
-
-                        contact_method:
-                            "WhatsApp"
-
-                    },
-                    {
-
-                        eventID:
-                            eventId
-
-                    }
-                );
-
-
-                console.log(
-                    "Meta Pixel Contact 已发送:",
-                    eventId
-                );
-
-            } else {
-
                 console.warn(
-                    "Meta Pixel 尚未加载，Contact 未发送"
+                    "Meta Pixel 尚未加载"
                 );
+
+                return;
 
             }
+
+
+            window.fbq(
+                "track",
+                "Contact",
+                {
+                    content_name:
+                        "WhatsApp Contact",
+
+                    content_category:
+                        "agarwood",
+
+                    contact_method:
+                        "WhatsApp"
+                },
+                {
+                    eventID:
+                        eventId
+                }
+            );
+
+
+            console.log(
+                "Meta Pixel Contact:",
+                eventId
+            );
 
         } catch (error) {
 
@@ -307,31 +264,23 @@ window.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
        Meta Conversions API
-       服务器端 Contact
 
-       注意：
+       浏览器：
+       Meta Pixel Contact
 
-       浏览器 Meta Pixel
-       +
-       Meta CAPI
+       同时：
 
-       使用相同 event_id。
+       Cloudflare Worker
+       ↓
+       Meta Conversions API
 
-       Meta 可以利用 event_id
-       对浏览器端和服务器端事件进行去重。
+       使用相同 Event ID
+       防止重复计算
     ===================================================== */
 
     function trackMetaCAPIContact(eventId) {
 
         try {
-
-            const browserData =
-                getMetaBrowserData();
-
-
-            const pageUrl =
-                getPageUrl();
-
 
             const eventTime =
                 Math.floor(
@@ -339,90 +288,79 @@ window.addEventListener("DOMContentLoaded", function () {
                 );
 
 
-            const serverEvent = {
+            const fbp =
+                getMetaFbp();
 
-                event_name:
-                    "Contact",
 
-                event_time:
-                    eventTime,
+            const fbc =
+                getMetaFbc();
 
-                event_id:
-                    eventId,
 
-                action_source:
-                    "website",
+            const capiEvent = {
 
-                event_source_url:
-                    pageUrl,
+                data: [
 
-                user_data: {},
+                    {
 
-                custom_data: {
+                        event_name:
+                            "Contact",
 
-                    content_name:
-                        "WhatsApp Contact",
+                        event_time:
+                            eventTime,
 
-                    content_category:
-                        "agarwood",
+                        event_id:
+                            eventId,
 
-                    contact_method:
-                        "WhatsApp"
+                        action_source:
+                            "website",
 
-                }
+                        event_source_url:
+                            window.location.href,
+
+                        user_data: {},
+
+                        custom_data: {
+
+                            content_name:
+                                "WhatsApp Contact",
+
+                            content_category:
+                                "agarwood",
+
+                            contact_method:
+                                "WhatsApp"
+
+                        }
+
+                    }
+
+                ]
 
             };
 
 
             /* =============================================
                Meta Browser ID
-               _fbp
             ============================================= */
 
-            if (
-                browserData.fbp
-            ) {
+            if (fbp) {
 
-                serverEvent.user_data.fbp =
-                    browserData.fbp;
+                capiEvent.data[0].user_data.fbp =
+                    fbp;
 
             }
 
 
             /* =============================================
                Meta Click ID
-               _fbc
             ============================================= */
 
-            if (
-                browserData.fbc
-            ) {
+            if (fbc) {
 
-                serverEvent.user_data.fbc =
-                    browserData.fbc;
+                capiEvent.data[0].user_data.fbc =
+                    fbc;
 
             }
-
-
-            /* =============================================
-               fbclid
-               如果 Worker 支持，也一并发送
-            ============================================= */
-
-            if (
-                browserData.fbclid
-            ) {
-
-                serverEvent.user_data.fbclid =
-                    browserData.fbclid;
-
-            }
-
-
-            console.log(
-                "Meta CAPI Contact 准备发送:",
-                serverEvent
-            );
 
 
             /* =============================================
@@ -430,7 +368,7 @@ window.addEventListener("DOMContentLoaded", function () {
             ============================================= */
 
             fetch(
-                META_CAPI_API,
+                META_CAPI_URL,
                 {
 
                     method:
@@ -445,7 +383,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
                     body:
                         JSON.stringify(
-                            serverEvent
+                            capiEvent
                         ),
 
                     keepalive:
@@ -472,17 +410,18 @@ window.addEventListener("DOMContentLoaded", function () {
                 function (error) {
 
                     console.error(
-                        "Meta CAPI 请求失败:",
+                        "Meta CAPI Error:",
                         error
                     );
 
                 }
             );
 
+
         } catch (error) {
 
             console.error(
-                "Meta CAPI Contact Error:",
+                "Meta CAPI处理错误:",
                 error
             );
 
@@ -492,17 +431,42 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
+       TikTok Click ID
+    ===================================================== */
+
+    function getTikTokClickId() {
+
+        try {
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            return (
+                params.get("ttclid") ||
+                ""
+            );
+
+        } catch (error) {
+
+            return "";
+
+        }
+
+    }
+
+
+    /* =====================================================
        TikTok Contact
 
-       浏览器 Pixel
-       +
-       Cloudflare Events API
+       Pixel + Events API
     ===================================================== */
 
     function trackTikTokContact() {
 
         const eventId =
-            generateEventId();
+            generateEventId("tiktok_contact");
 
 
         const ttclid =
@@ -514,7 +478,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
         const pageUrl =
-            getPageUrl();
+            window.location.href;
 
 
         const eventTime =
@@ -622,11 +586,7 @@ window.addEventListener("DOMContentLoaded", function () {
             };
 
 
-            /* TikTok Click ID */
-
-            if (
-                ttclid
-            ) {
+            if (ttclid) {
 
                 serverEvent.user.ttclid =
                     ttclid;
@@ -634,11 +594,7 @@ window.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            /* TikTok Browser ID */
-
-            if (
-                ttp
-            ) {
+            if (ttp) {
 
                 serverEvent.user.ttp =
                     ttp;
@@ -910,10 +866,6 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* =================================================
-           强制图片加载
-        ================================================= */
-
         slides.forEach(
             function (slide) {
 
@@ -942,12 +894,8 @@ window.addEventListener("DOMContentLoaded", function () {
                     img.dataset &&
                     img.dataset.src &&
                     (
-                        !img.getAttribute(
-                            "src"
-                        ) ||
-                        img.getAttribute(
-                            "src"
-                        ) === ""
+                        !img.getAttribute("src") ||
+                        img.getAttribute("src") === ""
                     )
                 ) {
 
@@ -959,10 +907,6 @@ window.addEventListener("DOMContentLoaded", function () {
             }
         );
 
-
-        /* =================================================
-           只有一张图片
-        ================================================= */
 
         if (
             slides.length === 1
@@ -1007,22 +951,14 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* =================================================
-           创建首尾克隆
-        ================================================= */
-
         const firstClone =
-            slides[0].cloneNode(
-                true
-            );
+            slides[0].cloneNode(true);
 
 
         const lastClone =
             slides[
                 slides.length - 1
-            ].cloneNode(
-                true
-            );
+            ].cloneNode(true);
 
 
         firstClone.classList.add(
@@ -1084,10 +1020,6 @@ window.addEventListener("DOMContentLoaded", function () {
             false;
 
 
-        /* =================================================
-           更新圆点
-        ================================================= */
-
         function updateDots() {
 
             let realIndex =
@@ -1131,10 +1063,6 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* =================================================
-           设置位置
-        ================================================= */
-
         function setPosition(
             animated
         ) {
@@ -1157,10 +1085,6 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
-
-        /* =================================================
-           移动
-        ================================================= */
 
         function move(
             direction
@@ -1188,18 +1112,13 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* =================================================
-           动画结束
-        ================================================= */
-
         track.addEventListener(
             "transitionend",
             function (event) {
 
                 if (
                     event.propertyName &&
-                    event.propertyName !==
-                    "transform"
+                    event.propertyName !== "transform"
                 ) {
 
                     return;
@@ -1221,6 +1140,7 @@ window.addEventListener("DOMContentLoaded", function () {
                     );
 
                 }
+
 
                 else if (
                     current === 0
@@ -1244,10 +1164,6 @@ window.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /* =================================================
-           上一张
-        ================================================= */
-
         if (prev) {
 
             prev.addEventListener(
@@ -1266,10 +1182,6 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* =================================================
-           下一张
-        ================================================= */
-
         if (next) {
 
             next.addEventListener(
@@ -1287,10 +1199,6 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
-
-        /* =================================================
-           圆点
-        ================================================= */
 
         dots.forEach(
             function (
@@ -1332,10 +1240,6 @@ window.addEventListener("DOMContentLoaded", function () {
             }
         );
 
-
-        /* =================================================
-           手机触摸滑动
-        ================================================= */
 
         let startX =
             0;
@@ -1424,8 +1328,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
                 if (
                     Math.abs(deltaX) < 40 ||
-                    Math.abs(deltaX) <=
-                    Math.abs(deltaY)
+                    Math.abs(deltaX) <= Math.abs(deltaY)
                 ) {
 
                     return;
@@ -1451,10 +1354,6 @@ window.addEventListener("DOMContentLoaded", function () {
             }
         );
 
-
-        /* =================================================
-           初始化
-        ================================================= */
 
         setPosition(
             false
@@ -1566,8 +1465,6 @@ window.addEventListener("DOMContentLoaded", function () {
             [];
 
 
-        /* 沉香树 */
-
         const treeImages =
             Array.from(
                 document.querySelectorAll(
@@ -1592,8 +1489,6 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
-
-        /* 产品 */
 
         const productImages =
             Array.from(
@@ -1620,8 +1515,6 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* 客户评价 */
-
         const reviewImages =
             Array.from(
                 document.querySelectorAll(
@@ -1646,8 +1539,6 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
-
-        /* 活动图片 */
 
         const shippingImages =
             Array.from(
@@ -1688,15 +1579,12 @@ window.addEventListener("DOMContentLoaded", function () {
 
             for (
                 let groupIndex = 0;
-                groupIndex <
-                imageGroups.length;
+                groupIndex < imageGroups.length;
                 groupIndex++
             ) {
 
                 const group =
-                    imageGroups[
-                        groupIndex
-                    ];
+                    imageGroups[groupIndex];
 
 
                 const imageIndex =
@@ -1904,8 +1792,7 @@ window.addEventListener("DOMContentLoaded", function () {
             ) {
 
                 currentImageIndex =
-                    currentGroup.images.length -
-                    1;
+                    currentGroup.images.length - 1;
 
             }
 
@@ -1959,7 +1846,6 @@ window.addEventListener("DOMContentLoaded", function () {
                                 event.preventDefault();
 
                                 event.stopPropagation();
-
 
                                 openLightbox(
                                     image
@@ -2052,10 +1938,6 @@ window.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /* =================================================
-           手机 Lightbox 滑动
-        ================================================= */
-
         let lightboxStartX =
             0;
 
@@ -2145,8 +2027,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
                 if (
                     Math.abs(deltaX) < 50 ||
-                    Math.abs(deltaX) <=
-                    Math.abs(deltaY)
+                    Math.abs(deltaX) <= Math.abs(deltaY)
                 ) {
 
                     return;
@@ -2173,10 +2054,6 @@ window.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /* =================================================
-           键盘控制
-        ================================================= */
-
         document.addEventListener(
             "keydown",
             function (event) {
@@ -2193,8 +2070,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
                 if (
-                    event.key ===
-                    "Escape"
+                    event.key === "Escape"
                 ) {
 
                     closeLightbox();
@@ -2203,8 +2079,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
                 if (
-                    event.key ===
-                    "ArrowLeft"
+                    event.key === "ArrowLeft"
                 ) {
 
                     showPreviousImage();
@@ -2213,8 +2088,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
                 if (
-                    event.key ===
-                    "ArrowRight"
+                    event.key === "ArrowRight"
                 ) {
 
                     showNextImage();
@@ -2275,7 +2149,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
                 console.error(
-                    "Supabase客服轮询失败：",
+                    "Supabase客服轮询失败:",
                     response.status,
                     errorText
                 );
@@ -2293,7 +2167,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
             console.log(
-                "Supabase返回客服：",
+                "Supabase返回客服:",
                 result
             );
 
@@ -2316,7 +2190,7 @@ window.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
 
             console.error(
-                "获取客服号码失败：",
+                "获取客服号码失败:",
                 error
             );
 
@@ -2330,57 +2204,46 @@ window.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
        WhatsApp 核心功能
-
-       点击 WhatsApp 后：
-
-       ① Meta Pixel Contact
-       ② Meta CAPI Contact
-       ③ TikTok Pixel Contact
-       ④ TikTok Events API Contact
-       ⑤ Supabase 获取在线客服
-       ⑥ 跳转 WhatsApp
     ===================================================== */
 
     async function openWhatsApp() {
 
-        /* ---------------------------------------------
-           生成 Meta 本次 Contact 的唯一 Event ID
-        --------------------------------------------- */
+        /* =================================================
+           生成 Meta Event ID
+        ================================================= */
 
         const metaEventId =
-            generateEventId();
+            generateEventId("meta_contact");
 
 
-        /* ---------------------------------------------
+        /* =================================================
            Meta Pixel
-        --------------------------------------------- */
+           +
+           Meta Conversions API
 
-        trackMetaContact(
+           两者使用相同 Event ID
+        ================================================= */
+
+        trackMetaPixelContact(
             metaEventId
         );
 
-
-        /* ---------------------------------------------
-           Meta Conversions API
-        --------------------------------------------- */
 
         trackMetaCAPIContact(
             metaEventId
         );
 
 
-        /* ---------------------------------------------
+        /* =================================================
            TikTok Pixel + Events API
-
-           TikTok 使用独立 Event ID
-        --------------------------------------------- */
+        ================================================= */
 
         trackTikTokContact();
 
 
-        /* ---------------------------------------------
+        /* =================================================
            获取在线客服
-        --------------------------------------------- */
+        ================================================= */
 
         const customerService =
             await getNextWhatsAppNumber();
@@ -2397,9 +2260,9 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* ---------------------------------------------
+        /* =================================================
            清理电话号码
-        --------------------------------------------- */
+        ================================================= */
 
         const phone =
             String(
@@ -2423,9 +2286,9 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /* ---------------------------------------------
+        /* =================================================
            WhatsApp URL
-        --------------------------------------------- */
+        ================================================= */
 
         const whatsappUrl =
             "https://wa.me/" +
@@ -2433,16 +2296,15 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
         console.log(
-            "正在打开在线客服：",
-            customerService.name ||
-            "",
+            "正在打开在线客服:",
+            customerService.name || "",
             phone
         );
 
 
-        /* ---------------------------------------------
-           打开 WhatsApp Web / App
-        --------------------------------------------- */
+        /* =================================================
+           跳转 WhatsApp
+        ================================================= */
 
         window.location.href =
             whatsappUrl;
@@ -2480,12 +2342,8 @@ window.addEventListener("DOMContentLoaded", function () {
             const hasWhatsAppHref =
                 href &&
                 (
-                    href.includes(
-                        "wa.me"
-                    ) ||
-                    href.includes(
-                        "whatsapp.com"
-                    )
+                    href.includes("wa.me") ||
+                    href.includes("whatsapp.com")
                 );
 
 
@@ -2499,7 +2357,8 @@ window.addEventListener("DOMContentLoaded", function () {
                 (
                     target.textContent ||
                     ""
-                ).toLowerCase();
+                )
+                .toLowerCase();
 
 
             const hasWhatsAppText =
@@ -2533,10 +2392,6 @@ window.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
        提供给 HTML onclick 使用
-
-       例如：
-
-       onclick="openWhatsApp()"
     ===================================================== */
 
     window.openWhatsApp =
@@ -2560,19 +2415,13 @@ window.addEventListener("DOMContentLoaded", function () {
 
     console.log(
         "Meta CAPI:",
-        META_CAPI_API
+        META_CAPI_URL
     );
 
 
     console.log(
         "TikTok Pixel ID:",
         TIKTOK_PIXEL_ID
-    );
-
-
-    console.log(
-        "TikTok Events API:",
-        TIKTOK_EVENTS_API
     );
 
 });
