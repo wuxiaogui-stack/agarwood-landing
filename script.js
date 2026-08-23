@@ -2153,11 +2153,7 @@ window.addEventListener("DOMContentLoaded", function () {
            打开 WhatsApp Web / App
         --------------------------------------------- */
 
-        window.open(
-            whatsappUrl,
-            "_blank",
-            "noopener,noreferrer"
-        );
+  window.location.href = whatsappUrl;
 
     }
 
