@@ -1,8 +1,15 @@
-
 window.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
        网站数据追踪系统
+
+       Meta Pixel
+       Pixel ID:
+       882833290918835
+
+       Meta Conversions API
+       Cloudflare Worker:
+       https://meta-capi.717560552.workers.dev/
 
        TikTok Pixel
        Pixel ID:
@@ -11,10 +18,6 @@ window.addEventListener("DOMContentLoaded", function () {
        TikTok Events API
        Cloudflare Worker:
        https://tiktok-events-api.717560552.workers.dev/
-
-       Meta Pixel
-       Pixel ID:
-       882833290918835
 
        Supabase
        用于自动轮询在线 WhatsApp 客服
@@ -33,11 +36,14 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       Meta Pixel 配置
+       Meta 配置
     ===================================================== */
 
     const META_PIXEL_ID =
         "882833290918835";
+
+    const META_CAPI_API =
+        "https://meta-capi.717560552.workers.dev/";
 
 
     /* =====================================================
@@ -115,10 +121,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       获取 TikTok Click ID
+       获取 URL 参数
     ===================================================== */
 
-    function getTikTokClickId() {
+    function getUrlParameter(name) {
 
         try {
 
@@ -128,7 +134,7 @@ window.addEventListener("DOMContentLoaded", function () {
                 );
 
             return (
-                params.get("ttclid") ||
+                params.get(name) ||
                 ""
             );
 
@@ -142,7 +148,104 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
+       获取 TikTok Click ID
+    ===================================================== */
+
+    function getTikTokClickId() {
+
+        return getUrlParameter("ttclid");
+
+    }
+
+
+    /* =====================================================
+       获取 Meta Click ID
+       fbclid
+    ===================================================== */
+
+    function getMetaClickId() {
+
+        return getUrlParameter("fbclid");
+
+    }
+
+
+    /* =====================================================
+       获取 Meta Cookie
+       _fbp / _fbc
+    ===================================================== */
+
+    function getMetaBrowserData() {
+
+        const fbp =
+            getCookie("_fbp");
+
+        let fbc =
+            getCookie("_fbc");
+
+
+        /*
+         * 如果 URL 中存在 fbclid，
+         * 但是浏览器没有 _fbc，
+         * 自动生成标准 _fbc 格式。
+         */
+
+        const fbclid =
+            getMetaClickId();
+
+
+        if (
+            !fbc &&
+            fbclid
+        ) {
+
+            fbc =
+                "fb.1." +
+                Date.now() +
+                "." +
+                fbclid;
+
+        }
+
+
+        return {
+
+            fbp:
+                fbp,
+
+            fbc:
+                fbc,
+
+            fbclid:
+                fbclid
+
+        };
+
+    }
+
+
+    /* =====================================================
+       获取页面 URL
+    ===================================================== */
+
+    function getPageUrl() {
+
+        try {
+
+            return window.location.href;
+
+        } catch (error) {
+
+            return "";
+
+        }
+
+    }
+
+
+    /* =====================================================
        Meta Pixel Contact
+       浏览器端事件
     ===================================================== */
 
     function trackMetaContact(eventId) {
@@ -157,6 +260,7 @@ window.addEventListener("DOMContentLoaded", function () {
                     "track",
                     "Contact",
                     {
+
                         content_name:
                             "WhatsApp Contact",
 
@@ -164,29 +268,21 @@ window.addEventListener("DOMContentLoaded", function () {
                             "agarwood",
 
                         contact_method:
-                            "WhatsApp",
+                            "WhatsApp"
+
+                    },
+                    {
 
                         eventID:
                             eventId
+
                     }
                 );
 
 
                 console.log(
-                    "Meta Pixel Contact:",
-                    {
-                        content_name:
-                            "WhatsApp Contact",
-
-                        content_category:
-                            "agarwood",
-
-                        contact_method:
-                            "WhatsApp",
-
-                        eventID:
-                            eventId
-                    }
+                    "Meta Pixel Contact 已发送:",
+                    eventId
                 );
 
             } else {
@@ -201,6 +297,192 @@ window.addEventListener("DOMContentLoaded", function () {
 
             console.error(
                 "Meta Pixel Contact Error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       Meta Conversions API
+       服务器端 Contact
+
+       注意：
+
+       浏览器 Meta Pixel
+       +
+       Meta CAPI
+
+       使用相同 event_id。
+
+       Meta 可以利用 event_id
+       对浏览器端和服务器端事件进行去重。
+    ===================================================== */
+
+    function trackMetaCAPIContact(eventId) {
+
+        try {
+
+            const browserData =
+                getMetaBrowserData();
+
+
+            const pageUrl =
+                getPageUrl();
+
+
+            const eventTime =
+                Math.floor(
+                    Date.now() / 1000
+                );
+
+
+            const serverEvent = {
+
+                event_name:
+                    "Contact",
+
+                event_time:
+                    eventTime,
+
+                event_id:
+                    eventId,
+
+                action_source:
+                    "website",
+
+                event_source_url:
+                    pageUrl,
+
+                user_data: {},
+
+                custom_data: {
+
+                    content_name:
+                        "WhatsApp Contact",
+
+                    content_category:
+                        "agarwood",
+
+                    contact_method:
+                        "WhatsApp"
+
+                }
+
+            };
+
+
+            /* =============================================
+               Meta Browser ID
+               _fbp
+            ============================================= */
+
+            if (
+                browserData.fbp
+            ) {
+
+                serverEvent.user_data.fbp =
+                    browserData.fbp;
+
+            }
+
+
+            /* =============================================
+               Meta Click ID
+               _fbc
+            ============================================= */
+
+            if (
+                browserData.fbc
+            ) {
+
+                serverEvent.user_data.fbc =
+                    browserData.fbc;
+
+            }
+
+
+            /* =============================================
+               fbclid
+               如果 Worker 支持，也一并发送
+            ============================================= */
+
+            if (
+                browserData.fbclid
+            ) {
+
+                serverEvent.user_data.fbclid =
+                    browserData.fbclid;
+
+            }
+
+
+            console.log(
+                "Meta CAPI Contact 准备发送:",
+                serverEvent
+            );
+
+
+            /* =============================================
+               发送到 Cloudflare Worker
+            ============================================= */
+
+            fetch(
+                META_CAPI_API,
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            serverEvent
+                        ),
+
+                    keepalive:
+                        true
+
+                }
+            )
+            .then(
+                async function (response) {
+
+                    const text =
+                        await response.text();
+
+
+                    console.log(
+                        "Meta CAPI:",
+                        response.status,
+                        text
+                    );
+
+                }
+            )
+            .catch(
+                function (error) {
+
+                    console.error(
+                        "Meta CAPI 请求失败:",
+                        error
+                    );
+
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Meta CAPI Contact Error:",
                 error
             );
 
@@ -232,7 +514,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
         const pageUrl =
-            window.location.href;
+            getPageUrl();
 
 
         const eventTime =
@@ -299,7 +581,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
         /* =================================================
-           Cloudflare Events API
+           TikTok Events API
         ================================================= */
 
         try {
@@ -342,7 +624,9 @@ window.addEventListener("DOMContentLoaded", function () {
 
             /* TikTok Click ID */
 
-            if (ttclid) {
+            if (
+                ttclid
+            ) {
 
                 serverEvent.user.ttclid =
                     ttclid;
@@ -352,7 +636,9 @@ window.addEventListener("DOMContentLoaded", function () {
 
             /* TikTok Browser ID */
 
-            if (ttp) {
+            if (
+                ttp
+            ) {
 
                 serverEvent.user.ttp =
                     ttp;
@@ -413,16 +699,12 @@ window.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
 
             console.error(
-                "Events API Error:",
+                "TikTok Events API Error:",
                 error
             );
 
         }
 
-
-        /* =================================================
-           返回 Event ID
-        ================================================= */
 
         return eventId;
 
@@ -939,7 +1221,6 @@ window.addEventListener("DOMContentLoaded", function () {
                     );
 
                 }
-
 
                 else if (
                     current === 0
@@ -2053,19 +2334,20 @@ window.addEventListener("DOMContentLoaded", function () {
        点击 WhatsApp 后：
 
        ① Meta Pixel Contact
-       ② TikTok Pixel Contact
-       ③ TikTok Events API Contact
-       ④ Supabase 获取在线客服
-       ⑤ 跳转 WhatsApp
+       ② Meta CAPI Contact
+       ③ TikTok Pixel Contact
+       ④ TikTok Events API Contact
+       ⑤ Supabase 获取在线客服
+       ⑥ 跳转 WhatsApp
     ===================================================== */
 
     async function openWhatsApp() {
 
         /* ---------------------------------------------
-           生成本次 Contact 的唯一 Event ID
+           生成 Meta 本次 Contact 的唯一 Event ID
         --------------------------------------------- */
 
-        const eventId =
+        const metaEventId =
             generateEventId();
 
 
@@ -2074,14 +2356,23 @@ window.addEventListener("DOMContentLoaded", function () {
         --------------------------------------------- */
 
         trackMetaContact(
-            eventId
+            metaEventId
+        );
+
+
+        /* ---------------------------------------------
+           Meta Conversions API
+        --------------------------------------------- */
+
+        trackMetaCAPIContact(
+            metaEventId
         );
 
 
         /* ---------------------------------------------
            TikTok Pixel + Events API
 
-           使用独立的 TikTok Event ID
+           TikTok 使用独立 Event ID
         --------------------------------------------- */
 
         trackTikTokContact();
@@ -2153,7 +2444,8 @@ window.addEventListener("DOMContentLoaded", function () {
            打开 WhatsApp Web / App
         --------------------------------------------- */
 
-  window.location.href = whatsappUrl;
+        window.location.href =
+            whatsappUrl;
 
     }
 
@@ -2259,14 +2551,28 @@ window.addEventListener("DOMContentLoaded", function () {
         "网站脚本加载完成"
     );
 
+
     console.log(
         "Meta Pixel ID:",
         META_PIXEL_ID
     );
 
+
+    console.log(
+        "Meta CAPI:",
+        META_CAPI_API
+    );
+
+
     console.log(
         "TikTok Pixel ID:",
         TIKTOK_PIXEL_ID
+    );
+
+
+    console.log(
+        "TikTok Events API:",
+        TIKTOK_EVENTS_API
     );
 
 });
