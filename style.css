@@ -1,4 +1,4 @@
-```css
+css
 /* =========================================================
    基础重置
 ========================================================= */
@@ -2213,4 +2213,927 @@ html[dir="rtl"] body {
         font-size: 15px;
     }
 }
-```
+
+/* =========================================================
+   手机端最终修正版
+   不修改桌面端布局
+   只覆盖 700px 以下设备
+========================================================= */
+
+@media (max-width: 700px) {
+
+    /* =====================================================
+       全局防止横向溢出
+    ===================================================== */
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    body {
+        min-width: 0;
+    }
+
+    img,
+    video {
+        max-width: 100%;
+    }
+
+
+    /* =====================================================
+       Header
+    ===================================================== */
+
+    .header {
+        width: 100%;
+        min-height: 64px;
+        height: 64px;
+
+        padding: 8px 14px;
+
+        display: flex;
+        align-items: center;
+
+        gap: 8px;
+    }
+
+    .logo {
+        min-width: 0;
+
+        flex: 1 1 auto;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+
+        font-size: 16px;
+
+        letter-spacing: 0.5px;
+    }
+
+    .header-button {
+        flex: 0 0 auto;
+
+        min-height: 40px;
+
+        margin-left: 0;
+
+        padding: 8px 13px;
+
+        border-radius: 22px;
+
+        font-size: 12px;
+
+        white-space: nowrap;
+    }
+
+    .menu-toggle {
+        flex: 0 0 42px;
+
+        width: 42px;
+        height: 42px;
+
+        margin-left: 0;
+    }
+
+
+    /* =====================================================
+       手机导航菜单
+    ===================================================== */
+
+    .nav {
+        position: absolute;
+
+        top: 64px;
+        left: 0;
+        right: 0;
+
+        width: 100%;
+
+        margin: 0;
+
+        padding: 6px 0;
+
+        max-height: calc(100svh - 64px);
+
+        overflow-y: auto;
+
+        border-top:
+            1px solid rgba(255,255,255,0.08);
+
+        box-shadow:
+            0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .nav a {
+        width: 100%;
+
+        min-height: 48px;
+
+        padding: 13px 20px;
+
+        display: flex;
+
+        align-items: center;
+
+        font-size: 14px;
+    }
+
+
+    /* =====================================================
+       Hero
+    ===================================================== */
+
+    .hero {
+        width: 100%;
+
+        min-height: 100svh;
+
+        padding: 0;
+
+        background-position: center center;
+    }
+
+    .hero-content {
+        width: 100%;
+
+        max-width: none;
+
+        margin: 0;
+
+        padding:
+            100px 20px 50px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        justify-content: center;
+    }
+
+    .eyebrow {
+        margin-bottom: 12px;
+
+        font-size: 10px;
+
+        letter-spacing: 1.5px;
+    }
+
+    .hero h1 {
+        width: 100%;
+
+        margin-bottom: 18px;
+
+        font-size: clamp(32px, 9vw, 40px);
+
+        line-height: 1.3;
+
+        letter-spacing: 0;
+
+        word-break: normal;
+
+        overflow-wrap: break-word;
+    }
+
+    .hero-description {
+        width: 100%;
+
+        max-width: 100%;
+
+        font-size: 14px;
+
+        line-height: 1.9;
+
+        overflow-wrap: break-word;
+    }
+
+
+    /* =====================================================
+       Features
+    ===================================================== */
+
+    .features {
+        width: 100%;
+
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .feature {
+        min-width: 0;
+
+        padding:
+            26px 10px;
+    }
+
+    .feature-number {
+        margin-bottom: 8px;
+
+        font-size: 11px;
+
+        letter-spacing: 1px;
+    }
+
+    .feature h3 {
+        margin-bottom: 6px;
+
+        font-size: 15px;
+
+        line-height: 1.4;
+    }
+
+    .feature p {
+        font-size: 11px;
+
+        line-height: 1.6;
+
+        word-break: break-word;
+    }
+
+
+    /* =====================================================
+       所有 Section
+    ===================================================== */
+
+    .trees-section,
+    .video-section,
+    .products-section,
+    .shipping-section,
+    .reviews-section,
+    .contact-section {
+        width: 100%;
+
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .trees-section,
+    .products-section,
+    .shipping-section,
+    .reviews-section {
+        padding-top: 65px;
+        padding-bottom: 65px;
+    }
+
+
+    /* =====================================================
+       标题
+    ===================================================== */
+
+    .section-heading {
+        width: 100%;
+
+        max-width: 100%;
+
+        margin:
+            0 auto 32px;
+    }
+
+    .section-heading h2 {
+        width: 100%;
+
+        margin-bottom: 14px;
+
+        font-size: 30px;
+
+        line-height: 1.35;
+
+        word-break: break-word;
+    }
+
+    .section-heading p {
+        width: 100%;
+
+        font-size: 13px;
+
+        line-height: 1.8;
+    }
+
+
+    /* =====================================================
+       沉香树轮播
+    ===================================================== */
+
+    .tree-slider {
+        width: 100%;
+
+        max-width: 100%;
+
+        margin: 0 auto;
+
+        border-radius: 10px;
+    }
+
+    .tree-track {
+        width: 100%;
+    }
+
+    .tree-slide {
+        flex:
+            0 0 100%;
+
+        width: 100%;
+
+        min-width: 100%;
+
+        aspect-ratio: 1 / 1;
+    }
+
+    .tree-slide img {
+        width: 100%;
+        height: 100%;
+
+        object-fit: cover;
+    }
+
+    .slider-button {
+        width: 36px;
+        height: 36px;
+
+        font-size: 24px;
+    }
+
+    .slider-prev {
+        left: 8px;
+    }
+
+    .slider-next {
+        right: 8px;
+    }
+
+    .slider-dots {
+        margin-top: 18px;
+
+        gap: 7px;
+    }
+
+    .slider-dot {
+        width: 7px;
+        height: 7px;
+    }
+
+    .slider-dot.active {
+        width: 22px;
+    }
+
+
+    /* =====================================================
+       Video
+    ===================================================== */
+
+    .video-section {
+        padding-top: 65px;
+        padding-bottom: 65px;
+    }
+
+    .video-content {
+        width: 100%;
+
+        max-width: 100%;
+
+        margin-bottom: 25px;
+    }
+
+    .video-eyebrow {
+        font-size: 10px;
+
+        letter-spacing: 2px;
+    }
+
+    .video-content h2 {
+        margin-bottom: 14px;
+
+        font-size: 30px;
+
+        line-height: 1.35;
+    }
+
+    .video-content p:last-child {
+        font-size: 13px;
+
+        line-height: 1.8;
+    }
+
+    .video-placeholder {
+        width: 100%;
+
+        max-width: 100%;
+
+        border-radius: 10px;
+    }
+
+    .video-placeholder video {
+        width: 100%;
+        height: auto;
+
+        max-height: none;
+    }
+
+
+    /* =====================================================
+       产品
+    ===================================================== */
+
+    .product-grid {
+        width: 100%;
+
+        max-width: 100%;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+    .product-card {
+        min-width: 0;
+
+        width: 100%;
+
+        border-radius: 9px;
+    }
+
+    .product-image {
+        width: 100%;
+
+        aspect-ratio: 1 / 1;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+
+        object-fit: cover;
+    }
+
+    .secondary-cta {
+        width: 100%;
+
+        max-width: 100%;
+
+        min-height: 52px;
+
+        padding:
+            13px 20px;
+
+        font-size: 15px;
+    }
+
+
+    /* =====================================================
+       Shipping
+    ===================================================== */
+
+    .shipping-content {
+        width: 100%;
+
+        max-width: 100%;
+
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+    }
+
+    .shipping-info {
+        width: 100%;
+
+        min-width: 0;
+
+        gap: 14px;
+    }
+
+    .shipping-item {
+        width: 100%;
+
+        min-width: 0;
+
+        padding: 20px;
+
+        border-radius: 10px;
+    }
+
+    .shipping-item h3 {
+        font-size: 18px;
+
+        line-height: 1.5;
+    }
+
+    .shipping-item p {
+        font-size: 13px;
+
+        line-height: 1.8;
+
+        overflow-wrap: break-word;
+    }
+
+    .shipping-promotion {
+        width: 100%;
+
+        min-width: 0;
+
+        border-radius: 10px;
+    }
+
+    .shipping-promotion-image {
+        width: 100%;
+
+        aspect-ratio: 4 / 3;
+    }
+
+    .shipping-promotion-image img {
+        width: 100%;
+        height: 100%;
+
+        object-fit: cover;
+    }
+
+    .shipping-promotion-text {
+        padding: 20px;
+    }
+
+    .shipping-promotion-text h3 {
+        font-size: 21px;
+
+        line-height: 1.45;
+    }
+
+    .shipping-promotion-text p {
+        font-size: 13px;
+
+        line-height: 1.8;
+    }
+
+    .shipping-button {
+        width: 100%;
+
+        min-height: 52px;
+
+        padding:
+            13px 20px;
+
+        font-size: 15px;
+    }
+
+
+    /* =====================================================
+       客户评价
+    ===================================================== */
+
+    .review-slider {
+        width: 100%;
+
+        max-width: 100%;
+
+        border-radius: 10px;
+    }
+
+    .review-slide {
+        width: 100%;
+
+        min-width: 100%;
+    }
+
+    .review-slide img {
+        width: 100%;
+        height: auto;
+
+        max-height: 75svh;
+
+        object-fit: contain;
+    }
+
+    .review-button {
+        width: 36px;
+        height: 36px;
+
+        font-size: 24px;
+    }
+
+    .review-prev {
+        left: 7px;
+    }
+
+    .review-next {
+        right: 7px;
+    }
+
+    .review-dots {
+        margin-top: 18px;
+
+        gap: 7px;
+    }
+
+
+    /* =====================================================
+       Contact
+    ===================================================== */
+
+    .contact-section {
+        padding-top: 70px;
+        padding-bottom: 70px;
+    }
+
+    .contact-content {
+        width: 100%;
+
+        max-width: 100%;
+    }
+
+    .contact-eyebrow {
+        font-size: 10px;
+
+        letter-spacing: 2px;
+    }
+
+    .contact-content h2 {
+        width: 100%;
+
+        margin-bottom: 16px;
+
+        font-size: 32px;
+
+        line-height: 1.4;
+    }
+
+    .contact-content p {
+        width: 100%;
+
+        margin-bottom: 28px;
+
+        font-size: 13px;
+
+        line-height: 1.9;
+    }
+
+    .whatsapp-button {
+        width: 100%;
+
+        min-width: 0;
+
+        min-height: 60px;
+
+        padding:
+            16px 20px;
+
+        font-size: 17px;
+
+        border-radius: 32px;
+    }
+
+
+    /* =====================================================
+       Footer
+    ===================================================== */
+
+    .footer {
+        width: 100%;
+
+        padding:
+            28px 18px;
+    }
+
+    .footer-logo {
+        font-size: 18px;
+    }
+
+    .footer-links {
+        width: 100%;
+
+        gap:
+            10px 16px;
+    }
+
+    .footer-links a {
+        font-size: 12px;
+    }
+
+    .footer p {
+        font-size: 11px;
+
+        line-height: 1.7;
+    }
+
+
+    /* =====================================================
+       Lightbox
+    ===================================================== */
+
+    .image-lightbox {
+        width: 100%;
+        height: 100%;
+
+        padding: 10px;
+    }
+
+    .lightbox-image-wrap {
+        width: 94vw;
+
+        height: 82svh;
+    }
+
+    .lightbox-image-wrap img {
+        max-width: 94vw;
+
+        max-height: 82svh;
+    }
+
+    .lightbox-close {
+        top: 8px;
+        right: 8px;
+
+        width: 42px;
+        height: 42px;
+
+        font-size: 28px;
+    }
+
+    .lightbox-prev,
+    .lightbox-next {
+        width: 36px;
+        height: 52px;
+
+        font-size: 32px;
+    }
+
+    .lightbox-prev {
+        left: 4px;
+    }
+
+    .lightbox-next {
+        right: 4px;
+    }
+
+}
+
+
+/* =========================================================
+   超小屏手机
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .header {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .logo {
+        font-size: 14px;
+
+        letter-spacing: 0;
+    }
+
+    .header-button {
+        padding:
+            7px 10px;
+
+        font-size: 11px;
+    }
+
+    .menu-toggle {
+        flex-basis: 38px;
+
+        width: 38px;
+        height: 38px;
+    }
+
+    .hero-content {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
+
+    .hero-description {
+        font-size: 13px;
+    }
+
+    .features .feature {
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    .feature h3 {
+        font-size: 14px;
+    }
+
+    .feature p {
+        font-size: 10px;
+    }
+
+    .trees-section,
+    .video-section,
+    .products-section,
+    .shipping-section,
+    .reviews-section,
+    .contact-section {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .section-heading h2,
+    .video-content h2 {
+        font-size: 28px;
+    }
+
+    .product-grid {
+        gap: 7px;
+    }
+
+    .product-card {
+        border-radius: 7px;
+    }
+
+}
+
+
+/* =========================================================
+   Arabic RTL 手机端最终修正
+========================================================= */
+
+@media (max-width: 700px) {
+
+    html[dir="rtl"] .header {
+        direction: rtl;
+    }
+
+    html[dir="rtl"] .logo {
+        text-align: right;
+
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    html[dir="rtl"] .header-button {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    html[dir="rtl"] .menu-toggle {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    html[dir="rtl"] .nav {
+        left: 0;
+        right: 0;
+
+        direction: rtl;
+
+        text-align: right;
+    }
+
+    html[dir="rtl"] .nav a {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .hero-content {
+        margin: 0;
+
+        text-align: right;
+
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    html[dir="rtl"] .hero h1,
+    html[dir="rtl"] .hero-description,
+    html[dir="rtl"] .eyebrow {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .feature {
+        text-align: center;
+    }
+
+    html[dir="rtl"] .shipping-item,
+    html[dir="rtl"] .shipping-promotion-text {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .contact-content {
+        text-align: center;
+    }
+
+    html[dir="rtl"] .footer {
+        text-align: center;
+    }
+
+}
+
+
+/* =========================================================
+   防止长阿拉伯语 / 英文内容撑破页面
+========================================================= */
+
+html[dir="rtl"] *,
+html[dir="rtl"] *::before,
+html[dir="rtl"] *::after {
+    overflow-wrap: anywhere;
+}
