@@ -164,7 +164,9 @@ window.addEventListener("DOMContentLoaded", function () {
        获取 Meta fbc
 
        优先使用 Cookie
-       如果没有，则根据 fbclid 创建 fbc
+
+       如果没有 Cookie：
+       根据 fbclid 创建 fbc
     ===================================================== */
 
     function getMetaFbc() {
@@ -200,12 +202,63 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
+       获取浏览器 User Agent
+
+       这是本次修复 Meta CAPI 的关键
+
+       Meta CAPI 的 user_data
+       不再出现完全为空的情况
+
+       client_user_agent 是 Meta 支持的
+       user_data 参数
+    ===================================================== */
+
+    function getClientUserAgent() {
+
+        try {
+
+            return (
+                navigator.userAgent ||
+                ""
+            );
+
+        } catch (error) {
+
+            return "";
+
+        }
+
+    }
+
+
+    /* =====================================================
+       获取页面来源
+    ===================================================== */
+
+    function getEventSourceUrl() {
+
+        try {
+
+            return (
+                window.location.href ||
+                ""
+            );
+
+        } catch (error) {
+
+            return "";
+
+        }
+
+    }
+
+
+    /* =====================================================
        Meta Pixel 浏览器 Contact
 
-       注意：
+       eventID 必须作为第四个参数传入
 
-       eventID 必须作为第三个参数传入，
-       不能放进 custom_data。
+       不能放进 custom_data
     ===================================================== */
 
     function trackMetaPixelContact(eventId) {
@@ -229,6 +282,7 @@ window.addEventListener("DOMContentLoaded", function () {
                 "track",
                 "Contact",
                 {
+
                     content_name:
                         "WhatsApp Contact",
 
@@ -237,10 +291,13 @@ window.addEventListener("DOMContentLoaded", function () {
 
                     contact_method:
                         "WhatsApp"
+
                 },
                 {
+
                     eventID:
                         eventId
+
                 }
             );
 
@@ -269,12 +326,11 @@ window.addEventListener("DOMContentLoaded", function () {
        Meta Pixel Contact
 
        同时：
-
        Cloudflare Worker
        ↓
        Meta Conversions API
 
-       使用相同 Event ID
+       两者使用相同 Event ID
        防止重复计算
     ===================================================== */
 
@@ -296,6 +352,77 @@ window.addEventListener("DOMContentLoaded", function () {
                 getMetaFbc();
 
 
+            const clientUserAgent =
+                getClientUserAgent();
+
+
+            const eventSourceUrl =
+                getEventSourceUrl();
+
+
+            /* =================================================
+               创建 user_data
+
+               关键修改：
+
+               即使没有 _fbp
+               即使没有 _fbc
+
+               也至少发送：
+
+               client_user_agent
+
+               从而避免：
+
+               user_data: {}
+
+               ================================================= */
+
+            const userData = {};
+
+
+            /* =================================================
+               Meta Browser ID
+            ================================================= */
+
+            if (fbp) {
+
+                userData.fbp =
+                    fbp;
+
+            }
+
+
+            /* =================================================
+               Meta Click ID
+            ================================================= */
+
+            if (fbc) {
+
+                userData.fbc =
+                    fbc;
+
+            }
+
+
+            /* =================================================
+               浏览器 User Agent
+
+               这是本次主要修复
+            ================================================= */
+
+            if (clientUserAgent) {
+
+                userData.client_user_agent =
+                    clientUserAgent;
+
+            }
+
+
+            /* =================================================
+               构建 Meta CAPI Event
+            ================================================= */
+
             const capiEvent = {
 
                 data: [
@@ -315,9 +442,10 @@ window.addEventListener("DOMContentLoaded", function () {
                             "website",
 
                         event_source_url:
-                            window.location.href,
+                            eventSourceUrl,
 
-                        user_data: {},
+                        user_data:
+                            userData,
 
                         custom_data: {
 
@@ -339,33 +467,19 @@ window.addEventListener("DOMContentLoaded", function () {
             };
 
 
-            /* =============================================
-               Meta Browser ID
-            ============================================= */
+            /* =================================================
+               调试信息
+            ================================================= */
 
-            if (fbp) {
-
-                capiEvent.data[0].user_data.fbp =
-                    fbp;
-
-            }
+            console.log(
+                "Meta CAPI发送数据:",
+                capiEvent
+            );
 
 
-            /* =============================================
-               Meta Click ID
-            ============================================= */
-
-            if (fbc) {
-
-                capiEvent.data[0].user_data.fbc =
-                    fbc;
-
-            }
-
-
-            /* =============================================
+            /* =================================================
                发送到 Cloudflare Worker
-            ============================================= */
+            ================================================= */
 
             fetch(
                 META_CAPI_URL,
@@ -403,6 +517,17 @@ window.addEventListener("DOMContentLoaded", function () {
                         response.status,
                         text
                     );
+
+
+                    if (!response.ok) {
+
+                        console.error(
+                            "Meta CAPI服务器返回错误:",
+                            response.status,
+                            text
+                        );
+
+                    }
 
                 }
             )
@@ -466,7 +591,9 @@ window.addEventListener("DOMContentLoaded", function () {
     function trackTikTokContact() {
 
         const eventId =
-            generateEventId("tiktok_contact");
+            generateEventId(
+                "tiktok_contact"
+            );
 
 
         const ttclid =
@@ -2213,7 +2340,9 @@ window.addEventListener("DOMContentLoaded", function () {
         ================================================= */
 
         const metaEventId =
-            generateEventId("meta_contact");
+            generateEventId(
+                "meta_contact"
+            );
 
 
         /* =================================================
