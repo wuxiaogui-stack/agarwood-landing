@@ -2845,4 +2845,33 @@ html[dir="rtl"] .lightbox-next {
         font-size: 15px;
     }
 
+}/* 首页 WhatsApp 批发价按钮 */
+.hero-whatsapp-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+    padding: 15px 30px;
+    background: #25D366;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 700;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.hero-whatsapp-button:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+}
+
+@media (max-width: 768px) {
+    .hero-whatsapp-button {
+        width: 100%;
+        max-width: 340px;
+        box-sizing: border-box;
+        padding: 16px 20px;
+        font-size: 16px;
+    }
 }
