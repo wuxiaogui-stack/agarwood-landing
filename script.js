@@ -150,7 +150,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       获取 Meta fbp
+       Meta fbp
     ===================================================== */
 
     function getMetaFbp() {
@@ -161,12 +161,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       获取 Meta fbc
-
-       优先使用 Cookie
-
-       如果没有 Cookie：
-       根据 fbclid 创建 fbc
+       Meta fbc
     ===================================================== */
 
     function getMetaFbc() {
@@ -202,63 +197,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       获取浏览器 User Agent
+       Meta Pixel Contact
 
-       这是本次修复 Meta CAPI 的关键
-
-       Meta CAPI 的 user_data
-       不再出现完全为空的情况
-
-       client_user_agent 是 Meta 支持的
-       user_data 参数
-    ===================================================== */
-
-    function getClientUserAgent() {
-
-        try {
-
-            return (
-                navigator.userAgent ||
-                ""
-            );
-
-        } catch (error) {
-
-            return "";
-
-        }
-
-    }
-
-
-    /* =====================================================
-       获取页面来源
-    ===================================================== */
-
-    function getEventSourceUrl() {
-
-        try {
-
-            return (
-                window.location.href ||
-                ""
-            );
-
-        } catch (error) {
-
-            return "";
-
-        }
-
-    }
-
-
-    /* =====================================================
-       Meta Pixel 浏览器 Contact
-
-       eventID 必须作为第四个参数传入
-
-       不能放进 custom_data
+       Pixel 与 CAPI 使用相同 Event ID
+       用于事件去重
     ===================================================== */
 
     function trackMetaPixelContact(eventId) {
@@ -281,6 +223,7 @@ window.addEventListener("DOMContentLoaded", function () {
             window.fbq(
                 "track",
                 "Contact",
+
                 {
 
                     content_name:
@@ -293,12 +236,14 @@ window.addEventListener("DOMContentLoaded", function () {
                         "WhatsApp"
 
                 },
+
                 {
 
                     eventID:
                         eventId
 
                 }
+
             );
 
 
@@ -322,16 +267,18 @@ window.addEventListener("DOMContentLoaded", function () {
     /* =====================================================
        Meta Conversions API
 
-       浏览器：
-       Meta Pixel Contact
+       重要：
 
-       同时：
-       Cloudflare Worker
-       ↓
-       Meta Conversions API
+       前端发送：
+       - fbp
+       - fbc
+       - client_user_agent
 
-       两者使用相同 Event ID
-       防止重复计算
+       Cloudflare Worker 再补充：
+       - client_ip_address
+
+       这样 Meta CAPI 的 user_data
+       不再长期为空。
     ===================================================== */
 
     function trackMetaCAPIContact(eventId) {
@@ -352,31 +299,9 @@ window.addEventListener("DOMContentLoaded", function () {
                 getMetaFbc();
 
 
-            const clientUserAgent =
-                getClientUserAgent();
-
-
-            const eventSourceUrl =
-                getEventSourceUrl();
-
-
             /* =================================================
                创建 user_data
-
-               关键修改：
-
-               即使没有 _fbp
-               即使没有 _fbc
-
-               也至少发送：
-
-               client_user_agent
-
-               从而避免：
-
-               user_data: {}
-
-               ================================================= */
+            ================================================= */
 
             const userData = {};
 
@@ -408,19 +333,23 @@ window.addEventListener("DOMContentLoaded", function () {
             /* =================================================
                浏览器 User Agent
 
-               这是本次主要修复
+               Worker 也会再次从请求 Header 获取，
+               这里发送给 Worker 是为了保证事件数据完整。
             ================================================= */
 
-            if (clientUserAgent) {
+            if (
+                navigator &&
+                navigator.userAgent
+            ) {
 
                 userData.client_user_agent =
-                    clientUserAgent;
+                    navigator.userAgent;
 
             }
 
 
             /* =================================================
-               构建 Meta CAPI Event
+               Meta CAPI Event
             ================================================= */
 
             const capiEvent = {
@@ -442,7 +371,7 @@ window.addEventListener("DOMContentLoaded", function () {
                             "website",
 
                         event_source_url:
-                            eventSourceUrl,
+                            window.location.href,
 
                         user_data:
                             userData,
@@ -468,11 +397,13 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
             /* =================================================
-               调试信息
+               调试日志
+
+               可以在浏览器 F12 Console 中查看
             ================================================= */
 
             console.log(
-                "Meta CAPI发送数据:",
+                "Meta CAPI准备发送:",
                 capiEvent
             );
 
@@ -483,6 +414,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
             fetch(
                 META_CAPI_URL,
+
                 {
 
                     method:
@@ -504,7 +436,9 @@ window.addEventListener("DOMContentLoaded", function () {
                         true
 
                 }
+
             )
+
             .then(
                 async function (response) {
 
@@ -518,19 +452,9 @@ window.addEventListener("DOMContentLoaded", function () {
                         text
                     );
 
-
-                    if (!response.ok) {
-
-                        console.error(
-                            "Meta CAPI服务器返回错误:",
-                            response.status,
-                            text
-                        );
-
-                    }
-
                 }
             )
+
             .catch(
                 function (error) {
 
@@ -613,6 +537,10 @@ window.addEventListener("DOMContentLoaded", function () {
                 Date.now() / 1000
             );
 
+
+        /* =================================================
+           TikTok Pixel 数据
+        ================================================= */
 
         const pixelProperties = {
 
@@ -713,6 +641,10 @@ window.addEventListener("DOMContentLoaded", function () {
             };
 
 
+            /* =================================================
+               TikTok ttclid
+            ================================================= */
+
             if (ttclid) {
 
                 serverEvent.user.ttclid =
@@ -720,6 +652,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
             }
 
+
+            /* =================================================
+               TikTok _ttp
+            ================================================= */
 
             if (ttp) {
 
@@ -731,6 +667,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
             fetch(
                 TIKTOK_EVENTS_API,
+
                 {
 
                     method:
@@ -752,7 +689,9 @@ window.addEventListener("DOMContentLoaded", function () {
                         true
 
                 }
+
             )
+
             .then(
                 async function (response) {
 
@@ -768,6 +707,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
                 }
             )
+
             .catch(
                 function (error) {
 
@@ -778,6 +718,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
                 }
             );
+
 
         } catch (error) {
 
@@ -993,6 +934,10 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
+        /* =================================================
+           图片初始化
+        ================================================= */
+
         slides.forEach(
             function (slide) {
 
@@ -1034,6 +979,10 @@ window.addEventListener("DOMContentLoaded", function () {
             }
         );
 
+
+        /* =================================================
+           只有一张图片
+        ================================================= */
 
         if (
             slides.length === 1
@@ -1077,6 +1026,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        /* =================================================
+           创建首尾 Clone
+        ================================================= */
 
         const firstClone =
             slides[0].cloneNode(true);
@@ -1147,6 +1100,10 @@ window.addEventListener("DOMContentLoaded", function () {
             false;
 
 
+        /* =================================================
+           更新圆点
+        ================================================= */
+
         function updateDots() {
 
             let realIndex =
@@ -1190,6 +1147,10 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
+        /* =================================================
+           设置位置
+        ================================================= */
+
         function setPosition(
             animated
         ) {
@@ -1212,6 +1173,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        /* =================================================
+           移动
+        ================================================= */
 
         function move(
             direction
@@ -1238,6 +1203,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        /* =================================================
+           transitionend
+        ================================================= */
 
         track.addEventListener(
             "transitionend",
@@ -1268,7 +1237,6 @@ window.addEventListener("DOMContentLoaded", function () {
 
                 }
 
-
                 else if (
                     current === 0
                 ) {
@@ -1291,6 +1259,10 @@ window.addEventListener("DOMContentLoaded", function () {
         );
 
 
+        /* =================================================
+           上一张
+        ================================================= */
+
         if (prev) {
 
             prev.addEventListener(
@@ -1309,6 +1281,10 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
+        /* =================================================
+           下一张
+        ================================================= */
+
         if (next) {
 
             next.addEventListener(
@@ -1326,6 +1302,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        /* =================================================
+           圆点
+        ================================================= */
 
         dots.forEach(
             function (
@@ -1367,6 +1347,10 @@ window.addEventListener("DOMContentLoaded", function () {
             }
         );
 
+
+        /* =================================================
+           手机触摸滑动
+        ================================================= */
 
         let startX =
             0;
@@ -1592,6 +1576,10 @@ window.addEventListener("DOMContentLoaded", function () {
             [];
 
 
+        /* =================================================
+           沉香树图片
+        ================================================= */
+
         const treeImages =
             Array.from(
                 document.querySelectorAll(
@@ -1616,6 +1604,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        /* =================================================
+           产品图片
+        ================================================= */
 
         const productImages =
             Array.from(
@@ -1642,6 +1634,10 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
+        /* =================================================
+           客户评价图片
+        ================================================= */
+
         const reviewImages =
             Array.from(
                 document.querySelectorAll(
@@ -1666,6 +1662,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        /* =================================================
+           物流图片
+        ================================================= */
 
         const shippingImages =
             Array.from(
@@ -1699,6 +1699,10 @@ window.addEventListener("DOMContentLoaded", function () {
         let currentImageIndex =
             0;
 
+
+        /* =================================================
+           查找图片所在组
+        ================================================= */
 
         function findImageGroup(
             image
@@ -1743,6 +1747,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        /* =================================================
+           更新 Lightbox 图片
+        ================================================= */
 
         function updateLightboxImage() {
 
@@ -1806,6 +1814,10 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
+        /* =================================================
+           打开 Lightbox
+        ================================================= */
+
         function openLightbox(
             image
         ) {
@@ -1856,6 +1868,10 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
+        /* =================================================
+           关闭 Lightbox
+        ================================================= */
+
         function closeLightbox() {
 
             lightbox.classList.remove(
@@ -1899,6 +1915,10 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
+        /* =================================================
+           上一张
+        ================================================= */
+
         function showPreviousImage() {
 
             if (
@@ -1928,6 +1948,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        /* =================================================
+           下一张
+        ================================================= */
 
         function showNextImage() {
 
@@ -1960,6 +1984,10 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
+        /* =================================================
+           图片点击
+        ================================================= */
+
         imageGroups.forEach(
             function (group) {
 
@@ -1988,6 +2016,10 @@ window.addEventListener("DOMContentLoaded", function () {
         );
 
 
+        /* =================================================
+           关闭按钮
+        ================================================= */
+
         if (lightboxClose) {
 
             lightboxClose.addEventListener(
@@ -2005,6 +2037,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        /* =================================================
+           Lightbox 上一张
+        ================================================= */
 
         if (lightboxPrev) {
 
@@ -2024,6 +2060,10 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
 
+        /* =================================================
+           Lightbox 下一张
+        ================================================= */
+
         if (lightboxNext) {
 
             lightboxNext.addEventListener(
@@ -2041,6 +2081,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        /* =================================================
+           点击背景关闭
+        ================================================= */
 
         lightbox.addEventListener(
             "click",
@@ -2064,6 +2108,10 @@ window.addEventListener("DOMContentLoaded", function () {
             }
         );
 
+
+        /* =================================================
+           Lightbox 手机滑动
+        ================================================= */
 
         let lightboxStartX =
             0;
@@ -2180,6 +2228,10 @@ window.addEventListener("DOMContentLoaded", function () {
             }
         );
 
+
+        /* =================================================
+           键盘控制
+        ================================================= */
 
         document.addEventListener(
             "keydown",
@@ -2348,9 +2400,9 @@ window.addEventListener("DOMContentLoaded", function () {
         /* =================================================
            Meta Pixel
            +
-           Meta Conversions API
+           Meta CAPI
 
-           两者使用相同 Event ID
+           使用相同 Event ID
         ================================================= */
 
         trackMetaPixelContact(
@@ -2447,6 +2499,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
     document.addEventListener(
         "click",
+
         function (event) {
 
             const target =
@@ -2515,7 +2568,9 @@ window.addEventListener("DOMContentLoaded", function () {
             openWhatsApp();
 
         },
+
         true
+
     );
 
 
