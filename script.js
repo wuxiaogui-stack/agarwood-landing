@@ -1,659 +1,302 @@
-window.addEventListener("DOMContentLoaded", function () {
+/* =========================================================
+   CONFIG
+========================================================= */
 
-    /* =====================================================
-       网站数据追踪系统
+const META_PIXEL_ID = "882833290918835";
 
-       Meta Pixel
-       Pixel ID:
-       882833290918835
+const META_CAPI_URL =
+    "https://meta-capi.717560552.workers.dev/";
 
-       Meta Conversions API
-       Cloudflare Worker:
-       https://meta-capi.717560552.workers.dev/
+const TIKTOK_PIXEL_ID =
+    "DA4P6OBC77UES973S3SG";
 
-       TikTok Pixel
-       Pixel ID:
-       DA4P6OBC77UES973S3SG
+const TIKTOK_EVENTS_API_URL =
+    "https://tiktok-events-api.717560552.workers.dev/";
 
-       TikTok Events API
-       Cloudflare Worker:
-       https://tiktok-events-api.717560552.workers.dev/
+const SUPABASE_URL =
+    "https://tvythmezaecdtqlqtwnh.supabase.co";
 
-       Supabase
-       用于自动轮询在线 WhatsApp 客服
-    ===================================================== */
+const SUPABASE_KEY =
+    "sb_publishable_SMgtLo5Zh15EWzVgTKoKHg_ci8lOFp6";
 
-
-    /* =====================================================
-       配置
-    ===================================================== */
-
-    const META_PIXEL_ID =
-        "882833290918835";
-
-    const META_CAPI_URL =
-        "https://meta-capi.717560552.workers.dev/";
-
-    const TIKTOK_PIXEL_ID =
-        "DA4P6OBC77UES973S3SG";
-
-    const TIKTOK_EVENTS_API =
-        "https://tiktok-events-api.717560552.workers.dev/";
-
-    const SUPABASE_URL =
-        "https://tvythmezaecdtqlqtwnh.supabase.co";
-
-    const SUPABASE_KEY =
-        "sb_publishable_SMgtLo5Zh15EWzVgTKoKHg_ci8lOFp6";
+const SUPABASE_RPC =
+    "/rest/v1/rpc/get_next_whatsapp";
 
 
-    /* =====================================================
-       生成唯一 Event ID
-    ===================================================== */
+/* =========================================================
+   EVENT ID
+========================================================= */
 
-    function generateEventId(prefix = "contact") {
+function generateEventId() {
 
-        return (
-            prefix +
-            "_" +
-            Date.now() +
-            "_" +
-            Math.random()
-                .toString(36)
-                .substring(2, 12)
+    return (
+        "wa_" +
+        Date.now() +
+        "_" +
+        Math.random()
+            .toString(36)
+            .substring(2, 12)
+    );
+
+}
+
+
+/* =========================================================
+   COOKIE
+========================================================= */
+
+function getCookie(name) {
+
+    const match =
+        document.cookie.match(
+            new RegExp(
+                "(^| )" +
+                name +
+                "=([^;]+)"
+            )
         );
 
-    }
+    return match
+        ? decodeURIComponent(match[2])
+        : null;
+
+}
 
 
-    /* =====================================================
-       获取 Cookie
-    ===================================================== */
+/* =========================================================
+   URL PARAMS
+========================================================= */
 
-    function getCookie(name) {
+function getUrlParams() {
 
-        try {
-
-            const cookies =
-                document.cookie
-                    ? document.cookie.split("; ")
-                    : [];
-
-            for (const cookie of cookies) {
-
-                const parts =
-                    cookie.split("=");
-
-                const key =
-                    parts.shift();
-
-                const value =
-                    parts.join("=");
-
-                if (key === name) {
-
-                    try {
-
-                        return decodeURIComponent(
-                            value || ""
-                        );
-
-                    } catch (error) {
-
-                        return value || "";
-
-                    }
-
-                }
-
-            }
-
-        } catch (error) {
-
-            console.warn(
-                "Cookie读取失败:",
-                error
-            );
-
-        }
-
-        return "";
-
-    }
-
-
-    /* =====================================================
-       获取 URL 参数
-    ===================================================== */
-
-    function getUrlParameter(name) {
-
-        try {
-
-            const params =
-                new URLSearchParams(
-                    window.location.search
-                );
-
-            return (
-                params.get(name) ||
-                ""
-            );
-
-        } catch (error) {
-
-            return "";
-
-        }
-
-    }
-
-
-    /* =====================================================
-       获取 Meta fbp
-    ===================================================== */
-
-    function getMetaFbp() {
-
-        return getCookie("_fbp");
-
-    }
-
-
-    /* =====================================================
-       获取 Meta fbc
-    ===================================================== */
-
-    function getMetaFbc() {
-
-        const cookieFbc =
-            getCookie("_fbc");
-
-        if (cookieFbc) {
-
-            return cookieFbc;
-
-        }
-
-
-        const fbclid =
-            getUrlParameter("fbclid");
-
-        if (!fbclid) {
-
-            return "";
-
-        }
-
-
-        return (
-            "fb.1." +
-            Date.now() +
-            "." +
-            fbclid
+    const params =
+        new URLSearchParams(
+            window.location.search
         );
 
-    }
+    return {
+
+        fbclid:
+            params.get("fbclid"),
+
+        ttclid:
+            params.get("ttclid"),
+
+        gclid:
+            params.get("gclid")
+
+    };
+
+}
 
 
-    /* =====================================================
-       Meta Pixel Contact
+/* =========================================================
+   META CONTACT
+========================================================= */
 
-       只有成功获取客服号码后才调用
-    ===================================================== */
+function sendMetaContact(eventId) {
 
-    function trackMetaPixelContact(eventId) {
+    try {
 
-        try {
-
-            if (
-                typeof window.fbq !== "function"
-            ) {
-
-                console.warn(
-                    "Meta Pixel 尚未加载"
-                );
-
-                return;
-
-            }
-
+        if (
+            typeof window.fbq ===
+            "function"
+        ) {
 
             window.fbq(
                 "track",
                 "Contact",
+                {},
                 {
-                    content_name:
-                        "WhatsApp Contact",
-
-                    content_category:
-                        "agarwood",
-
-                    contact_method:
-                        "WhatsApp"
-                },
-                {
-                    eventID:
-                        eventId
+                    eventID: eventId
                 }
-            );
-
-
-            console.log(
-                "✅ Meta Pixel Contact:",
-                eventId
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Meta Pixel Contact Error:",
-                error
             );
 
         }
 
-    }
+    } catch (error) {
 
-
-    /* =====================================================
-       Meta Conversions API Contact
-
-       只有成功获取客服号码后才调用
-    ===================================================== */
-
-    function trackMetaCAPIContact(eventId) {
-
-        try {
-
-            const eventTime =
-                Math.floor(
-                    Date.now() / 1000
-                );
-
-
-            const fbp =
-                getMetaFbp();
-
-
-            const fbc =
-                getMetaFbc();
-
-
-            const userData = {};
-
-
-            /* =============================================
-               Meta Browser ID
-            ============================================= */
-
-            if (fbp) {
-
-                userData.fbp =
-                    fbp;
-
-            }
-
-
-            /* =============================================
-               Meta Click ID
-            ============================================= */
-
-            if (fbc) {
-
-                userData.fbc =
-                    fbc;
-
-            }
-
-
-            const capiEvent = {
-
-                data: [
-
-                    {
-
-                        event_name:
-                            "Contact",
-
-                        event_time:
-                            eventTime,
-
-                        event_id:
-                            eventId,
-
-                        action_source:
-                            "website",
-
-                        event_source_url:
-                            window.location.href,
-
-                        user_data:
-                            userData,
-
-                        custom_data: {
-
-                            content_name:
-                                "WhatsApp Contact",
-
-                            content_category:
-                                "agarwood",
-
-                            contact_method:
-                                "WhatsApp"
-
-                        }
-
-                    }
-
-                ]
-
-            };
-
-
-            fetch(
-                META_CAPI_URL,
-                {
-
-                    method:
-                        "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body:
-                        JSON.stringify(
-                            capiEvent
-                        ),
-
-                    keepalive:
-                        true
-
-                }
-            )
-            .then(
-                async function (response) {
-
-                    const text =
-                        await response.text();
-
-
-                    console.log(
-                        "Meta CAPI:",
-                        response.status,
-                        text
-                    );
-
-                }
-            )
-            .catch(
-                function (error) {
-
-                    console.error(
-                        "Meta CAPI Error:",
-                        error
-                    );
-
-                }
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Meta CAPI处理错误:",
-                error
-            );
-
-        }
+        console.warn(
+            "Meta browser event error:",
+            error
+        );
 
     }
 
-
-    /* =====================================================
-       TikTok Click ID
-    ===================================================== */
-
-    function getTikTokClickId() {
-
-        try {
-
-            const params =
-                new URLSearchParams(
-                    window.location.search
-                );
-
-            return (
-                params.get("ttclid") ||
-                ""
-            );
-
-        } catch (error) {
-
-            return "";
-
-        }
-
-    }
+}
 
 
-    /* =====================================================
-       TikTok Contact
+/* =========================================================
+   META CAPI
+========================================================= */
 
-       只有成功获取客服号码后才调用
-    ===================================================== */
+async function sendMetaCAPI(eventId) {
 
-    function trackTikTokContact(eventId) {
+    try {
 
-        try {
+        const params =
+            getUrlParams();
 
-            const ttclid =
-                getTikTokClickId();
+        const payload = {
 
+            event_name: "Contact",
 
-            const ttp =
-                getCookie("_ttp");
+            event_id: eventId,
 
+            event_source_url:
+                window.location.href,
 
-            const pageUrl =
-                window.location.href;
+            action_source: "website",
 
+            fbclid:
+                params.fbclid,
 
-            const eventTime =
-                Math.floor(
-                    Date.now() / 1000
-                );
+            fbp:
+                getCookie("_fbp"),
 
+            fbc:
+                getCookie("_fbc")
 
-            const pixelProperties = {
-
-                contact_method:
-                    "WhatsApp",
-
-                content_name:
-                    "WhatsApp Contact",
-
-                content_category:
-                    "agarwood",
-
-                event_id:
-                    eventId
-
-            };
+        };
 
 
-            /* =============================================
-               TikTok Pixel
-            ============================================= */
+        await fetch(
+            META_CAPI_URL,
+            {
 
-            try {
+                method: "POST",
 
-                if (
-                    typeof window.ttq !== "undefined" &&
-                    typeof window.ttq.track === "function"
-                ) {
-
-                    window.ttq.track(
-                        "Contact",
-                        pixelProperties
-                    );
-
-
-                    console.log(
-                        "✅ TikTok Pixel Contact:",
-                        eventId
-                    );
-
-                } else {
-
-                    console.warn(
-                        "TikTok Pixel 尚未加载"
-                    );
-
-                }
-
-            } catch (error) {
-
-                console.error(
-                    "TikTok Pixel Contact Error:",
-                    error
-                );
-
-            }
-
-
-            /* =============================================
-               TikTok Events API
-            ============================================= */
-
-            const serverEvent = {
-
-                event:
-                    "Contact",
-
-                event_time:
-                    eventTime,
-
-                event_id:
-                    eventId,
-
-                user: {},
-
-                page: {
-
-                    url:
-                        pageUrl
-
+                headers: {
+                    "Content-Type":
+                        "application/json"
                 },
 
-                properties: {
+                body:
+                    JSON.stringify(
+                        payload
+                    ),
 
-                    contact_method:
-                        "WhatsApp",
-
-                    content_name:
-                        "WhatsApp Contact",
-
-                    content_category:
-                        "agarwood"
-
-                }
-
-            };
-
-
-            if (ttclid) {
-
-                serverEvent.user.ttclid =
-                    ttclid;
+                keepalive: true
 
             }
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Meta CAPI error:",
+            error
+        );
+
+    }
+
+}
 
 
-            if (ttp) {
+/* =========================================================
+   TIKTOK CONTACT
+========================================================= */
 
-                serverEvent.user.ttp =
-                    ttp;
+function sendTikTokContact() {
 
-            }
+    try {
 
+        if (
+            window.ttq &&
+            typeof window.ttq.track ===
+                "function"
+        ) {
 
-            fetch(
-                TIKTOK_EVENTS_API,
-                {
-
-                    method:
-                        "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body:
-                        JSON.stringify(
-                            serverEvent
-                        ),
-
-                    keepalive:
-                        true
-
-                }
-            )
-            .then(
-                async function (response) {
-
-                    const text =
-                        await response.text();
-
-
-                    console.log(
-                        "TikTok Events API:",
-                        response.status,
-                        text
-                    );
-
-                }
-            )
-            .catch(
-                function (error) {
-
-                    console.error(
-                        "TikTok Events API Error:",
-                        error
-                    );
-
-                }
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "TikTok Events API Error:",
-                error
+            window.ttq.track(
+                "Contact"
             );
 
         }
 
+    } catch (error) {
+
+        console.warn(
+            "TikTok browser event error:",
+            error
+        );
+
     }
 
+}
 
-    /* =====================================================
-       手机端导航
-    ===================================================== */
+
+/* =========================================================
+   TIKTOK EVENTS API
+========================================================= */
+
+async function sendTikTokEventsAPI(eventId) {
+
+    try {
+
+        const params =
+            getUrlParams();
+
+        const payload = {
+
+            event_name: "Contact",
+
+            event_id: eventId,
+
+            event_source_url:
+                window.location.href,
+
+            ttclid:
+                params.ttclid,
+
+            user_agent:
+                navigator.userAgent
+
+        };
+
+
+        await fetch(
+            TIKTOK_EVENTS_API_URL,
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify(
+                        payload
+                    ),
+
+                keepalive: true
+
+            }
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "TikTok Events API error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+function initMobileMenu() {
 
     const menuToggle =
         document.getElementById(
             "menuToggle"
         );
-
 
     const mainNav =
         document.getElementById(
@@ -661,105 +304,136 @@ window.addEventListener("DOMContentLoaded", function () {
         );
 
 
-    function closeMenu() {
+    if (
+        !menuToggle ||
+        !mainNav
+    ) {
 
-        if (
-            !menuToggle ||
-            !mainNav
-        ) {
-
-            return;
-
-        }
-
-
-        mainNav.classList.remove(
-            "mobile-open"
-        );
-
-
-        menuToggle.classList.remove(
-            "active"
-        );
-
-
-        menuToggle.setAttribute(
-            "aria-expanded",
-            "false"
-        );
+        return;
 
     }
 
 
-    if (
-        menuToggle &&
-        mainNav
-    ) {
+    menuToggle.addEventListener(
+        "click",
+        function () {
 
-        menuToggle.addEventListener(
-            "click",
-            function (event) {
+            const isOpen =
+                mainNav.classList.toggle(
+                    "mobile-open"
+                );
 
-                event.stopPropagation();
+            menuToggle.setAttribute(
+                "aria-expanded",
+                isOpen
+                    ? "true"
+                    : "false"
+            );
+
+        }
+    );
 
 
-                const isOpen =
-                    mainNav.classList.toggle(
+    const navLinks =
+        mainNav.querySelectorAll(
+            "a"
+        );
+
+
+    navLinks.forEach(
+        function (link) {
+
+            link.addEventListener(
+                "click",
+                function () {
+
+                    mainNav.classList.remove(
                         "mobile-open"
                     );
 
-
-                menuToggle.classList.toggle(
-                    "active",
-                    isOpen
-                );
-
-
-                menuToggle.setAttribute(
-                    "aria-expanded",
-                    isOpen
-                        ? "true"
-                        : "false"
-                );
-
-            }
-        );
-
-
-        mainNav
-            .querySelectorAll("a")
-            .forEach(
-                function (link) {
-
-                    link.addEventListener(
-                        "click",
-                        function () {
-
-                            closeMenu();
-
-                        }
+                    menuToggle.setAttribute(
+                        "aria-expanded",
+                        "false"
                     );
 
                 }
             );
 
+        }
+    );
 
-        document.addEventListener(
-            "click",
-            function (event) {
+}
 
-                if (
-                    !mainNav.contains(
-                        event.target
-                    ) &&
-                    !menuToggle.contains(
-                        event.target
-                    )
-                ) {
 
-                    closeMenu();
+/* =========================================================
+   REVIEW SLIDER
+========================================================= */
 
-                }
+function initReviewSlider() {
+
+    const slider =
+        document.querySelector(
+            ".review-slider"
+        );
+
+    const track =
+        document.querySelector(
+            ".review-track"
+        );
+
+    const slides =
+        document.querySelectorAll(
+            ".review-slide"
+        );
+
+    const prevButton =
+        document.querySelector(
+            ".review-prev"
+        );
+
+    const nextButton =
+        document.querySelector(
+            ".review-next"
+        );
+
+    const dots =
+        document.querySelectorAll(
+            ".review-dot"
+        );
+
+
+    if (
+        !slider ||
+        !track ||
+        slides.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    let currentIndex = 0;
+
+    const totalSlides =
+        slides.length;
+
+
+    function updateSlider() {
+
+        track.style.transform =
+            "translateX(-" +
+            (currentIndex * 100) +
+            "%)";
+
+
+        dots.forEach(
+            function (dot, index) {
+
+                dot.classList.toggle(
+                    "active",
+                    index === currentIndex
+                );
 
             }
         );
@@ -767,1711 +441,844 @@ window.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =====================================================
-       通用轮播
-    ===================================================== */
+    function nextSlide() {
 
-    function initSlider(config) {
+        currentIndex =
+            (currentIndex + 1) %
+            totalSlides;
 
-        const slider =
-            document.querySelector(
-                config.slider
-            );
+        updateSlider();
 
-
-        if (!slider) {
-
-            return;
-
-        }
+    }
 
 
-        const track =
-            slider.querySelector(
-                config.track
-            );
+    function previousSlide() {
+
+        currentIndex =
+            (currentIndex - 1 +
+                totalSlides) %
+            totalSlides;
+
+        updateSlider();
+
+    }
 
 
-        if (!track) {
+    if (nextButton) {
 
-            return;
-
-        }
-
-
-        const slides =
-            Array.from(
-                track.querySelectorAll(
-                    config.slide
-                )
-            );
-
-
-        const prev =
-            slider.querySelector(
-                config.prev
-            );
-
-
-        const next =
-            slider.querySelector(
-                config.next
-            );
-
-
-        const dotsContainer =
-            document.querySelector(
-                config.dots
-            );
-
-
-        const dots =
-            dotsContainer
-                ? Array.from(
-                    dotsContainer.querySelectorAll(
-                        config.dot
-                    )
-                )
-                : [];
-
-
-        if (
-            slides.length === 0
-        ) {
-
-            return;
-
-        }
-
-
-        slides.forEach(
-            function (slide) {
-
-                const img =
-                    slide.querySelector(
-                        "img"
-                    );
-
-
-                if (!img) {
-
-                    return;
-
-                }
-
-
-                img.loading =
-                    "eager";
-
-
-                img.decoding =
-                    "async";
-
-
-                if (
-                    img.dataset &&
-                    img.dataset.src &&
-                    (
-                        !img.getAttribute("src") ||
-                        img.getAttribute("src") === ""
-                    )
-                ) {
-
-                    img.src =
-                        img.dataset.src;
-
-                }
-
-            }
+        nextButton.addEventListener(
+            "click",
+            nextSlide
         );
 
-
-        if (
-            slides.length === 1
-        ) {
-
-            track.style.transition =
-                "none";
+    }
 
 
-            track.style.transform =
-                "translate3d(0,0,0)";
+    if (prevButton) {
+
+        prevButton.addEventListener(
+            "click",
+            previousSlide
+        );
+
+    }
 
 
-            if (prev) {
+    dots.forEach(
+        function (dot, index) {
 
-                prev.style.display =
-                    "none";
+            dot.addEventListener(
+                "click",
+                function () {
 
-            }
+                    currentIndex =
+                        index;
 
-
-            if (next) {
-
-                next.style.display =
-                    "none";
-
-            }
-
-
-            dots.forEach(
-                function (dot) {
-
-                    dot.style.display =
-                        "none";
+                    updateSlider();
 
                 }
             );
 
-
-            return;
-
         }
+    );
 
 
-        const firstClone =
-            slides[0].cloneNode(true);
+    let touchStartX = 0;
+
+    let touchEndX = 0;
 
 
-        const lastClone =
-            slides[
-                slides.length - 1
-            ].cloneNode(true);
+    slider.addEventListener(
+        "touchstart",
+        function (event) {
+
+            touchStartX =
+                event.changedTouches[0]
+                    .screenX;
+
+        },
+        {
+            passive: true
+        }
+    );
 
 
-        firstClone.classList.add(
-            "slider-clone"
-        );
+    slider.addEventListener(
+        "touchend",
+        function (event) {
+
+            touchEndX =
+                event.changedTouches[0]
+                    .screenX;
 
 
-        lastClone.classList.add(
-            "slider-clone"
-        );
-
-
-        [
-            firstClone,
-            lastClone
-        ].forEach(
-            function (clone) {
-
-                const img =
-                    clone.querySelector(
-                        "img"
-                    );
-
-
-                if (img) {
-
-                    img.loading =
-                        "eager";
-
-                    img.decoding =
-                        "async";
-
-                }
-
-            }
-        );
-
-
-        track.insertBefore(
-            lastClone,
-            track.firstChild
-        );
-
-
-        track.appendChild(
-            firstClone
-        );
-
-
-        const total =
-            slides.length;
-
-
-        let current =
-            1;
-
-
-        let isMoving =
-            false;
-
-
-        function updateDots() {
-
-            let realIndex =
-                current - 1;
+            const distance =
+                touchStartX -
+                touchEndX;
 
 
             if (
-                realIndex < 0
+                Math.abs(distance) < 50
             ) {
-
-                realIndex =
-                    total - 1;
-
-            }
-
-
-            if (
-                realIndex >= total
-            ) {
-
-                realIndex =
-                    0;
-
-            }
-
-
-            dots.forEach(
-                function (
-                    dot,
-                    index
-                ) {
-
-                    dot.classList.toggle(
-                        "active",
-                        index === realIndex
-                    );
-
-                }
-            );
-
-        }
-
-
-        function setPosition(
-            animated
-        ) {
-
-            track.style.transition =
-                animated
-                    ? "transform 0.45s ease"
-                    : "none";
-
-
-            track.style.transform =
-                "translate3d(-" +
-                (
-                    current * 100
-                ) +
-                "%,0,0)";
-
-
-            updateDots();
-
-        }
-
-
-        function move(
-            direction
-        ) {
-
-            if (isMoving) {
 
                 return;
 
             }
 
 
-            isMoving =
-                true;
+            if (distance > 0) {
 
+                nextSlide();
 
-            current +=
-                direction;
+            } else {
 
+                previousSlide();
 
-            setPosition(
-                true
-            );
+            }
 
+        },
+        {
+            passive: true
         }
+    );
 
 
-        track.addEventListener(
-            "transitionend",
-            function (event) {
+    updateSlider();
 
-                if (
-                    event.propertyName &&
-                    event.propertyName !== "transform"
-                ) {
+}
 
-                    return;
 
-                }
+/* =========================================================
+   LIGHTBOX
+========================================================= */
 
-
-                if (
-                    current ===
-                    total + 1
-                ) {
-
-                    current =
-                        1;
-
-
-                    setPosition(
-                        false
-                    );
-
-                }
-
-                else if (
-                    current === 0
-                ) {
-
-                    current =
-                        total;
-
-
-                    setPosition(
-                        false
-                    );
-
-                }
-
-
-                isMoving =
-                    false;
-
-            }
-        );
-
-
-        if (prev) {
-
-            prev.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-
-                    event.stopPropagation();
-
-                    move(-1);
-
-                }
-            );
-
-        }
-
-
-        if (next) {
-
-            next.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-
-                    event.stopPropagation();
-
-                    move(1);
-
-                }
-            );
-
-        }
-
-
-        dots.forEach(
-            function (
-                dot,
-                index
-            ) {
-
-                dot.addEventListener(
-                    "click",
-                    function (event) {
-
-                        event.preventDefault();
-
-                        event.stopPropagation();
-
-
-                        if (isMoving) {
-
-                            return;
-
-                        }
-
-
-                        current =
-                            index + 1;
-
-
-                        isMoving =
-                            true;
-
-
-                        setPosition(
-                            true
-                        );
-
-                    }
-                );
-
-            }
-        );
-
-
-        let startX =
-            0;
-
-        let startY =
-            0;
-
-        let isTouching =
-            false;
-
-
-        track.addEventListener(
-            "touchstart",
-            function (event) {
-
-                if (
-                    !event.touches ||
-                    event.touches.length !== 1
-                ) {
-
-                    return;
-
-                }
-
-
-                startX =
-                    event.touches[0].clientX;
-
-
-                startY =
-                    event.touches[0].clientY;
-
-
-                isTouching =
-                    true;
-
-            },
-            {
-                passive: true
-            }
-        );
-
-
-        track.addEventListener(
-            "touchend",
-            function (event) {
-
-                if (!isTouching) {
-
-                    return;
-
-                }
-
-
-                isTouching =
-                    false;
-
-
-                if (
-                    !event.changedTouches ||
-                    event.changedTouches.length !== 1
-                ) {
-
-                    return;
-
-                }
-
-
-                const endX =
-                    event.changedTouches[0].clientX;
-
-
-                const endY =
-                    event.changedTouches[0].clientY;
-
-
-                const deltaX =
-                    endX -
-                    startX;
-
-
-                const deltaY =
-                    endY -
-                    startY;
-
-
-                if (
-                    Math.abs(deltaX) < 40 ||
-                    Math.abs(deltaX) <= Math.abs(deltaY)
-                ) {
-
-                    return;
-
-                }
-
-
-                if (
-                    deltaX < 0
-                ) {
-
-                    move(1);
-
-                } else {
-
-                    move(-1);
-
-                }
-
-            },
-            {
-                passive: true
-            }
-        );
-
-
-        setPosition(
-            false
-        );
-
-    }
-
-
-    /* =====================================================
-       沉香树轮播
-    ===================================================== */
-
-    initSlider({
-
-        slider:
-            ".tree-slider",
-
-        track:
-            ".tree-track",
-
-        slide:
-            ".tree-slide",
-
-        prev:
-            ".slider-prev",
-
-        next:
-            ".slider-next",
-
-        dots:
-            ".slider-dots",
-
-        dot:
-            ".slider-dot"
-
-    });
-
-
-    /* =====================================================
-       客户评价轮播
-    ===================================================== */
-
-    initSlider({
-
-        slider:
-            ".review-slider",
-
-        track:
-            ".review-track",
-
-        slide:
-            ".review-slide",
-
-        prev:
-            ".review-prev",
-
-        next:
-            ".review-next",
-
-        dots:
-            ".review-dots",
-
-        dot:
-            ".review-dot"
-
-    });
-
-
-    /* =====================================================
-       图片 Lightbox
-    ===================================================== */
+function initLightbox() {
 
     const lightbox =
         document.getElementById(
             "imageLightbox"
         );
 
-
     const lightboxImage =
         document.getElementById(
             "lightboxImage"
         );
 
-
-    const lightboxClose =
+    const closeButton =
         document.getElementById(
             "lightboxClose"
         );
 
-
-    const lightboxPrev =
+    const prevButton =
         document.getElementById(
             "lightboxPrev"
         );
 
-
-    const lightboxNext =
+    const nextButton =
         document.getElementById(
             "lightboxNext"
         );
 
 
     if (
-        lightbox &&
-        lightboxImage
+        !lightbox ||
+        !lightboxImage
     ) {
 
-        const imageGroups =
-            [];
+        return;
+
+    }
 
 
-        const treeImages =
-            Array.from(
+    const imageSelectors = [
+
+        ".selection-image img",
+
+        ".product-image img",
+
+        ".review-slide:not(.slider-clone) img",
+
+        ".shipping-promotion-image img",
+
+        'img[data-lightbox="true"]'
+
+    ];
+
+
+    const images = [];
+
+
+    imageSelectors.forEach(
+        function (selector) {
+
+            const elements =
                 document.querySelectorAll(
-                    ".tree-slide:not(.slider-clone) img"
-                )
-            );
-
-
-        if (
-            treeImages.length > 0
-        ) {
-
-            imageGroups.push({
-
-                name:
-                    "trees",
-
-                images:
-                    treeImages
-
-            });
-
-        }
-
-
-        const productImages =
-            Array.from(
-                document.querySelectorAll(
-                    ".product-image img"
-                )
-            );
-
-
-        if (
-            productImages.length > 0
-        ) {
-
-            imageGroups.push({
-
-                name:
-                    "products",
-
-                images:
-                    productImages
-
-            });
-
-        }
-
-
-        const reviewImages =
-            Array.from(
-                document.querySelectorAll(
-                    ".review-slide:not(.slider-clone) img"
-                )
-            );
-
-
-        if (
-            reviewImages.length > 0
-        ) {
-
-            imageGroups.push({
-
-                name:
-                    "reviews",
-
-                images:
-                    reviewImages
-
-            });
-
-        }
-
-
-        const shippingImages =
-            Array.from(
-                document.querySelectorAll(
-                    ".shipping-promotion-image img"
-                )
-            );
-
-
-        if (
-            shippingImages.length > 0
-        ) {
-
-            imageGroups.push({
-
-                name:
-                    "shipping",
-
-                images:
-                    shippingImages
-
-            });
-
-        }
-
-
-        let currentGroup =
-            null;
-
-
-        let currentImageIndex =
-            0;
-
-
-        function findImageGroup(
-            image
-        ) {
-
-            for (
-                let groupIndex = 0;
-                groupIndex < imageGroups.length;
-                groupIndex++
-            ) {
-
-                const group =
-                    imageGroups[groupIndex];
-
-
-                const imageIndex =
-                    group.images.indexOf(
-                        image
-                    );
-
-
-                if (
-                    imageIndex !== -1
-                ) {
-
-                    return {
-
-                        group:
-                            group,
-
-                        index:
-                            imageIndex
-
-                    };
-
-                }
-
-            }
-
-
-            return null;
-
-        }
-
-
-        function updateLightboxImage() {
-
-            if (
-                !currentGroup ||
-                !currentGroup.images ||
-                currentGroup.images.length === 0
-            ) {
-
-                return;
-
-            }
-
-
-            const image =
-                currentGroup.images[
-                    currentImageIndex
-                ];
-
-
-            if (!image) {
-
-                return;
-
-            }
-
-
-            lightboxImage.src =
-                image.currentSrc ||
-                image.src;
-
-
-            lightboxImage.alt =
-                image.alt ||
-                "图片放大查看";
-
-
-            const showNavigation =
-                currentGroup.images.length > 1;
-
-
-            if (lightboxPrev) {
-
-                lightboxPrev.style.display =
-                    showNavigation
-                        ? "flex"
-                        : "none";
-
-            }
-
-
-            if (lightboxNext) {
-
-                lightboxNext.style.display =
-                    showNavigation
-                        ? "flex"
-                        : "none";
-
-            }
-
-        }
-
-
-        function openLightbox(
-            image
-        ) {
-
-            const result =
-                findImageGroup(
-                    image
+                    selector
                 );
 
 
-            if (!result) {
-
-                return;
-
-            }
-
-
-            currentGroup =
-                result.group;
-
-
-            currentImageIndex =
-                result.index;
-
-
-            updateLightboxImage();
-
-
-            lightbox.classList.add(
-                "active"
-            );
-
-
-            lightbox.setAttribute(
-                "aria-hidden",
-                "false"
-            );
-
-
-            document.body.classList.add(
-                "lightbox-open"
-            );
-
-
-            document.body.style.overflow =
-                "hidden";
-
-        }
-
-
-        function closeLightbox() {
-
-            lightbox.classList.remove(
-                "active"
-            );
-
-
-            lightbox.setAttribute(
-                "aria-hidden",
-                "true"
-            );
-
-
-            document.body.classList.remove(
-                "lightbox-open"
-            );
-
-
-            document.body.style.overflow =
-                "";
-
-
-            setTimeout(
-                function () {
+            elements.forEach(
+                function (img) {
 
                     if (
-                        !lightbox.classList.contains(
-                            "active"
-                        )
+                        !images.includes(img)
                     ) {
 
-                        lightboxImage.src =
-                            "";
+                        images.push(img);
 
                     }
+
+                }
+            );
+
+        }
+    );
+
+
+    if (images.length === 0) {
+
+        return;
+
+    }
+
+
+    let currentIndex = 0;
+
+
+    function showImage(index) {
+
+        if (
+            index < 0
+        ) {
+
+            index =
+                images.length - 1;
+
+        }
+
+
+        if (
+            index >= images.length
+        ) {
+
+            index = 0;
+
+        }
+
+
+        currentIndex = index;
+
+
+        const image =
+            images[currentIndex];
+
+
+        lightboxImage.src =
+            image.src;
+
+        lightboxImage.alt =
+            image.alt || "عرض الصورة";
+
+
+        lightbox.classList.add(
+            "active"
+        );
+
+        lightbox.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+
+        document.body.style.overflow =
+            "hidden";
+
+
+        if (
+            prevButton
+        ) {
+
+            prevButton.style.display =
+                images.length > 1
+                    ? "flex"
+                    : "none";
+
+        }
+
+
+        if (
+            nextButton
+        ) {
+
+            nextButton.style.display =
+                images.length > 1
+                    ? "flex"
+                    : "none";
+
+        }
+
+    }
+
+
+    function closeLightbox() {
+
+        lightbox.classList.remove(
+            "active"
+        );
+
+        lightbox.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        lightboxImage.src = "";
+
+        document.body.style.overflow =
+            "";
+
+    }
+
+
+    images.forEach(
+        function (img, index) {
+
+            img.addEventListener(
+                "click",
+                function () {
+
+                    showImage(index);
+
+                }
+            );
+
+        }
+    );
+
+
+    if (closeButton) {
+
+        closeButton.addEventListener(
+            "click",
+            closeLightbox
+        );
+
+    }
+
+
+    if (prevButton) {
+
+        prevButton.addEventListener(
+            "click",
+            function () {
+
+                showImage(
+                    currentIndex - 1
+                );
+
+            }
+        );
+
+    }
+
+
+    if (nextButton) {
+
+        nextButton.addEventListener(
+            "click",
+            function () {
+
+                showImage(
+                    currentIndex + 1
+                );
+
+            }
+        );
+
+    }
+
+
+    lightbox.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target ===
+                lightbox
+            ) {
+
+                closeLightbox();
+
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                !lightbox.classList.contains(
+                    "active"
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                closeLightbox();
+
+            }
+
+
+            if (
+                event.key === "ArrowRight"
+            ) {
+
+                showImage(
+                    currentIndex - 1
+                );
+
+            }
+
+
+            if (
+                event.key === "ArrowLeft"
+            ) {
+
+                showImage(
+                    currentIndex + 1
+                );
+
+            }
+
+        }
+    );
+
+
+    let touchStartX = 0;
+
+
+    lightbox.addEventListener(
+        "touchstart",
+        function (event) {
+
+            touchStartX =
+                event.changedTouches[0]
+                    .screenX;
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+    lightbox.addEventListener(
+        "touchend",
+        function (event) {
+
+            const touchEndX =
+                event.changedTouches[0]
+                    .screenX;
+
+            const distance =
+                touchStartX -
+                touchEndX;
+
+
+            if (
+                Math.abs(distance) < 50
+            ) {
+
+                return;
+
+            }
+
+
+            if (distance > 0) {
+
+                showImage(
+                    currentIndex + 1
+                );
+
+            } else {
+
+                showImage(
+                    currentIndex - 1
+                );
+
+            }
+
+        },
+        {
+            passive: true
+        }
+    );
+
+}
+
+
+/* =========================================================
+   VIDEO
+========================================================= */
+
+function initVideos() {
+
+    const videos =
+        document.querySelectorAll(
+            "video"
+        );
+
+
+    videos.forEach(
+        function (video) {
+
+            video.playsInline = true;
+
+            /*
+             * 不强制播放，
+             * 避免移动端浏览器拦截。
+             */
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   GET ONLINE WHATSAPP
+========================================================= */
+
+async function getNextWhatsAppNumber() {
+
+    const response =
+        await fetch(
+            SUPABASE_URL +
+            SUPABASE_RPC,
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json",
+
+                    "apikey":
+                        SUPABASE_KEY,
+
+                    "Authorization":
+                        "Bearer " +
+                        SUPABASE_KEY
 
                 },
-                200
-            );
 
-        }
-
-
-        function showPreviousImage() {
-
-            if (
-                !currentGroup ||
-                currentGroup.images.length <= 1
-            ) {
-
-                return;
-
-            }
-
-
-            currentImageIndex--;
-
-
-            if (
-                currentImageIndex < 0
-            ) {
-
-                currentImageIndex =
-                    currentGroup.images.length - 1;
-
-            }
-
-
-            updateLightboxImage();
-
-        }
-
-
-        function showNextImage() {
-
-            if (
-                !currentGroup ||
-                currentGroup.images.length <= 1
-            ) {
-
-                return;
-
-            }
-
-
-            currentImageIndex++;
-
-
-            if (
-                currentImageIndex >=
-                currentGroup.images.length
-            ) {
-
-                currentImageIndex =
-                    0;
-
-            }
-
-
-            updateLightboxImage();
-
-        }
-
-
-        imageGroups.forEach(
-            function (group) {
-
-                group.images.forEach(
-                    function (image) {
-
-                        image.addEventListener(
-                            "click",
-                            function (event) {
-
-                                event.preventDefault();
-
-                                event.stopPropagation();
-
-                                openLightbox(
-                                    image
-                                );
-
-                            }
-                        );
-
-                    }
-                );
+                body:
+                    JSON.stringify({})
 
             }
         );
 
 
-        if (lightboxClose) {
-
-            lightboxClose.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-
-                    event.stopPropagation();
-
-                    closeLightbox();
-
-                }
-            );
-
-        }
-
-
-        if (lightboxPrev) {
-
-            lightboxPrev.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-
-                    event.stopPropagation();
-
-                    showPreviousImage();
-
-                }
-            );
-
-        }
-
-
-        if (lightboxNext) {
-
-            lightboxNext.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-
-                    event.stopPropagation();
-
-                    showNextImage();
-
-                }
-            );
-
-        }
-
-
-        lightbox.addEventListener(
-            "click",
-            function (event) {
-
-                const imageWrap =
-                    document.querySelector(
-                        ".lightbox-image-wrap"
-                    );
-
-
-                if (
-                    event.target === lightbox ||
-                    event.target === imageWrap
-                ) {
-
-                    closeLightbox();
-
-                }
-
-            }
-        );
-
-
-        let lightboxStartX =
-            0;
-
-        let lightboxStartY =
-            0;
-
-        let lightboxTouching =
-            false;
-
-
-        lightbox.addEventListener(
-            "touchstart",
-            function (event) {
-
-                if (
-                    !event.touches ||
-                    event.touches.length !== 1
-                ) {
-
-                    return;
-
-                }
-
-
-                lightboxStartX =
-                    event.touches[0].clientX;
-
-
-                lightboxStartY =
-                    event.touches[0].clientY;
-
-
-                lightboxTouching =
-                    true;
-
-            },
-            {
-                passive: true
-            }
-        );
-
-
-        lightbox.addEventListener(
-            "touchend",
-            function (event) {
-
-                if (
-                    !lightboxTouching
-                ) {
-
-                    return;
-
-                }
-
-
-                lightboxTouching =
-                    false;
-
-
-                if (
-                    !event.changedTouches ||
-                    event.changedTouches.length !== 1
-                ) {
-
-                    return;
-
-                }
-
-
-                const endX =
-                    event.changedTouches[0].clientX;
-
-
-                const endY =
-                    event.changedTouches[0].clientY;
-
-
-                const deltaX =
-                    endX -
-                    lightboxStartX;
-
-
-                const deltaY =
-                    endY -
-                    lightboxStartY;
-
-
-                if (
-                    Math.abs(deltaX) < 50 ||
-                    Math.abs(deltaX) <= Math.abs(deltaY)
-                ) {
-
-                    return;
-
-                }
-
-
-                if (
-                    deltaX < 0
-                ) {
-
-                    showNextImage();
-
-                } else {
-
-                    showPreviousImage();
-
-                }
-
-            },
-            {
-                passive: true
-            }
-        );
-
-
-        document.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (
-                    !lightbox.classList.contains(
-                        "active"
-                    )
-                ) {
-
-                    return;
-
-                }
-
-
-                if (
-                    event.key === "Escape"
-                ) {
-
-                    closeLightbox();
-
-                }
-
-
-                if (
-                    event.key === "ArrowLeft"
-                ) {
-
-                    showPreviousImage();
-
-                }
-
-
-                if (
-                    event.key === "ArrowRight"
-                ) {
-
-                    showNextImage();
-
-                }
-
-            }
+    if (!response.ok) {
+
+        throw new Error(
+            "Supabase request failed: " +
+            response.status
         );
 
     }
 
 
-    /* =====================================================
-       Supabase 获取在线 WhatsApp 客服
-    ===================================================== */
-
-    async function getNextWhatsAppNumber() {
-
-        try {
-
-            const response =
-                await fetch(
-
-                    SUPABASE_URL +
-                    "/rest/v1/rpc/get_next_whatsapp",
-
-                    {
-
-                        method:
-                            "POST",
-
-                        headers: {
-
-                            "apikey":
-                                SUPABASE_KEY,
-
-                            "Authorization":
-                                "Bearer " +
-                                SUPABASE_KEY,
-
-                            "Content-Type":
-                                "application/json"
-
-                        },
-
-                        body:
-                            "{}"
-
-                    }
-
-                );
+    const data =
+        await response.json();
 
 
-            if (!response.ok) {
-
-                const errorText =
-                    await response.text();
+    let number = null;
 
 
-                console.error(
-                    "Supabase客服轮询失败:",
-                    response.status,
-                    errorText
-                );
+    if (
+        Array.isArray(data)
+    ) {
 
+        number =
+            data[0];
 
-                throw new Error(
-                    "客服轮询请求失败"
-                );
+    } else {
 
-            }
-
-
-            const result =
-                await response.json();
-
-
-            console.log(
-                "Supabase返回客服:",
-                result
-            );
-
-
-            if (
-                !result ||
-                result.success !== true ||
-                !result.phone
-            ) {
-
-                throw new Error(
-                    "目前没有在线客服"
-                );
-
-            }
-
-
-            return result;
-
-        } catch (error) {
-
-            console.error(
-                "获取客服号码失败:",
-                error
-            );
-
-
-            return null;
-
-        }
+        number =
+            data;
 
     }
 
 
-    /* =====================================================
-       WhatsApp 核心功能
+    if (!number) {
 
-       重要：
-
-       只有成功获取在线客服号码，
-       并且电话号码有效以后，
-
-       才发送：
-
-       Meta Pixel Contact
-       Meta CAPI Contact
-       TikTok Pixel Contact
-       TikTok Events API Contact
-    ===================================================== */
-
-    async function openWhatsApp() {
-
-        console.log(
-            "开始获取在线 WhatsApp 客服..."
+        throw new Error(
+            "No WhatsApp number returned"
         );
 
+    }
 
-        /* =================================================
-           第一步：
-           先获取在线客服
-        ================================================= */
 
-        const customerService =
+    return number;
+
+}
+
+
+/* =========================================================
+   NORMALIZE PHONE
+========================================================= */
+
+function normalizePhone(phone) {
+
+    if (!phone) {
+
+        return "";
+
+    }
+
+
+    return String(phone)
+        .replace(
+            /[^\d]/g,
+            ""
+        );
+
+}
+
+
+/* =========================================================
+   WHATSAPP
+========================================================= */
+
+async function openWhatsApp() {
+
+    const eventId =
+        generateEventId();
+
+
+    try {
+
+        const number =
             await getNextWhatsAppNumber();
 
 
-        /* =================================================
-           如果没有在线客服
-           
-           这里直接结束
-
-           不发送任何 Contact
-        ================================================= */
-
-        if (!customerService) {
-
-            console.warn(
-                "❌ 没有获取到在线客服，不发送 Contact"
-            );
-
-
-            alert(
-                "客服暂时无法接通，请稍后再试。"
-            );
-
-
-            return;
-
-        }
-
-
-        /* =================================================
-           第二步：
-           清理电话号码
-        ================================================= */
-
         const phone =
-            String(
-                customerService.phone ||
-                ""
-            )
-            .replace(
-                /\D/g,
-                ""
+            normalizePhone(
+                number.phone ||
+                number.mobile ||
+                number.number
             );
 
-
-        /* =================================================
-           电话号码无效
-
-           同样不发送 Contact
-        ================================================= */
 
         if (!phone) {
 
-            console.error(
-                "❌ 客服号码无效，不发送 Contact"
+            throw new Error(
+                "Invalid WhatsApp phone"
             );
-
-
-            alert(
-                "客服号码配置错误，请联系客服。"
-            );
-
-
-            return;
 
         }
 
 
-        console.log(
-            "✅ 成功获取在线客服:",
-            customerService.name || "",
-            phone
+        /*
+         * Tracking is only sent
+         * after a valid online number
+         * has been returned.
+         */
+
+        sendMetaContact(
+            eventId
+        );
+
+        sendMetaCAPI(
+            eventId
+        );
+
+        sendTikTokContact();
+
+        sendTikTokEventsAPI(
+            eventId
         );
 
 
-        /* =================================================
-           第三步：
-           到这里才算真正获得有效客服
+        const message =
+            "السلام عليكم، أريد معرفة المزيد عن العود الطبيعي والأسعار.";
 
-           现在生成 Event ID
-        ================================================= */
-
-        const metaEventId =
-            generateEventId(
-                "meta_contact"
-            );
-
-
-        /* =================================================
-           第四步：
-           Meta Pixel Contact
-        ================================================= */
-
-        trackMetaPixelContact(
-            metaEventId
-        );
-
-
-        /* =================================================
-           第五步：
-           Meta CAPI Contact
-        ================================================= */
-
-        trackMetaCAPIContact(
-            metaEventId
-        );
-
-
-        /* =================================================
-           第六步：
-           TikTok Contact
-
-           使用独立 Event ID
-        ================================================= */
-
-        const tiktokEventId =
-            generateEventId(
-                "tiktok_contact"
-            );
-
-
-        trackTikTokContact(
-            tiktokEventId
-        );
-
-
-        /* =================================================
-           第七步：
-           WhatsApp URL
-        ================================================= */
 
         const whatsappUrl =
             "https://wa.me/" +
-            phone;
+            phone +
+            "?text=" +
+            encodeURIComponent(
+                message
+            );
 
-
-        console.log(
-            "正在打开在线客服:",
-            customerService.name || "",
-            phone
-        );
-
-
-        /* =================================================
-           第八步：
-           跳转 WhatsApp
-        ================================================= */
 
         window.location.href =
             whatsappUrl;
 
+
+    } catch (error) {
+
+        console.error(
+            "WhatsApp error:",
+            error
+        );
+
+
+        /*
+         * 如果号码池暂时无法返回号码，
+         * 不随机跳转到一个可能离线的号码。
+         */
+
+        alert(
+            "نعتذر، خدمة التواصل غير متاحة حالياً. يرجى المحاولة مرة أخرى لاحقاً."
+        );
+
     }
 
-
-    /* =====================================================
-       自动接管 WhatsApp 链接
-    ===================================================== */
-
-    document.addEventListener(
-        "click",
-        function (event) {
-
-            const target =
-                event.target.closest(
-                    "a, button"
-                );
+}
 
 
-            if (!target) {
+/* =========================================================
+   AUTO WHATSAPP LINKS
+========================================================= */
 
-                return;
+function initWhatsAppLinks() {
 
-            }
+    const elements =
+        document.querySelectorAll(
+            "a, button"
+        );
+
+
+    elements.forEach(
+        function (element) {
+
+            const text =
+                (
+                    element.textContent ||
+                    ""
+                )
+                .trim()
+                .toLowerCase();
 
 
             const href =
-                target.getAttribute(
+                element.getAttribute(
                     "href"
                 );
 
 
-            const hasWhatsAppHref =
-                href &&
-                (
-                    href.includes("wa.me") ||
-                    href.includes("whatsapp.com")
-                );
-
-
-            const hasWhatsAppAttribute =
-                target.hasAttribute(
-                    "data-whatsapp"
-                );
-
-
-            const buttonText =
-                (
-                    target.textContent ||
-                    ""
-                )
-                .toLowerCase();
-
-
-            const hasWhatsAppText =
-                buttonText.includes(
+            const isWhatsAppText =
+                text.includes(
                     "whatsapp"
                 );
 
 
+            const isWhatsAppHref =
+                href &&
+                (
+                    href.includes(
+                        "wa.me"
+                    ) ||
+                    href.includes(
+                        "whatsapp.com"
+                    )
+                );
+
+
             if (
-                !hasWhatsAppHref &&
-                !hasWhatsAppAttribute &&
-                !hasWhatsAppText
+                isWhatsAppText ||
+                isWhatsAppHref
             ) {
 
-                return;
+                if (
+                    element.getAttribute(
+                        "onclick"
+                    ) ===
+                    "openWhatsApp()"
+                ) {
+
+                    return;
+
+                }
+
+
+                element.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        openWhatsApp();
+
+                    }
+                );
 
             }
 
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            openWhatsApp();
-
-        },
-        true
+        }
     );
 
-
-    /* =====================================================
-       提供给 HTML onclick 使用
-    ===================================================== */
-
-    window.openWhatsApp =
-        openWhatsApp;
+}
 
 
-    /* =====================================================
-       初始化完成
-    ===================================================== */
+/* =========================================================
+   PAGE INIT
+========================================================= */
 
-    console.log(
-        "网站脚本加载完成"
-    );
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
+        initMobileMenu();
 
-    console.log(
-        "Meta Pixel ID:",
-        META_PIXEL_ID
-    );
+        initReviewSlider();
 
+        initLightbox();
 
-    console.log(
-        "Meta CAPI:",
-        META_CAPI_URL
-    );
+        initVideos();
 
+        initWhatsAppLinks();
 
-    console.log(
-        "TikTok Pixel ID:",
-        TIKTOK_PIXEL_ID
-    );
+    }
+);
 
 
-});
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+window.openWhatsApp =
+    openWhatsApp;

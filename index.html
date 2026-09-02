@@ -22,7 +22,6 @@
 
     <!-- =====================================================
          Meta Pixel
-         Pixel ID: 882833290918835
     ====================================================== -->
 
     <script>
@@ -57,15 +56,9 @@
         'https://connect.facebook.net/en_US/fbevents.js'
     );
 
-    fbq(
-        'init',
-        '882833290918835'
-    );
+    fbq('init','882833290918835');
 
-    fbq(
-        'track',
-        'PageView'
-    );
+    fbq('track','PageView');
     </script>
 
 
@@ -83,17 +76,17 @@
 
     <!-- =====================================================
          TikTok Pixel
-         Pixel ID: DA4P6OBC77UES973S3SG
     ====================================================== -->
 
     <script>
-    !function (w, d, t) {
 
-        w.TiktokAnalyticsObject = t;
+    !function (w,d,t) {
 
-        var ttq = w[t] = w[t] || [];
+        w.TiktokAnalyticsObject=t;
 
-        ttq.methods = [
+        var ttq=w[t]=w[t]||[];
+
+        ttq.methods=[
             "page",
             "track",
             "identify",
@@ -112,9 +105,9 @@
             "grantConsent"
         ];
 
-        ttq.setAndDefer = function (t, e) {
+        ttq.setAndDefer=function(t,e){
 
-            t[e] = function () {
+            t[e]=function(){
 
                 t.push(
                     [e].concat(
@@ -129,11 +122,11 @@
 
         };
 
-        for (
-            var i = 0;
-            i < ttq.methods.length;
+        for(
+            var i=0;
+            i<ttq.methods.length;
             i++
-        ) {
+        ){
 
             ttq.setAndDefer(
                 ttq,
@@ -142,14 +135,14 @@
 
         }
 
-        ttq.instance = function (t) {
+        ttq.instance=function(t){
 
-            for (
-                var e = ttq._i[t] || [],
-                    n = 0;
-                n < ttq.methods.length;
+            for(
+                var e=ttq._i[t]||[],
+                    n=0;
+                n<ttq.methods.length;
                 n++
-            ) {
+            ){
 
                 ttq.setAndDefer(
                     e,
@@ -162,41 +155,34 @@
 
         };
 
-        ttq.load = function (e, n) {
+        ttq.load=function(e,n){
 
-            var r =
+            var r=
                 "https://analytics.tiktok.com/i18n/pixel/events.js";
 
-            ttq._i = ttq._i || {};
+            ttq._i=ttq._i||{};
+            ttq._i[e]=[];
+            ttq._i[e]._u=r;
 
-            ttq._i[e] = [];
+            ttq._t=ttq._t||{};
+            ttq._t[e]=+new Date;
 
-            ttq._i[e]._u = r;
+            ttq._o=ttq._o||{};
+            ttq._o[e]=n||{};
 
-            ttq._t = ttq._t || {};
+            n=document.createElement("script");
 
-            ttq._t[e] = +new Date;
-
-            ttq._o = ttq._o || {};
-
-            ttq._o[e] = n || {};
-
-            n = document.createElement("script");
-
-            n.type = "text/javascript";
-            n.async = true;
-
-            n.src =
-                r +
-                "?sdkid=" +
-                e +
-                "&lib=" +
+            n.type="text/javascript";
+            n.async=true;
+            n.src=r+
+                "?sdkid="+
+                e+
+                "&lib="+
                 t;
 
-            e =
-                document.getElementsByTagName(
-                    "script"
-                )[0];
+            e=document.getElementsByTagName(
+                "script"
+            )[0];
 
             e.parentNode.insertBefore(
                 n,
@@ -216,6 +202,7 @@
         document,
         "ttq"
     );
+
     </script>
 
 
@@ -234,7 +221,7 @@
 
 
 <!-- =====================================================
-     Header
+     HEADER
 ====================================================== -->
 
 <header class="header">
@@ -310,15 +297,12 @@
 </header>
 
 
-<!-- =====================================================
-     Main
-====================================================== -->
 
 <main>
 
 
 <!-- =====================================================
-     Hero
+     HERO
 ====================================================== -->
 
 <section
@@ -335,7 +319,9 @@
         <h1>
 
             اكتشف عبق العود
+
             <br>
+
             الذي تمنحه الطبيعة عبر الزمن
 
         </h1>
@@ -348,22 +334,25 @@
             برائحة عميقة وفاخرة تدوم لفترة طويلة.
 
         </p>
+
+
         <a
-    href="javascript:void(0)"
-    class="hero-whatsapp-button"
-    onclick="openWhatsApp()">
+            href="javascript:void(0)"
+            class="hero-whatsapp-button"
+            onclick="openWhatsApp()">
 
-    احصل على سعر الجملة عبر WhatsApp
+            احصل على سعر الجملة عبر WhatsApp
 
-</a>
+        </a>
 
     </div>
 
 </section>
 
 
+
 <!-- =====================================================
-     Features
+     FEATURES
 ====================================================== -->
 
 <section class="features">
@@ -440,8 +429,9 @@
 </section>
 
 
+
 <!-- =====================================================
-     Factory
+     FACTORY VIDEO
 ====================================================== -->
 
 <section
@@ -482,143 +472,37 @@
     </div>
 
 
-    <!-- Factory Slider -->
+    <div class="video-placeholder">
 
-    <div class="tree-slider">
+        <video
+            controls
+            playsinline
+            preload="metadata">
 
+            <source
+                src="video/factory.mp4"
+                type="video/mp4">
 
-        <button
-            class="slider-button slider-prev"
-            type="button"
-            aria-label="الصورة السابقة">
+            متصفحك لا يدعم تشغيل الفيديو.
 
-            ‹
-
-        </button>
-
-
-        <div class="tree-track">
-
-
-            <div class="tree-slide">
-
-                <img
-                    src="images/tree-01.jpg"
-                    alt="مصدر المصنع"
-                    loading="eager">
-
-            </div>
-
-
-            <div class="tree-slide">
-
-                <img
-                    src="images/tree-02.jpg"
-                    alt="مصنع معالجة العود"
-                    loading="lazy">
-
-            </div>
-
-
-            <div class="tree-slide">
-
-                <img
-                    src="images/tree-03.jpg"
-                    alt="اختيار المواد الخام"
-                    loading="lazy">
-
-            </div>
-
-
-            <div class="tree-slide">
-
-                <img
-                    src="images/tree-04.jpg"
-                    alt="معالجة العود في المصنع"
-                    loading="lazy">
-
-            </div>
-
-
-            <div class="tree-slide">
-
-                <img
-                    src="images/tree-05.jpg"
-                    alt="توريد العود مباشرة من المصنع"
-                    loading="lazy">
-
-            </div>
-
-
-        </div>
-
-
-        <button
-            class="slider-button slider-next"
-            type="button"
-            aria-label="الصورة التالية">
-
-            ›
-
-        </button>
+        </video>
 
     </div>
 
-
-    <!-- Factory Dots -->
-
-    <div class="slider-dots">
-
-
-        <button
-            class="slider-dot active"
-            type="button"
-            aria-label="عرض الصورة الأولى">
-        </button>
-
-
-        <button
-            class="slider-dot"
-            type="button"
-            aria-label="عرض الصورة الثانية">
-        </button>
-
-
-        <button
-            class="slider-dot"
-            type="button"
-            aria-label="عرض الصورة الثالثة">
-        </button>
-
-
-        <button
-            class="slider-dot"
-            type="button"
-            aria-label="عرض الصورة الرابعة">
-        </button>
-
-
-        <button
-            class="slider-dot"
-            type="button"
-            aria-label="عرض الصورة الخامسة">
-        </button>
-
-
-    </div>
 
 </section>
 
 
+
 <!-- =====================================================
-     Video
+     SELECTION
+     单张图片
 ====================================================== -->
 
 <section class="video-section">
 
 
     <div class="video-content">
-
 
         <p class="video-eyebrow">
         </p>
@@ -632,39 +516,30 @@
         <p>
 
             من المواد الخام الطبيعية إلى المنتجات المختارة،
-            اكتشف جمال العود الطبيعي وتفاصيله المميزة.
+            نحرص على اختيار كل قطعة بعناية
+            لضمان جودة مميزة وتفاصيل طبيعية جميلة.
 
         </p>
 
     </div>
 
 
-    <div class="video-placeholder">
+    <div class="selection-image">
 
-
-        <video
-            controls
-            playsinline
-            preload="metadata">
-
-
-            <source
-                src="video/xxx.mp4"
-                type="video/mp4">
-
-
-            متصفحك لا يدعم تشغيل الفيديو.
-
-
-        </video>
+        <img
+            src="images/select-01.jpg"
+            alt="اختيار قطع العود الطبيعي بعناية"
+            loading="eager">
 
     </div>
+
 
 </section>
 
 
+
 <!-- =====================================================
-     Products
+     PRODUCTS
 ====================================================== -->
 
 <section
@@ -753,7 +628,6 @@
 
     <div class="section-cta">
 
-
         <a
             href="javascript:void(0)"
             class="secondary-cta"
@@ -763,14 +637,15 @@
 
         </a>
 
-
     </div>
+
 
 </section>
 
 
+
 <!-- =====================================================
-     Shipping
+     SHIPPING
 ====================================================== -->
 
 <section
@@ -779,7 +654,6 @@
 
 
     <div class="section-heading">
-
 
         <h2>
             خدمات الشحن
@@ -803,7 +677,6 @@
 
 
             <div class="shipping-item">
-
 
                 <span class="shipping-number">
                     01
@@ -830,7 +703,6 @@
 
 
             <div class="shipping-item">
-
 
                 <span class="shipping-number">
                     02
@@ -872,7 +744,6 @@
 
             <div class="shipping-promotion-text">
 
-
                 <h3>
                     هدية خاصة للطلب الأول
                 </h3>
@@ -900,13 +771,16 @@
 
         </div>
 
+
     </div>
+
 
 </section>
 
 
+
 <!-- =====================================================
-     Reviews
+     REVIEWS
 ====================================================== -->
 
 <section
@@ -915,7 +789,6 @@
 
 
     <div class="section-heading">
-
 
         <h2>
             آراء العملاء
@@ -987,11 +860,11 @@
 
         </button>
 
+
     </div>
 
 
     <div class="review-dots">
-
 
         <button
             class="review-dot active"
@@ -999,13 +872,11 @@
             aria-label="المراجعة الأولى">
         </button>
 
-
         <button
             class="review-dot"
             type="button"
             aria-label="المراجعة الثانية">
         </button>
-
 
         <button
             class="review-dot"
@@ -1013,14 +884,15 @@
             aria-label="المراجعة الثالثة">
         </button>
 
-
     </div>
+
 
 </section>
 
 
+
 <!-- =====================================================
-     Contact
+     CONTACT
 ====================================================== -->
 
 <section
@@ -1053,7 +925,9 @@
 
         </a>
 
+
     </div>
+
 
 </section>
 
@@ -1061,8 +935,9 @@
 </main>
 
 
+
 <!-- =====================================================
-     Image Lightbox
+     LIGHTBOX
 ====================================================== -->
 
 <div
@@ -1113,11 +988,13 @@
 
     </button>
 
+
 </div>
 
 
+
 <!-- =====================================================
-     Footer
+     FOOTER
 ====================================================== -->
 
 <footer class="footer">
@@ -1129,7 +1006,6 @@
 
 
     <div class="footer-links">
-
 
         <a href="privacy.html">
             سياسة الخصوصية
@@ -1150,7 +1026,6 @@
             أمان الموقع
         </a>
 
-
     </div>
 
 
@@ -1162,12 +1037,8 @@
 </footer>
 
 
-<!-- =====================================================
-     JavaScript
-====================================================== -->
 
 <script src="script.js"></script>
-
 
 </body>
 

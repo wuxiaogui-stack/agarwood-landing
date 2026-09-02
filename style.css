@@ -1,14 +1,3 @@
-/* =========================================================
-   عود الصين الفاخر
-   完整版 Style CSS
-   适配：桌面端 / 平板 / 手机 / 阿拉伯语 RTL
-========================================================= */
-
-
-/* =========================================================
-   01. 基础重置
-========================================================= */
-
 * {
     margin: 0;
     padding: 0;
@@ -17,39 +6,21 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 76px;
-    background: #f7f5ef;
 }
 
 body {
-    width: 100%;
-    min-height: 100%;
-
-    font-family:
-        "Tahoma",
-        "Arial",
-        "Segoe UI",
-        sans-serif;
-
-    background: #f7f5ef;
+    font-family: Arial, Tahoma, sans-serif;
+    background: #f8f6f1;
     color: #2f2a22;
-
-    line-height: 1.7;
-
+    line-height: 1.8;
+    direction: rtl;
     overflow-x: hidden;
-
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
 }
 
 img,
 video {
     display: block;
     max-width: 100%;
-}
-
-img {
-    height: auto;
 }
 
 a {
@@ -63,82 +34,61 @@ button {
 
 
 /* =========================================================
-   02. Header
+   HEADER
 ========================================================= */
 
 .header {
     position: fixed;
-
     top: 0;
+    right: 0;
     left: 0;
-
-    width: 100%;
-    min-height: 76px;
-
     z-index: 1000;
+
+    min-height: 76px;
+    padding: 0 5%;
 
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
-    padding: 14px 6%;
-
-    background:
-        rgba(47, 42, 34, 0.96);
-
-    color: #fff;
-
-    border-bottom:
-        1px solid
-        rgba(255, 255, 255, 0.1);
-
-    box-shadow:
-        0 4px 20px
-        rgba(0, 0, 0, 0.12);
+    background: rgba(47, 42, 34, 0.96);
 
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+
+    color: #ffffff;
+
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
 .logo {
-    flex: 0 0 auto;
-
-    color: #fff;
-
     font-size: 22px;
     font-weight: 700;
-
-    letter-spacing: 1px;
-
     white-space: nowrap;
+}
+
+.logo:hover {
+    opacity: 0.8;
 }
 
 .nav {
     display: flex;
     align-items: center;
+    gap: 28px;
 
-    gap: 30px;
-
-    margin-left: 30px;
     margin-right: auto;
+    margin-left: 35px;
 }
 
 .nav a {
     position: relative;
 
-    color: #fff;
-
-    font-size: 14px;
-
-    opacity: 0.9;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
 
     white-space: nowrap;
 
-    transition:
-        opacity 0.2s ease;
-}
-
-.nav a:hover {
-    opacity: 1;
+    transition: color 0.3s ease;
 }
 
 .nav a::after {
@@ -152,10 +102,13 @@ button {
     width: 0;
     height: 2px;
 
-    background: #c4a979;
+    background: #d8c39b;
 
-    transition:
-        width 0.25s ease;
+    transition: width 0.3s ease;
+}
+
+.nav a:hover {
+    color: #ffffff;
 }
 
 .nav a:hover::after {
@@ -163,731 +116,514 @@ button {
 }
 
 .header-button {
-    flex: 0 0 auto;
+    min-width: 120px;
 
-    display: inline-flex;
+    padding: 10px 20px;
 
+    display: flex;
     align-items: center;
     justify-content: center;
 
-    min-height: 44px;
-
-    padding: 10px 24px;
-
-    border-radius: 30px;
-
     background: #25d366;
+    color: #ffffff;
 
-    color: #fff;
+    border-radius: 8px;
 
     font-size: 14px;
     font-weight: 700;
 
-    white-space: nowrap;
-
     transition:
-        background 0.2s ease,
-        transform 0.2s ease;
+        background 0.3s ease,
+        transform 0.3s ease;
 }
 
 .header-button:hover {
     background: #128c7e;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
 .menu-toggle {
     display: none;
 
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
 
-    padding: 0;
-
-    border: 0;
-
-    border-radius: 8px;
-
+    border: none;
     background: transparent;
 
-    flex-direction: column;
+    cursor: pointer;
 
     align-items: center;
     justify-content: center;
 
+    flex-direction: column;
     gap: 5px;
-
-    cursor: pointer;
 }
 
 .menu-toggle span {
-    width: 23px;
+    display: block;
+
+    width: 25px;
     height: 2px;
 
-    background: #fff;
+    background: #ffffff;
 
     border-radius: 2px;
-
-    transition:
-        transform 0.25s ease,
-        opacity 0.25s ease;
-}
-
-.menu-toggle.active span:nth-child(1) {
-    transform:
-        translateY(7px)
-        rotate(45deg);
-}
-
-.menu-toggle.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.menu-toggle.active span:nth-child(3) {
-    transform:
-        translateY(-7px)
-        rotate(-45deg);
 }
 
 
 /* =========================================================
-   03. Hero
+   HERO
 ========================================================= */
 
 .hero {
     position: relative;
 
-    width: 100%;
-    min-height: 100svh;
+    min-height: 760px;
+
+    padding: 150px 6% 100px;
 
     display: flex;
     align-items: center;
+    justify-content: center;
 
-    overflow: hidden;
+    text-align: center;
 
-    background-color: #2f2a22;
+    color: #ffffff;
 
     background-image:
+        linear-gradient(
+            rgba(25, 22, 18, 0.52),
+            rgba(25, 22, 18, 0.68)
+        ),
         url("images/hero.jpg");
 
-    background-position: center center;
     background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
-
-    color: #fff;
-
-    contain: paint;
-}
-
-.hero::before {
-    content: "";
-
-    position: absolute;
-    inset: 0;
-
-    z-index: 1;
-
-    background:
-        linear-gradient(
-            270deg,
-            rgba(0, 0, 0, 0.68),
-            rgba(0, 0, 0, 0.38),
-            rgba(0, 0, 0, 0.12)
-        );
 }
 
 .hero-content {
-    position: relative;
-
-    z-index: 2;
-
     width: 100%;
-    max-width: 760px;
-
-    margin-right: 8%;
-    margin-left: 8%;
-
-    padding-top: 76px;
-
-    text-align: right;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .eyebrow {
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 
-    color: #fff;
+    color: #e2c994;
 
-    font-size: 13px;
+    font-size: 16px;
+    font-weight: 700;
 
-    letter-spacing: 2px;
-
-    font-weight: 600;
+    letter-spacing: 1px;
 }
 
 .hero h1 {
-    margin-bottom: 24px;
+    margin-bottom: 25px;
 
-    font-size:
-        clamp(42px, 5vw, 72px);
+    font-size: clamp(38px, 5vw, 68px);
 
-    line-height: 1.45;
+    line-height: 1.35;
 
-    letter-spacing: 0;
-
-    font-weight: 700;
+    font-weight: 800;
 }
 
 .hero-description {
-    max-width: 560px;
+    max-width: 720px;
 
-    margin-right: 0;
-
-    font-size: 18px;
-
-    line-height: 2;
-
-    color:
-        rgba(255, 255, 255, 0.94);
-}
-
-
-/* =========================================================
-   04. Features
-========================================================= */
-
-.features {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
-    width: 100%;
-
-    background: #fff;
-
-    border-bottom:
-        1px solid #e5e1d8;
-}
-
-.feature {
-    min-width: 0;
-
-    padding: 45px 30px;
-
-    text-align: center;
-
-    border-left:
-        1px solid #e5e1d8;
-}
-
-.feature:first-child {
-    border-left: 0;
-}
-
-.feature-number {
-    display: block;
-
-    margin-bottom: 12px;
-
-    color: #8b7655;
-
-    font-size: 13px;
-
-    letter-spacing: 2px;
-}
-
-.feature h3 {
-    margin-bottom: 8px;
-
-    color: #2f2a22;
+    margin: 0 auto 35px;
 
     font-size: 19px;
-}
-
-.feature p {
-    color: #777064;
-
-    font-size: 14px;
-
-    line-height: 1.8;
-}
-
-
-/* =========================================================
-   05. Common Section
-========================================================= */
-
-.section-heading {
-    width: 100%;
-    max-width: 760px;
-
-    margin:
-        0 auto 55px;
-
-    text-align: center;
-}
-
-.section-heading h2 {
-    margin-bottom: 20px;
-
-    color: #2f2a22;
-
-    font-size:
-        clamp(32px, 4vw, 48px);
-
-    line-height: 1.45;
-}
-
-.section-heading p {
-    margin-bottom: 18px;
-
-    color: #716b61;
-
-    font-size: 16px;
 
     line-height: 2;
+
+    color: rgba(255, 255, 255, 0.92);
 }
 
-.section-heading p:last-child {
-    margin-bottom: 0;
-}
-
-.section-heading strong {
-    color: #5e4e37;
-    font-weight: 700;
-}
-
-
-/* =========================================================
-   06. Factory / Trees
-========================================================= */
-
-.trees-section {
-    width: 100%;
-
-    padding: 100px 7%;
-
-    background: #f7f5ef;
-}
-
-.tree-slider {
-    position: relative;
-
-    width: 100%;
-    max-width: 850px;
-
-    margin: 0 auto;
-
-    overflow: hidden;
-
-    border-radius: 14px;
-
-    background: #e8e3d8;
-
-    box-shadow:
-        0 15px 40px
-        rgba(0, 0, 0, 0.1);
-
-    touch-action: pan-y;
-}
-
-.tree-track {
-    display: flex;
-
-    width: 100%;
-
-    direction: ltr;
-
-    transform:
-        translate3d(0, 0, 0);
-
-    will-change: transform;
-
-    transition:
-        transform 0.45s ease;
-}
-
-.tree-slide {
-    position: relative;
-
-    flex:
-        0 0 100%;
-
-    width: 100%;
-
-    min-width: 100%;
-
-    aspect-ratio: 1 / 1;
-
-    overflow: hidden;
-
-    background: #e8e3d8;
-}
-
-.tree-slide img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-
-    cursor: zoom-in;
-
-    background: #e8e3d8;
-
-    user-select: none;
-}
-
-.slider-button,
-.review-button {
-    position: absolute;
-
-    top: 50%;
-
-    transform:
-        translateY(-50%);
-
-    z-index: 20;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    width: 48px;
-    height: 48px;
-
-    padding: 0;
-
-    border: 0;
-
-    border-radius: 50%;
-
-    background:
-        rgba(47, 42, 34, 0.82);
-
-    color: #fff;
-
-    font-size: 34px;
-
-    line-height: 1;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-.slider-button:hover,
-.review-button:hover {
-    background: #c4a979;
-
-    color: #28241e;
-}
-
-.slider-button:active,
-.review-button:active {
-    transform:
-        translateY(-50%)
-        scale(0.95);
-}
-
-.slider-prev {
-    right: 18px;
-}
-
-.slider-next {
-    left: 18px;
-}
-
-.slider-dots,
-.review-dots {
-    display: flex;
-
-    justify-content: center;
-    align-items: center;
-
-    gap: 10px;
-
-    margin-top: 25px;
-
-    direction: ltr;
-}
-
-.slider-dot,
-.review-dot {
-    width: 9px;
-    height: 9px;
-
-    padding: 0;
-
-    border: 0;
-
-    border-radius: 50%;
-
-    background: #cfc7b8;
-
-    cursor: pointer;
-
-    transition:
-        width 0.25s ease,
-        background 0.25s ease;
-}
-
-.slider-dot.active,
-.review-dot.active {
-    width: 28px;
-
-    border-radius: 10px;
-
-    background: #8b7655;
-}
-
-
-/* =========================================================
-   07. Video
-========================================================= */
-
-.video-section {
-    width: 100%;
-
-    padding: 100px 7%;
-
-    background: #28241e;
-
-    color: #fff;
-
-    text-align: center;
-}
-
-.video-content {
-    width: 100%;
-    max-width: 700px;
-
-    margin:
-        0 auto 40px;
-}
-
-.video-eyebrow,
-.contact-eyebrow,
-.shipping-eyebrow {
-    margin-bottom: 12px;
-
-    color: #c4a979;
-
-    font-size: 12px;
-
-    letter-spacing: 3px;
-}
-
-.video-content h2 {
-    margin-bottom: 18px;
-
-    color: #fff;
-
-    font-size:
-        clamp(32px, 4vw, 48px);
-
-    line-height: 1.45;
-}
-
-.video-content p:last-child {
-    color:
-        rgba(255, 255, 255, 0.72);
-
-    font-size: 15px;
-
-    line-height: 2;
-}
-
-.video-placeholder {
-    width: 100%;
-    max-width: 900px;
-
-    margin: 0 auto;
-
-    overflow: hidden;
-
-    border-radius: 14px;
-
-    background: #000;
-
-    box-shadow:
-        0 15px 40px
-        rgba(0, 0, 0, 0.25);
-}
-
-.video-placeholder video {
-    display: block;
-
-    width: 100%;
-    height: auto;
-
-    max-height: 600px;
-
-    background: #000;
-}
-
-
-/* =========================================================
-   08. Products
-========================================================= */
-
-.products-section {
-    width: 100%;
-
-    padding: 100px 7%;
-
-    background: #fff;
-}
-
-.product-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 24px;
-
-    width: 100%;
-    max-width: 1000px;
-
-    margin: 0 auto;
-}
-
-.product-card {
-    min-width: 0;
-
-    overflow: hidden;
-
-    background: #f8f6f1;
-
-    border:
-        1px solid #e6e0d5;
-
-    border-radius: 14px;
-}
-
-.product-image {
-    width: 100%;
-
-    aspect-ratio: 1 / 1;
-
-    overflow: hidden;
-
-    background: #e8e3d8;
-}
-
-.product-image img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-
-    cursor: zoom-in;
-
-    background: #e8e3d8;
-
-    transition:
-        transform 0.5s ease;
-}
-
-.product-card:hover
-.product-image img {
-    transform:
-        scale(1.04);
-}
-
-.section-cta {
-    display: flex;
-
-    justify-content: center;
-
-    width: 100%;
-
-    margin-top: 42px;
-}
-
-.secondary-cta,
-.shipping-button {
+.hero-whatsapp-button {
     display: inline-flex;
 
     align-items: center;
     justify-content: center;
 
-    min-height: 54px;
+    min-height: 64px;
 
-    padding: 14px 30px;
-
-    border-radius: 30px;
+    padding: 0 34px;
 
     background: #25d366;
 
-    color: #fff;
+    color: #ffffff;
 
-    font-size: 16px;
+    border-radius: 8px;
 
+    font-size: 17px;
     font-weight: 700;
 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
     transition:
-        background 0.2s ease,
-        transform 0.2s ease;
+        background 0.3s ease,
+        transform 0.3s ease;
 }
 
-.secondary-cta:hover,
-.shipping-button:hover {
+.hero-whatsapp-button:hover {
     background: #128c7e;
-
-    transform:
-        translateY(-1px);
+    transform: translateY(-3px);
 }
 
 
 /* =========================================================
-   09. Shipping
+   FEATURES
+========================================================= */
+
+.features {
+    width: 90%;
+    max-width: 1250px;
+
+    margin: 0 auto;
+
+    padding: 75px 0;
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 30px;
+}
+
+.feature {
+    padding: 10px 20px;
+
+    text-align: center;
+
+    border-left:
+        1px solid rgba(47, 42, 34, 0.12);
+}
+
+.feature:last-child {
+    border-left: none;
+}
+
+.feature-number {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #9c8559;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+.feature h3 {
+    margin-bottom: 8px;
+
+    font-size: 22px;
+}
+
+.feature p {
+    color: #71695d;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   GENERAL SECTIONS
+========================================================= */
+
+.trees-section,
+.products-section,
+.shipping-section,
+.reviews-section,
+.video-section {
+    width: 100%;
+
+    padding: 100px 6%;
+}
+
+.section-heading {
+    max-width: 850px;
+
+    margin: 0 auto 55px;
+
+    text-align: center;
+}
+
+.section-heading h2,
+.video-content h2 {
+    margin-bottom: 20px;
+
+    color: #2f2a22;
+
+    font-size: clamp(30px, 4vw, 46px);
+
+    line-height: 1.4;
+}
+
+.section-heading p,
+.video-content p {
+    color: #71695d;
+
+    font-size: 17px;
+
+    line-height: 2;
+}
+
+.section-heading strong,
+.video-content strong {
+    color: #4c4131;
+}
+
+
+/* =========================================================
+   FACTORY VIDEO
+========================================================= */
+
+.trees-section {
+    background: #eee9df;
+}
+
+.video-placeholder {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    overflow: hidden;
+
+    border-radius: 16px;
+
+    background: #1d1a16;
+
+    box-shadow:
+        0 20px 50px rgba(47, 42, 34, 0.16);
+}
+
+.video-placeholder video {
+    width: 100%;
+
+    height: auto;
+
+    min-height: 400px;
+
+    object-fit: cover;
+
+    background: #1d1a16;
+}
+
+
+/* =========================================================
+   SELECTION
+   单张图片
+========================================================= */
+
+.video-section {
+    background: #f8f6f1;
+
+    text-align: center;
+}
+
+.video-content {
+    max-width: 850px;
+
+    margin: 0 auto 45px;
+}
+
+.video-content h2 {
+    margin-bottom: 18px;
+}
+
+.video-content p {
+    max-width: 780px;
+
+    margin: 0 auto;
+
+    font-size: 17px;
+}
+
+.selection-image {
+    width: 100%;
+
+    max-width: 950px;
+
+    margin: 0 auto;
+
+    overflow: hidden;
+
+    border-radius: 16px;
+
+    background: #e8e2d7;
+
+    box-shadow:
+        0 18px 45px rgba(47, 42, 34, 0.15);
+}
+
+.selection-image img {
+    width: 100%;
+
+    height: auto;
+
+    max-height: 680px;
+
+    object-fit: cover;
+
+    cursor: zoom-in;
+
+    transition:
+        transform 0.5s ease;
+}
+
+.selection-image:hover img {
+    transform: scale(1.015);
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+.products-section {
+    background: #ffffff;
+}
+
+.product-grid {
+    width: 100%;
+
+    max-width: 1200px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 25px;
+}
+
+.product-card {
+    overflow: hidden;
+
+    background: #f5f2ec;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 8px 25px rgba(47, 42, 34, 0.08);
+}
+
+.product-image {
+    width: 100%;
+
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+
+    height: auto;
+
+    aspect-ratio: 1 / 1;
+
+    object-fit: cover;
+
+    cursor: zoom-in;
+
+    transition:
+        transform 0.5s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.04);
+}
+
+.section-cta {
+    margin-top: 45px;
+
+    text-align: center;
+}
+
+.secondary-cta {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 58px;
+
+    padding: 0 35px;
+
+    border: 1px solid #8e7953;
+
+    border-radius: 8px;
+
+    color: #4d412f;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease;
+}
+
+.secondary-cta:hover {
+    background: #8e7953;
+
+    color: #ffffff;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   SHIPPING
 ========================================================= */
 
 .shipping-section {
-    width: 100%;
-
-    padding: 100px 7%;
-
-    background: #f7f5ef;
+    background: #eee9df;
 }
 
 .shipping-content {
+    width: 100%;
+
+    max-width: 1200px;
+
+    margin: 0 auto;
+
     display: grid;
 
     grid-template-columns:
         1fr 1fr;
 
-    gap: 40px;
+    gap: 45px;
 
-    width: 100%;
-    max-width: 1100px;
-
-    margin: 0 auto;
+    align-items: start;
 }
 
 .shipping-info {
-    display: grid;
+    display: flex;
 
-    gap: 20px;
+    flex-direction: column;
 
-    align-content: start;
+    gap: 25px;
 }
 
 .shipping-item {
-    width: 100%;
+    padding: 30px;
 
-    padding: 28px;
-
-    background: #fff;
-
-    border:
-        1px solid #e5e1d8;
+    background: #f8f6f1;
 
     border-radius: 14px;
+
+    border:
+        1px solid rgba(47, 42, 34, 0.08);
 }
 
 .shipping-number {
@@ -895,127 +631,142 @@ button {
 
     margin-bottom: 8px;
 
-    color: #8b7655;
+    color: #9c8559;
 
-    font-size: 13px;
-
-    letter-spacing: 2px;
+    font-size: 14px;
+    font-weight: 700;
 }
 
 .shipping-item h3 {
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 
-    color: #2f2a22;
-
-    font-size: 20px;
-
-    line-height: 1.5;
+    font-size: 23px;
 }
 
 .shipping-item p {
-    color: #716b61;
+    color: #71695d;
 
-    font-size: 14px;
+    font-size: 16px;
 
     line-height: 2;
 }
 
-.shipping-promotion {
-    width: 100%;
+.shipping-item strong {
+    color: #4c4131;
+}
 
+.shipping-promotion {
     overflow: hidden;
 
-    background: #fff;
+    background: #ffffff;
 
-    border:
-        1px solid #e5e1d8;
-
-    border-radius: 14px;
+    border-radius: 16px;
 
     box-shadow:
-        0 12px 30px
-        rgba(0, 0, 0, 0.06);
+        0 15px 40px rgba(47, 42, 34, 0.1);
 }
 
 .shipping-promotion-image {
     width: 100%;
 
-    aspect-ratio: 4 / 3;
-
     overflow: hidden;
-
-    background: #e8e3d8;
 }
 
 .shipping-promotion-image img {
     width: 100%;
-    height: 100%;
 
-    object-fit: cover;
+    height: auto;
 
     cursor: zoom-in;
 
-    background: #e8e3d8;
+    transition:
+        transform 0.5s ease;
+}
+
+.shipping-promotion:hover img {
+    transform: scale(1.03);
 }
 
 .shipping-promotion-text {
     padding: 30px;
 
-    text-align: right;
+    text-align: center;
 }
 
 .shipping-promotion-text h3 {
     margin-bottom: 12px;
 
-    color: #2f2a22;
-
-    font-size: 24px;
-
-    line-height: 1.5;
+    font-size: 25px;
 }
 
 .shipping-promotion-text p {
-    margin-bottom: 24px;
+    margin-bottom: 25px;
 
-    color: #716b61;
+    color: #71695d;
 
-    font-size: 14px;
+    font-size: 16px;
 
     line-height: 2;
 }
 
+.shipping-promotion-text strong {
+    color: #8e7953;
+}
+
+.shipping-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 55px;
+
+    padding: 0 30px;
+
+    background: #25d366;
+
+    color: #ffffff;
+
+    border-radius: 8px;
+
+    font-weight: 700;
+
+    transition:
+        background 0.3s ease,
+        transform 0.3s ease;
+}
+
+.shipping-button:hover {
+    background: #128c7e;
+
+    transform: translateY(-2px);
+}
+
 
 /* =========================================================
-   10. Reviews
+   REVIEWS
 ========================================================= */
 
 .reviews-section {
-    width: 100%;
+    background: #ffffff;
 
-    padding: 100px 7%;
-
-    background: #f7f5ef;
+    overflow: hidden;
 }
 
 .review-slider {
     position: relative;
 
     width: 100%;
-    max-width: 850px;
+
+    max-width: 1100px;
 
     margin: 0 auto;
 
     overflow: hidden;
 
-    border-radius: 14px;
+    border-radius: 16px;
 
-    background: #fff;
-
-    box-shadow:
-        0 15px 40px
-        rgba(0, 0, 0, 0.08);
-
-    touch-action: pan-y;
+    background: #f5f2ec;
 }
 
 .review-track {
@@ -1025,73 +776,131 @@ button {
 
     direction: ltr;
 
-    transform:
-        translate3d(0, 0, 0);
-
-    will-change: transform;
-
     transition:
-        transform 0.45s ease;
+        transform 0.5s ease;
 }
 
 .review-slide {
-    flex:
-        0 0 100%;
+    flex: 0 0 100%;
 
     width: 100%;
-    min-width: 100%;
+
+    overflow: hidden;
+}
+
+.review-slide img {
+    width: 100%;
+
+    height: auto;
+
+    max-height: 720px;
+
+    object-fit: contain;
+
+    cursor: zoom-in;
+
+    background: #f5f2ec;
+}
+
+.review-button {
+    position: absolute;
+
+    top: 50%;
+
+    z-index: 10;
+
+    width: 48px;
+    height: 48px;
 
     display: flex;
 
     align-items: center;
     justify-content: center;
 
-    background: #fff;
+    transform: translateY(-50%);
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: rgba(47, 42, 34, 0.78);
+
+    color: #ffffff;
+
+    font-size: 32px;
+
+    cursor: pointer;
 }
 
-.review-slide img {
-    display: block;
-
-    width: 100%;
-    max-height: 700px;
-
-    object-fit: contain;
-
-    cursor: zoom-in;
-
-    background: #fff;
-
-    user-select: none;
+.review-button:hover {
+    background: #2f2a22;
 }
 
 .review-prev {
-    right: 15px;
+    right: 20px;
 }
 
 .review-next {
-    left: 15px;
+    left: 20px;
+}
+
+.review-dots {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: 22px;
+
+    direction: ltr;
+}
+
+.review-dot {
+    width: 9px;
+    height: 9px;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #cfc7b8;
+
+    cursor: pointer;
+}
+
+.review-dot.active {
+    background: #8e7953;
+
+    transform: scale(1.35);
 }
 
 
 /* =========================================================
-   11. Contact
+   CONTACT
 ========================================================= */
 
 .contact-section {
-    width: 100%;
+    padding: 110px 6%;
 
-    padding: 110px 7%;
+    background:
+        linear-gradient(
+            rgba(47, 42, 34, 0.92),
+            rgba(47, 42, 34, 0.96)
+        );
 
-    background: #28241e;
-
-    color: #fff;
+    color: #ffffff;
 
     text-align: center;
 }
 
 .contact-content {
     width: 100%;
-    max-width: 650px;
+
+    max-width: 750px;
 
     margin: 0 auto;
 }
@@ -1099,21 +908,17 @@ button {
 .contact-content h2 {
     margin-bottom: 20px;
 
-    color: #fff;
+    font-size: clamp(30px, 4vw, 44px);
 
-    font-size:
-        clamp(34px, 4vw, 52px);
-
-    line-height: 1.45;
+    line-height: 1.4;
 }
 
 .contact-content p {
     margin-bottom: 35px;
 
-    color:
-        rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.8);
 
-    font-size: 15px;
+    font-size: 17px;
 
     line-height: 2;
 }
@@ -1125,98 +930,30 @@ button {
     justify-content: center;
 
     min-width: 270px;
+
     min-height: 66px;
 
-    padding: 18px 40px;
-
-    border-radius: 36px;
+    padding: 0 35px;
 
     background: #25d366;
 
-    color: #fff;
+    color: #ffffff;
 
-    font-size: 19px;
+    border-radius: 8px;
 
+    font-size: 18px;
     font-weight: 700;
-
-    box-shadow:
-        0 10px 30px
-        rgba(37, 211, 102, 0.3);
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
 }
 
 .whatsapp-button:hover {
     background: #128c7e;
 
-    transform:
-        translateY(-2px);
+    transform: translateY(-3px);
 }
 
 
 /* =========================================================
-   12. Footer
-========================================================= */
-
-.footer {
-    width: 100%;
-
-    padding: 35px 7%;
-
-    background: #1d1a16;
-
-    color:
-        rgba(255, 255, 255, 0.7);
-
-    text-align: center;
-}
-
-.footer-logo {
-    margin-bottom: 18px;
-
-    color: #fff;
-
-    font-size: 20px;
-
-    font-weight: 700;
-}
-
-.footer-links {
-    display: flex;
-
-    justify-content: center;
-    align-items: center;
-
-    flex-wrap: wrap;
-
-    gap: 25px;
-
-    margin-bottom: 15px;
-}
-
-.footer-links a {
-    font-size: 13px;
-
-    transition:
-        color 0.2s ease;
-}
-
-.footer-links a:hover {
-    color: #c4a979;
-}
-
-.footer p {
-    color:
-        rgba(255, 255, 255, 0.45);
-
-    font-size: 12px;
-}
-
-
-/* =========================================================
-   13. Image Lightbox
+   LIGHTBOX
 ========================================================= */
 
 .image-lightbox {
@@ -1231,13 +968,10 @@ button {
     align-items: center;
     justify-content: center;
 
-    width: 100%;
-    height: 100%;
-
-    padding: 30px;
+    padding: 40px;
 
     background:
-        rgba(0, 0, 0, 0.94);
+        rgba(15, 13, 10, 0.94);
 
     opacity: 0;
 
@@ -1246,8 +980,8 @@ button {
     pointer-events: none;
 
     transition:
-        opacity 0.2s ease,
-        visibility 0.2s ease;
+        opacity 0.3s ease,
+        visibility 0.3s ease;
 }
 
 .image-lightbox.active {
@@ -1259,9 +993,13 @@ button {
 }
 
 .lightbox-image-wrap {
-    width: min(92vw, 1200px);
+    position: relative;
 
-    height: min(88vh, 900px);
+    width: 100%;
+
+    max-width: 1100px;
+
+    max-height: 90vh;
 
     display: flex;
 
@@ -1270,250 +1008,233 @@ button {
 }
 
 .lightbox-image-wrap img {
-    display: block;
-
     max-width: 100%;
-    max-height: 100%;
+
+    max-height: 90vh;
 
     width: auto;
     height: auto;
 
     object-fit: contain;
 
-    border-radius: 4px;
-
-    user-select: none;
-
-    -webkit-user-drag: none;
+    border-radius: 8px;
 }
 
-.lightbox-close,
-.lightbox-prev,
-.lightbox-next {
+.lightbox-close {
     position: absolute;
 
-    z-index: 10000;
+    top: 20px;
+    left: 25px;
+
+    z-index: 20;
+
+    width: 48px;
+    height: 48px;
 
     display: flex;
 
     align-items: center;
     justify-content: center;
 
-    padding: 0;
-
-    border: 0;
-
-    color: #fff;
-
-    background:
-        rgba(0, 0, 0, 0.45);
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease;
-}
-
-.lightbox-close {
-    top: 18px;
-    right: 22px;
-
-    width: 48px;
-    height: 48px;
+    border: none;
 
     border-radius: 50%;
 
+    background:
+        rgba(255, 255, 255, 0.12);
+
+    color: #ffffff;
+
     font-size: 34px;
 
-    line-height: 1;
+    cursor: pointer;
 }
 
 .lightbox-prev,
 .lightbox-next {
+    position: absolute;
+
     top: 50%;
 
-    transform:
-        translateY(-50%);
+    z-index: 20;
 
-    width: 54px;
-    height: 70px;
+    width: 52px;
+    height: 52px;
 
-    font-size: 46px;
+    display: flex;
 
-    line-height: 1;
+    align-items: center;
+    justify-content: center;
+
+    transform: translateY(-50%);
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.12);
+
+    color: #ffffff;
+
+    font-size: 34px;
+
+    cursor: pointer;
 }
 
 .lightbox-prev {
-    right: 18px;
+    right: 25px;
 }
 
 .lightbox-next {
-    left: 18px;
+    left: 25px;
 }
 
 .lightbox-close:hover,
 .lightbox-prev:hover,
 .lightbox-next:hover {
-    background: #c4a979;
-
-    color: #28241e;
+    background:
+        rgba(255, 255, 255, 0.22);
 }
 
 
 /* =========================================================
-   14. Tablet
+   FOOTER
+========================================================= */
+
+.footer {
+    padding: 45px 6% 30px;
+
+    background: #211e19;
+
+    color: rgba(255, 255, 255, 0.7);
+
+    text-align: center;
+}
+
+.footer-logo {
+    margin-bottom: 20px;
+
+    color: #ffffff;
+
+    font-size: 22px;
+
+    font-weight: 700;
+}
+
+.footer-links {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 22px;
+
+    margin-bottom: 22px;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.7);
+
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    color: #ffffff;
+}
+
+.footer p {
+    font-size: 13px;
+
+    color:
+        rgba(255, 255, 255, 0.45);
+}
+
+
+/* =========================================================
+   TABLET
 ========================================================= */
 
 @media (max-width: 1000px) {
 
     .header {
-        padding-left: 4%;
-        padding-right: 4%;
+        padding: 0 4%;
     }
 
     .nav {
         gap: 18px;
+
+        margin-left: 20px;
     }
 
     .nav a {
-        font-size: 13px;
-    }
-
-    .header-button {
-        padding:
-            9px 18px;
-
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .features {
         grid-template-columns:
             repeat(2, 1fr);
+
+        gap: 35px;
     }
 
     .feature:nth-child(2) {
-        border-left: 0;
-    }
-
-    .feature:nth-child(3),
-    .feature:nth-child(4) {
-        border-top:
-            1px solid #e5e1d8;
+        border-left: none;
     }
 
     .shipping-content {
         grid-template-columns: 1fr;
+
+        gap: 35px;
+    }
+
+    .shipping-promotion {
+        max-width: 800px;
+
+        margin: 0 auto;
     }
 }
 
 
 /* =========================================================
-   15. Mobile
+   MOBILE
 ========================================================= */
 
-@media (max-width: 700px) {
-
-    html {
-        scroll-padding-top: 64px;
-    }
-
-    html,
-    body {
-        width: 100%;
-        max-width: 100%;
-
-        overflow-x: hidden;
-    }
-
-    body {
-        min-width: 0;
-
-        font-size: 14px;
-    }
-
-
-    /* -----------------------------------------------------
-       Header
-    ----------------------------------------------------- */
+@media (max-width: 768px) {
 
     .header {
-        width: 100%;
+        min-height: 68px;
 
-        min-height: 64px;
-        height: 64px;
-
-        padding:
-            8px 14px;
-
-        gap: 8px;
-
-        direction: rtl;
+        padding: 0 18px;
     }
 
     .logo {
-        min-width: 0;
-
-        flex: 1 1 auto;
-
-        overflow: hidden;
-
-        text-overflow: ellipsis;
-
-        white-space: nowrap;
-
-        font-size: 16px;
-
-        letter-spacing: 0;
+        font-size: 18px;
     }
 
     .header-button {
-        flex:
-            0 0 auto;
-
-        min-height: 40px;
-
-        padding:
-            8px 13px;
-
-        border-radius: 22px;
-
-        font-size: 12px;
+        display: none;
     }
 
     .menu-toggle {
         display: flex;
-
-        flex:
-            0 0 42px;
-
-        width: 42px;
-        height: 42px;
     }
 
-
-    /* -----------------------------------------------------
-       Mobile Navigation
-    ----------------------------------------------------- */
-
     .nav {
-        position: absolute;
+        position: fixed;
 
-        top: 64px;
+        top: 68px;
 
-        left: 0;
         right: 0;
+        left: 0;
 
         width: 100%;
 
-        max-height:
-            calc(100svh - 64px);
-
-        overflow-y: auto;
-
         margin: 0;
 
-        padding: 6px 0;
+        padding: 20px;
 
         display: flex;
 
@@ -1523,18 +1244,8 @@ button {
 
         gap: 0;
 
-        direction: rtl;
-
         background:
             rgba(47, 42, 34, 0.98);
-
-        border-top:
-            1px solid
-            rgba(255, 255, 255, 0.08);
-
-        box-shadow:
-            0 10px 25px
-            rgba(0, 0, 0, 0.2);
 
         opacity: 0;
 
@@ -1542,13 +1253,12 @@ button {
 
         pointer-events: none;
 
-        transform:
-            translateY(-8px);
+        transform: translateY(-10px);
 
         transition:
-            opacity 0.2s ease,
-            transform 0.2s ease,
-            visibility 0.2s ease;
+            opacity 0.3s ease,
+            visibility 0.3s ease,
+            transform 0.3s ease;
     }
 
     .nav.mobile-open {
@@ -1558,35 +1268,17 @@ button {
 
         pointer-events: auto;
 
-        transform:
-            translateY(0);
+        transform: translateY(0);
     }
 
     .nav a {
-        width: 100%;
-
-        min-height: 48px;
-
-        padding:
-            13px 20px;
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: flex-start;
+        padding: 13px 8px;
 
         border-bottom:
             1px solid
-            rgba(255, 255, 255, 0.07);
+            rgba(255, 255, 255, 0.08);
 
-        font-size: 14px;
-
-        text-align: right;
-    }
-
-    .nav a:last-child {
-        border-bottom: 0;
+        font-size: 15px;
     }
 
     .nav a::after {
@@ -1594,365 +1286,157 @@ button {
     }
 
 
-    /* -----------------------------------------------------
-       Hero
-    ----------------------------------------------------- */
+    /* Hero */
 
     .hero {
-        width: 100%;
-
-        min-height: 100svh;
-
-        background-position:
-            center center;
-    }
-
-    .hero::before {
-        background:
-            linear-gradient(
-                270deg,
-                rgba(0, 0, 0, 0.72),
-                rgba(0, 0, 0, 0.42),
-                rgba(0, 0, 0, 0.15)
-            );
-    }
-
-    .hero-content {
-        width: 100%;
-
-        max-width: none;
-
-        margin: 0;
+        min-height: 680px;
 
         padding:
-            100px 20px 50px;
-
-        text-align: right;
+            120px 22px 80px;
     }
 
     .eyebrow {
-        margin-bottom: 12px;
+        font-size: 14px;
 
-        font-size: 10px;
-
-        letter-spacing: 1px;
+        margin-bottom: 15px;
     }
 
     .hero h1 {
-        width: 100%;
-
-        margin-bottom: 18px;
-
         font-size:
-            clamp(32px, 9vw, 40px);
+            clamp(32px, 9vw, 45px);
 
-        line-height: 1.5;
+        line-height: 1.45;
 
-        letter-spacing: 0;
-
-        overflow-wrap: anywhere;
+        margin-bottom: 20px;
     }
 
     .hero-description {
+        font-size: 16px;
+
+        line-height: 1.9;
+
+        margin-bottom: 28px;
+    }
+
+    .hero-whatsapp-button {
         width: 100%;
 
-        max-width: 100%;
+        min-height: 60px;
 
-        font-size: 14px;
+        padding: 0 20px;
 
-        line-height: 2;
-
-        overflow-wrap: anywhere;
+        font-size: 16px;
     }
 
 
-    /* -----------------------------------------------------
-       Features
-    ----------------------------------------------------- */
+    /* Features */
 
     .features {
-        width: 100%;
+        width: 90%;
+
+        padding: 55px 0;
 
         grid-template-columns:
-            1fr 1fr;
+            repeat(2, 1fr);
 
-        direction: rtl;
+        gap: 25px 10px;
     }
 
     .feature {
-        min-width: 0;
-
         padding:
-            26px 10px;
+            5px 12px;
 
-        border-left:
-            1px solid #e5e1d8;
-    }
-
-    .feature:nth-child(2) {
-        border-left: 0;
-    }
-
-    .feature:nth-child(3),
-    .feature:nth-child(4) {
-        border-top:
-            1px solid #e5e1d8;
-    }
-
-    .feature-number {
-        margin-bottom: 8px;
-
-        font-size: 11px;
-
-        letter-spacing: 1px;
+        border-left: none;
     }
 
     .feature h3 {
-        margin-bottom: 6px;
-
-        font-size: 15px;
-
-        line-height: 1.5;
+        font-size: 19px;
     }
 
     .feature p {
-        font-size: 11px;
+        font-size: 14px;
 
         line-height: 1.7;
-
-        overflow-wrap: anywhere;
     }
 
 
-    /* -----------------------------------------------------
-       Sections
-    ----------------------------------------------------- */
+    /* Sections */
 
     .trees-section,
-    .video-section,
     .products-section,
     .shipping-section,
     .reviews-section,
-    .contact-section {
-        width: 100%;
-
-        padding-left: 18px;
-        padding-right: 18px;
+    .video-section {
+        padding:
+            70px 20px;
     }
-
-    .trees-section,
-    .products-section,
-    .shipping-section,
-    .reviews-section {
-        padding-top: 65px;
-        padding-bottom: 65px;
-    }
-
-
-    /* -----------------------------------------------------
-       Section Heading
-    ----------------------------------------------------- */
 
     .section-heading {
-        width: 100%;
-
-        max-width: 100%;
-
-        margin:
-            0 auto 32px;
-
-        text-align: center;
+        margin-bottom: 35px;
     }
 
-    .section-heading h2 {
-        width: 100%;
-
-        margin-bottom: 14px;
-
-        font-size: 30px;
-
-        line-height: 1.5;
-
-        overflow-wrap: anywhere;
-    }
-
-    .section-heading p {
-        width: 100%;
-
-        margin-bottom: 16px;
-
-        font-size: 13px;
-
-        line-height: 2;
-
-        overflow-wrap: anywhere;
-    }
-
-
-    /* -----------------------------------------------------
-       Factory Slider
-    ----------------------------------------------------- */
-
-    .tree-slider {
-        width: 100%;
-
-        max-width: 100%;
-
-        margin: 0 auto;
-
-        border-radius: 10px;
-    }
-
-    .tree-track {
-        width: 100%;
-
-        direction: ltr;
-    }
-
-    .tree-slide {
-        flex:
-            0 0 100%;
-
-        width: 100%;
-        min-width: 100%;
-
-        aspect-ratio: 1 / 1;
-    }
-
-    .tree-slide img {
-        width: 100%;
-        height: 100%;
-
-        object-fit: cover;
-    }
-
-    .slider-button {
-        width: 36px;
-        height: 36px;
-
-        font-size: 24px;
-    }
-
-    .slider-prev {
-        right: 8px;
-    }
-
-    .slider-next {
-        left: 8px;
-    }
-
-    .slider-dots {
-        margin-top: 18px;
-
-        gap: 7px;
-    }
-
-    .slider-dot {
-        width: 7px;
-        height: 7px;
-    }
-
-    .slider-dot.active {
-        width: 22px;
-    }
-
-
-    /* -----------------------------------------------------
-       Video
-    ----------------------------------------------------- */
-
-    .video-section {
-        padding-top: 65px;
-        padding-bottom: 65px;
-    }
-
-    .video-content {
-        width: 100%;
-
-        max-width: 100%;
-
-        margin-bottom: 25px;
-    }
-
-    .video-eyebrow {
-        font-size: 10px;
-
-        letter-spacing: 2px;
-    }
-
+    .section-heading h2,
     .video-content h2 {
-        margin-bottom: 14px;
-
         font-size: 30px;
 
         line-height: 1.5;
-
-        overflow-wrap: anywhere;
     }
 
-    .video-content p:last-child {
-        font-size: 13px;
+    .section-heading p,
+    .video-content p {
+        font-size: 15px;
 
-        line-height: 2;
-
-        overflow-wrap: anywhere;
+        line-height: 1.9;
     }
+
+
+    /* Factory */
 
     .video-placeholder {
-        width: 100%;
-
-        max-width: 100%;
-
-        border-radius: 10px;
+        border-radius: 12px;
     }
 
     .video-placeholder video {
+        min-height: auto;
+
         width: 100%;
+
+        object-fit: contain;
+    }
+
+
+    /* Selection */
+
+    .video-content {
+        margin-bottom: 30px;
+    }
+
+    .selection-image {
+        border-radius: 12px;
+    }
+
+    .selection-image img {
+        width: 100%;
+
         height: auto;
 
         max-height: none;
+
+        object-fit: contain;
     }
 
 
-    /* -----------------------------------------------------
-       Products
-    ----------------------------------------------------- */
+    /* Products */
 
     .product-grid {
-        width: 100%;
-
-        max-width: 100%;
-
         grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+            repeat(2, 1fr);
 
-        gap: 10px;
+        gap: 12px;
     }
 
     .product-card {
-        min-width: 0;
-
-        width: 100%;
-
-        border-radius: 9px;
-    }
-
-    .product-image {
-        width: 100%;
-
-        aspect-ratio: 1 / 1;
-    }
-
-    .product-image img {
-        width: 100%;
-        height: 100%;
-
-        object-fit: cover;
-    }
-
-    .product-card:hover
-    .product-image img {
-        transform: none;
+        border-radius: 10px;
     }
 
     .section-cta {
@@ -1962,151 +1446,218 @@ button {
     .secondary-cta {
         width: 100%;
 
-        max-width: 100%;
-
-        min-height: 52px;
-
-        padding:
-            13px 20px;
-
-        font-size: 15px;
+        min-height: 55px;
     }
 
 
-    /* -----------------------------------------------------
-       Shipping
-    ----------------------------------------------------- */
+    /* Shipping */
 
     .shipping-content {
-        width: 100%;
-
-        max-width: 100%;
-
-        grid-template-columns: 1fr;
-
-        gap: 18px;
-    }
-
-    .shipping-info {
-        width: 100%;
-
-        gap: 14px;
+        gap: 25px;
     }
 
     .shipping-item {
-        width: 100%;
+        padding:
+            23px 20px;
 
-        padding: 20px;
-
-        border-radius: 10px;
-    }
-
-    .shipping-number {
-        font-size: 11px;
+        border-radius: 12px;
     }
 
     .shipping-item h3 {
-        font-size: 18px;
-
-        line-height: 1.5;
+        font-size: 21px;
     }
 
     .shipping-item p {
-        font-size: 13px;
-
-        line-height: 2;
-
-        overflow-wrap: anywhere;
+        font-size: 15px;
     }
 
     .shipping-promotion {
-        width: 100%;
-
-        border-radius: 10px;
-    }
-
-    .shipping-promotion-image {
-        width: 100%;
-
-        aspect-ratio: 4 / 3;
-    }
-
-    .shipping-promotion-image img {
-        width: 100%;
-        height: 100%;
-
-        object-fit: cover;
+        border-radius: 12px;
     }
 
     .shipping-promotion-text {
-        padding: 20px;
-
-        text-align: right;
+        padding:
+            25px 20px;
     }
 
     .shipping-promotion-text h3 {
-        font-size: 21px;
-
-        line-height: 1.5;
+        font-size: 22px;
     }
 
     .shipping-promotion-text p {
-        margin-bottom: 20px;
-
-        font-size: 13px;
-
-        line-height: 2;
+        font-size: 15px;
     }
 
     .shipping-button {
         width: 100%;
 
-        min-height: 52px;
-
-        padding:
-            13px 20px;
-
-        font-size: 15px;
+        min-height: 55px;
     }
 
 
-    /* -----------------------------------------------------
-       Reviews
-    ----------------------------------------------------- */
+    /* Reviews */
 
     .review-slider {
-        width: 100%;
-
-        max-width: 100%;
-
-        border-radius: 10px;
-    }
-
-    .review-track {
-        width: 100%;
-
-        direction: ltr;
-    }
-
-    .review-slide {
-        width: 100%;
-        min-width: 100%;
+        border-radius: 12px;
     }
 
     .review-slide img {
-        width: 100%;
-        height: auto;
+        max-height: none;
 
-        max-height: 75svh;
+        width: 100%;
 
         object-fit: contain;
+    }
+
+    .review-button {
+        width: 40px;
+        height: 40px;
+
+        font-size: 27px;
+    }
+
+    .review-prev {
+        right: 10px;
+    }
+
+    .review-next {
+        left: 10px;
+    }
+
+
+    /* Contact */
+
+    .contact-section {
+        padding:
+            75px 20px;
+    }
+
+    .contact-content h2 {
+        font-size: 30px;
+    }
+
+    .contact-content p {
+        font-size: 15px;
+    }
+
+    .whatsapp-button {
+        width: 100%;
+
+        min-width: 0;
+
+        min-height: 62px;
+
+        font-size: 17px;
+    }
+
+
+    /* Lightbox */
+
+    .image-lightbox {
+        padding:
+            20px 12px;
+    }
+
+    .lightbox-image-wrap {
+        max-width: 100%;
+
+        max-height: 85vh;
+    }
+
+    .lightbox-image-wrap img {
+        max-width: 100%;
+
+        max-height: 85vh;
+    }
+
+    .lightbox-close {
+        top: 12px;
+        left: 12px;
+
+        width: 42px;
+        height: 42px;
+
+        font-size: 29px;
+    }
+
+    .lightbox-prev,
+    .lightbox-next {
+        width: 42px;
+        height: 42px;
+
+        font-size: 28px;
+    }
+
+    .lightbox-prev {
+        right: 10px;
+    }
+
+    .lightbox-next {
+        left: 10px;
+    }
+
+
+    /* Footer */
+
+    .footer {
+        padding:
+            35px 20px 25px;
+    }
+
+    .footer-links {
+        gap:
+            12px 18px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .logo {
+        font-size: 16px;
+    }
+
+    .hero {
+        min-height: 650px;
+
+        padding:
+            110px 18px 70px;
+    }
+
+    .hero h1 {
+        font-size: 31px;
+    }
+
+    .hero-description {
+        font-size: 15px;
+    }
+
+    .features {
+        gap:
+            20px 5px;
+    }
+
+    .feature h3 {
+        font-size: 18px;
+    }
+
+    .feature p {
+        font-size: 13px;
+    }
+
+    .product-grid {
+        gap: 10px;
     }
 
     .review-button {
         width: 36px;
         height: 36px;
 
-        font-size: 24px;
+        font-size: 25px;
     }
 
     .review-prev {
@@ -2117,761 +1668,161 @@ button {
         left: 7px;
     }
 
-    .review-dots {
-        margin-top: 18px;
-
-        gap: 7px;
-    }
-
-
-    /* -----------------------------------------------------
-       Contact
-    ----------------------------------------------------- */
-
-    .contact-section {
-        padding-top: 70px;
-        padding-bottom: 70px;
-    }
-
-    .contact-content {
-        width: 100%;
-
-        max-width: 100%;
-
-        text-align: center;
-    }
-
-    .contact-content h2 {
-        width: 100%;
-
-        margin-bottom: 16px;
-
-        font-size: 32px;
-
-        line-height: 1.5;
-
-        overflow-wrap: anywhere;
-    }
-
-    .contact-content p {
-        width: 100%;
-
-        margin-bottom: 28px;
-
-        font-size: 13px;
-
-        line-height: 2;
-
-        overflow-wrap: anywhere;
-    }
-
-    .whatsapp-button {
-        width: 100%;
-
-        min-width: 0;
-
-        min-height: 60px;
-
-        padding:
-            16px 20px;
-
-        font-size: 17px;
-
-        border-radius: 32px;
-    }
-
-
-    /* -----------------------------------------------------
-       Footer
-    ----------------------------------------------------- */
-
-    .footer {
-        width: 100%;
-
-        padding:
-            28px 18px;
-
-        text-align: center;
-    }
-
-    .footer-logo {
-        font-size: 18px;
-    }
-
     .footer-links {
-        width: 100%;
+        flex-direction: column;
 
-        gap:
-            10px 16px;
-    }
-
-    .footer-links a {
-        font-size: 12px;
-    }
-
-    .footer p {
-        font-size: 11px;
-
-        line-height: 1.7;
-    }
-
-
-    /* -----------------------------------------------------
-       Lightbox
-    ----------------------------------------------------- */
-
-    .image-lightbox {
-        width: 100%;
-        height: 100%;
-
-        padding: 10px;
-    }
-
-    .lightbox-image-wrap {
-        width: 94vw;
-
-        height: 82svh;
-    }
-
-    .lightbox-image-wrap img {
-        max-width: 94vw;
-
-        max-height: 82svh;
-    }
-
-    .lightbox-close {
-        top: 8px;
-        right: 8px;
-
-        width: 42px;
-        height: 42px;
-
-        font-size: 28px;
-    }
-
-    .lightbox-prev,
-    .lightbox-next {
-        width: 36px;
-        height: 52px;
-
-        font-size: 32px;
-    }
-
-    .lightbox-prev {
-        right: 4px;
-    }
-
-    .lightbox-next {
-        left: 4px;
-    }
-}
-
-
-/* =========================================================
-   16. Small Mobile
-========================================================= */
-
-@media (max-width: 380px) {
-
-    .header {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .logo {
-        font-size: 14px;
-    }
-
-    .header-button {
-        padding:
-            7px 10px;
-
-        font-size: 11px;
-    }
-
-    .menu-toggle {
-        flex-basis: 38px;
-
-        width: 38px;
-        height: 38px;
-    }
-
-    .hero-content {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-
-    .hero h1 {
-        font-size: 32px;
-
-        line-height: 1.5;
-    }
-
-    .hero-description {
-        font-size: 13px;
-    }
-
-    .feature {
-        padding-left: 7px;
-        padding-right: 7px;
-    }
-
-    .feature h3 {
-        font-size: 14px;
-    }
-
-    .feature p {
-        font-size: 10px;
-    }
-
-    .trees-section,
-    .video-section,
-    .products-section,
-    .shipping-section,
-    .reviews-section,
-    .contact-section {
-        padding-left: 14px;
-        padding-right: 14px;
-    }
-
-    .section-heading h2,
-    .video-content h2 {
-        font-size: 28px;
-    }
-
-    .product-grid {
-        gap: 7px;
-    }
-
-    .product-card {
-        border-radius: 7px;
-    }
-}
-
-
-/* =========================================================
-   17. Reduced Motion
-========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    html {
-        scroll-behavior: auto;
-    }
-
-    *,
-    *::before,
-    *::after {
-        animation-duration:
-            0.01ms !important;
-
-        animation-iteration-count:
-            1 !important;
-
-        transition-duration:
-            0.01ms !important;
-    }
-}
-
-
-/* =========================================================
-   18. RTL Global Protection
-========================================================= */
-
-html[dir="rtl"] {
-    direction: rtl;
-}
-
-html[dir="rtl"] body {
-    direction: rtl;
-
-    text-align: right;
-
-    overflow-x: hidden;
-}
-
-html[dir="rtl"] * {
-    overflow-wrap: anywhere;
-}
-
-
-/* =========================================================
-   19. RTL Header
-========================================================= */
-
-html[dir="rtl"] .header {
-    direction: rtl;
-}
-
-html[dir="rtl"] .nav {
-    direction: rtl;
-}
-
-html[dir="rtl"] .nav a {
-    text-align: right;
-}
-
-
-/* =========================================================
-   20. RTL Hero
-========================================================= */
-
-html[dir="rtl"] .hero {
-    direction: rtl;
-}
-
-html[dir="rtl"] .hero-content {
-    text-align: right;
-}
-
-html[dir="rtl"] .hero h1,
-html[dir="rtl"] .hero-description,
-html[dir="rtl"] .eyebrow {
-    text-align: right;
-}
-
-
-/* =========================================================
-   21. RTL Factory
-========================================================= */
-
-html[dir="rtl"] .tree-slider {
-    direction: ltr;
-}
-
-html[dir="rtl"] .tree-track {
-    direction: ltr;
-}
-
-html[dir="rtl"] .slider-prev {
-    right: 18px;
-    left: auto;
-}
-
-html[dir="rtl"] .slider-next {
-    left: 18px;
-    right: auto;
-}
-
-
-/* =========================================================
-   22. RTL Products
-========================================================= */
-
-html[dir="rtl"] .product-grid {
-    direction: rtl;
-}
-
-html[dir="rtl"] .product-card {
-    direction: rtl;
-}
-
-
-/* =========================================================
-   23. RTL Shipping
-========================================================= */
-
-html[dir="rtl"] .shipping-content {
-    direction: rtl;
-}
-
-html[dir="rtl"] .shipping-info {
-    direction: rtl;
-}
-
-html[dir="rtl"] .shipping-item {
-    text-align: right;
-}
-
-html[dir="rtl"] .shipping-promotion {
-    direction: rtl;
-}
-
-html[dir="rtl"] .shipping-promotion-text {
-    text-align: right;
-}
-
-
-/* =========================================================
-   24. RTL Reviews
-========================================================= */
-
-html[dir="rtl"] .review-slider {
-    direction: ltr;
-}
-
-html[dir="rtl"] .review-track {
-    direction: ltr;
-}
-
-html[dir="rtl"] .review-prev {
-    right: 15px;
-    left: auto;
-}
-
-html[dir="rtl"] .review-next {
-    left: 15px;
-    right: auto;
-}
-
-
-/* =========================================================
-   25. RTL Contact
-========================================================= */
-
-html[dir="rtl"] .contact-section {
-    direction: rtl;
-}
-
-html[dir="rtl"] .contact-content {
-    direction: rtl;
-}
-
-
-/* =========================================================
-   26. RTL Footer
-========================================================= */
-
-html[dir="rtl"] .footer {
-    direction: rtl;
-}
-
-html[dir="rtl"] .footer-links {
-    direction: rtl;
-}
-
-
-/* =========================================================
-   27. RTL Lightbox
-========================================================= */
-
-html[dir="rtl"] .lightbox-prev {
-    right: 18px;
-    left: auto;
-}
-
-html[dir="rtl"] .lightbox-next {
-    left: 18px;
-    right: auto;
-}
-
-
-/* =========================================================
-   28. RTL Mobile
-========================================================= */
-
-@media (max-width: 700px) {
-
-    html[dir="rtl"] .header {
-        direction: rtl;
-    }
-
-    html[dir="rtl"] .logo {
-        text-align: right;
-
-        margin:
-            0;
-    }
-
-    html[dir="rtl"] .header-button {
-        margin:
-            0;
-    }
-
-    html[dir="rtl"] .menu-toggle {
-        margin:
-            0;
-    }
-
-    html[dir="rtl"] .nav {
-        left: 0;
-        right: 0;
-
-        direction: rtl;
-
-        text-align: right;
-    }
-
-    html[dir="rtl"] .nav a {
-        text-align: right;
-    }
-
-    html[dir="rtl"] .hero {
-        direction: rtl;
-
-        background-position:
-            center center;
-    }
-
-    html[dir="rtl"] .hero::before {
-        background:
-            linear-gradient(
-                270deg,
-                rgba(0, 0, 0, 0.72),
-                rgba(0, 0, 0, 0.42),
-                rgba(0, 0, 0, 0.15)
-            );
-    }
-
-    html[dir="rtl"] .hero-content {
-        margin: 0;
-
-        padding:
-            100px 20px 50px;
-
-        text-align: right;
-    }
-
-    html[dir="rtl"] .hero h1 {
-        text-align: right;
-
-        line-height: 1.5;
-    }
-
-    html[dir="rtl"] .hero-description {
-        text-align: right;
-
-        line-height: 2;
-    }
-
-    html[dir="rtl"] .features {
-        direction: rtl;
-    }
-
-    html[dir="rtl"] .feature {
-        text-align: center;
-    }
-
-    html[dir="rtl"] .tree-slider {
-        direction: ltr;
-    }
-
-    html[dir="rtl"] .tree-track {
-        direction: ltr;
-    }
-
-    html[dir="rtl"] .slider-prev {
-        right: 8px;
-        left: auto;
-    }
-
-    html[dir="rtl"] .slider-next {
-        left: 8px;
-        right: auto;
-    }
-
-    html[dir="rtl"] .product-grid {
-        direction: rtl;
-    }
-
-    html[dir="rtl"] .shipping-content {
-        direction: rtl;
-    }
-
-    html[dir="rtl"] .shipping-item {
-        text-align: right;
-    }
-
-    html[dir="rtl"] .shipping-promotion-text {
-        text-align: right;
-    }
-
-    html[dir="rtl"] .review-slider {
-        direction: ltr;
-    }
-
-    html[dir="rtl"] .review-track {
-        direction: ltr;
-    }
-
-    html[dir="rtl"] .review-prev {
-        right: 7px;
-        left: auto;
-    }
-
-    html[dir="rtl"] .review-next {
-        left: 7px;
-        right: auto;
-    }
-
-    html[dir="rtl"] .contact-content {
-        text-align: center;
-    }
-
-    html[dir="rtl"] .footer {
-        text-align: center;
-    }
-
-    html[dir="rtl"] .lightbox-prev {
-        right: 4px;
-        left: auto;
-    }
-
-    html[dir="rtl"] .lightbox-next {
-        left: 4px;
-        right: auto;
+        gap: 8px;
     }
 }/* =====================================================
-   Mobile Typography Optimization
-   手机端文字优化
+   Arabic Policy Pages
+===================================================== */
+
+.policy-page {
+    min-height: 100vh;
+    padding: 140px 20px 80px;
+    background: #f7f5f1;
+}
+
+.policy-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+}
+
+.policy-container h1 {
+    margin: 0 0 20px;
+    font-size: 42px;
+    line-height: 1.4;
+    text-align: center;
+    color: #2f2a22;
+}
+
+.policy-intro {
+    margin: 0 auto 45px;
+    max-width: 720px;
+    font-size: 18px;
+    line-height: 2;
+    text-align: center;
+    color: #66605a;
+}
+
+.policy-block {
+    margin-bottom: 35px;
+}
+
+.policy-block h2 {
+    margin: 0 0 12px;
+    font-size: 23px;
+    line-height: 1.6;
+    color: #2f2a22;
+}
+
+.policy-block p {
+    margin: 0 0 12px;
+    font-size: 16px;
+    line-height: 2;
+    color: #5f5a54;
+}
+
+.policy-list {
+    margin: 15px 0 0;
+    padding-right: 25px;
+}
+
+.policy-list li {
+    margin-bottom: 10px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #5f5a54;
+}
+
+.policy-highlight {
+    padding: 25px;
+    border-radius: 14px;
+    background: #f2eee7;
+}
+
+.shipping-highlight,
+.security-highlight {
+    padding: 25px;
+    border-radius: 14px;
+    background: #f2eee7;
+}
+
+.policy-date {
+    margin-top: 45px;
+    padding-top: 25px;
+    border-top: 1px solid #e5e0d8;
+    font-size: 14px;
+    color: #8a837b;
+    text-align: center;
+}
+
+.policy-back {
+    display: block;
+    width: fit-content;
+    margin: 30px auto 0;
+    padding: 14px 30px;
+    border-radius: 8px;
+    background: #2f2a22;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.policy-back:hover {
+    opacity: 0.85;
+}
+
+
+/* =====================================================
+   Policy Mobile
 ===================================================== */
 
 @media (max-width: 768px) {
 
-    /* 导航 */
-    .nav a {
-        font-size: 16px;
+    .policy-page {
+        padding: 110px 15px 50px;
     }
 
-    .header-button {
-        font-size: 15px;
+    .policy-container {
+        padding: 30px 20px;
+        border-radius: 14px;
     }
 
-    /* 首页小标题 */
-    .eyebrow {
-        font-size: 15px;
-        line-height: 1.8;
-    }
-
-    /* 首页主标题 */
-    .hero h1 {
-        font-size: 32px;
-        line-height: 1.55;
-    }
-
-    /* 首页介绍 */
-    .hero-description {
-        font-size: 18px;
-        line-height: 2;
-    }
-
-    /* 各区块标题 */
-    .section-heading h2 {
+    .policy-container h1 {
         font-size: 30px;
-        line-height: 1.5;
     }
 
-    /* 各区块正文 */
-    .section-heading p {
-        font-size: 17px;
-        line-height: 2;
+    .policy-intro {
+        font-size: 16px;
+        line-height: 1.9;
+        margin-bottom: 35px;
     }
 
-    /* 特点区域 */
-    .feature h3 {
+    .policy-block {
+        margin-bottom: 28px;
+    }
+
+    .policy-block h2 {
         font-size: 20px;
     }
 
-    .feature p {
-        font-size: 16px;
-        line-height: 1.8;
-    }
-
-    .feature-number {
-        font-size: 14px;
-    }
-
-    /* 视频区域 */
-    .video-content h2 {
-        font-size: 28px;
-        line-height: 1.55;
-    }
-
-    .video-content p {
-        font-size: 17px;
-        line-height: 2;
-    }
-
-    /* 产品区域 */
-    .product-card {
-        font-size: 16px;
-    }
-
-    /* 运输区域 */
-    .shipping-item h3 {
-        font-size: 20px;
-    }
-
-    .shipping-item p {
-        font-size: 17px;
-        line-height: 2;
-    }
-
-    .shipping-number {
-        font-size: 14px;
-    }
-
-    /* 首单优惠 */
-    .shipping-promotion-text h3 {
-        font-size: 24px;
-        line-height: 1.5;
-    }
-
-    .shipping-promotion-text p {
-        font-size: 17px;
-        line-height: 2;
-    }
-
-    .shipping-button {
-        font-size: 17px;
-    }
-
-    /* 客户评价 */
-    .reviews-section .section-heading p {
-        font-size: 17px;
-    }
-
-    /* 联系我们 */
-    .contact-content h2 {
-        font-size: 30px;
-        line-height: 1.5;
-    }
-
-    .contact-content p {
-        font-size: 18px;
-        line-height: 2;
-    }
-
-    .whatsapp-button {
-        font-size: 18px;
-    }
-
-    /* 页脚 */
-    .footer {
+    .policy-block p,
+    .policy-list li {
         font-size: 15px;
+        line-height: 2;
     }
 
-    .footer-links a {
-        font-size: 15px;
-    }
-
-}/* 首页 WhatsApp 批发价按钮 */
-.hero-whatsapp-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 25px;
-    padding: 15px 30px;
-    background: #25D366;
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 17px;
-    font-weight: 700;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.hero-whatsapp-button:hover {
-    transform: translateY(-2px);
-    opacity: 0.92;
-}
-
-@media (max-width: 768px) {
-    .hero-whatsapp-button {
+    .policy-back {
         width: 100%;
-        max-width: 340px;
         box-sizing: border-box;
-        padding: 16px 20px;
-        font-size: 16px;
+        text-align: center;
     }
+
 }
