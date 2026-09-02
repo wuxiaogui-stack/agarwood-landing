@@ -2,7 +2,8 @@
    CONFIG
 ========================================================= */
 
-const META_PIXEL_ID = "882833290918835";
+const META_PIXEL_ID =
+    "882833290918835";
 
 const META_CAPI_URL =
     "https://meta-capi.717560552.workers.dev/";
@@ -30,12 +31,10 @@ const SUPABASE_RPC =
 function generateEventId() {
 
     return (
-        "wa_" +
-        Date.now() +
-        "_" +
+        Date.now().toString(36) +
         Math.random()
             .toString(36)
-            .substring(2, 12)
+            .substring(2, 10)
     );
 
 }
@@ -57,7 +56,7 @@ function getCookie(name) {
         );
 
     return match
-        ? decodeURIComponent(match[2])
+        ? match[2]
         : null;
 
 }
@@ -74,36 +73,34 @@ function getUrlParams() {
             window.location.search
         );
 
-    return {
+    const result = {};
 
-        fbclid:
-            params.get("fbclid"),
+    params.forEach(
+        (value, key) => {
 
-        ttclid:
-            params.get("ttclid"),
+            result[key] = value;
 
-        gclid:
-            params.get("gclid")
+        }
+    );
 
-    };
+    return result;
 
 }
 
 
 /* =========================================================
-   META CONTACT
+   META BROWSER EVENT
 ========================================================= */
 
-function sendMetaContact(eventId) {
+function sendMetaBrowserContact(eventId) {
 
     try {
 
         if (
-            typeof window.fbq ===
-            "function"
+            typeof fbq === "function"
         ) {
 
-            window.fbq(
+            fbq(
                 "track",
                 "Contact",
                 {},
@@ -116,7 +113,7 @@ function sendMetaContact(eventId) {
 
     } catch (error) {
 
-        console.warn(
+        console.error(
             "Meta browser event error:",
             error
         );
@@ -130,7 +127,7 @@ function sendMetaContact(eventId) {
    META CAPI
 ========================================================= */
 
-async function sendMetaCAPI(eventId) {
+async function sendMetaCAPIContact(eventId) {
 
     try {
 
@@ -146,16 +143,20 @@ async function sendMetaCAPI(eventId) {
             event_source_url:
                 window.location.href,
 
-            action_source: "website",
-
-            fbclid:
-                params.fbclid,
+            action_source:
+                "website",
 
             fbp:
                 getCookie("_fbp"),
 
             fbc:
-                getCookie("_fbc")
+                getCookie("_fbc"),
+
+            external_id:
+                eventId,
+
+            url_params:
+                params
 
         };
 
@@ -163,7 +164,6 @@ async function sendMetaCAPI(eventId) {
         await fetch(
             META_CAPI_URL,
             {
-
                 method: "POST",
 
                 headers: {
@@ -172,18 +172,15 @@ async function sendMetaCAPI(eventId) {
                 },
 
                 body:
-                    JSON.stringify(
-                        payload
-                    ),
+                    JSON.stringify(payload),
 
                 keepalive: true
-
             }
         );
 
     } catch (error) {
 
-        console.warn(
+        console.error(
             "Meta CAPI error:",
             error
         );
@@ -194,17 +191,16 @@ async function sendMetaCAPI(eventId) {
 
 
 /* =========================================================
-   TIKTOK CONTACT
+   TIKTOK BROWSER EVENT
 ========================================================= */
 
-function sendTikTokContact() {
+function sendTikTokBrowserContact() {
 
     try {
 
         if (
             window.ttq &&
-            typeof window.ttq.track ===
-                "function"
+            typeof window.ttq.track === "function"
         ) {
 
             window.ttq.track(
@@ -215,7 +211,7 @@ function sendTikTokContact() {
 
     } catch (error) {
 
-        console.warn(
+        console.error(
             "TikTok browser event error:",
             error
         );
@@ -229,27 +225,32 @@ function sendTikTokContact() {
    TIKTOK EVENTS API
 ========================================================= */
 
-async function sendTikTokEventsAPI(eventId) {
+async function sendTikTokEventsAPIContact(eventId) {
 
     try {
 
-        const params =
-            getUrlParams();
-
         const payload = {
 
-            event_name: "Contact",
+            event_name:
+                "Contact",
 
-            event_id: eventId,
+            event_id:
+                eventId,
 
             event_source_url:
                 window.location.href,
 
-            ttclid:
-                params.ttclid,
+            pixel_code:
+                TIKTOK_PIXEL_ID,
 
-            user_agent:
-                navigator.userAgent
+            url_params:
+                getUrlParams(),
+
+            ttclid:
+                getUrlParams().ttclid,
+
+            external_id:
+                eventId
 
         };
 
@@ -257,7 +258,6 @@ async function sendTikTokEventsAPI(eventId) {
         await fetch(
             TIKTOK_EVENTS_API_URL,
             {
-
                 method: "POST",
 
                 headers: {
@@ -266,18 +266,15 @@ async function sendTikTokEventsAPI(eventId) {
                 },
 
                 body:
-                    JSON.stringify(
-                        payload
-                    ),
+                    JSON.stringify(payload),
 
                 keepalive: true
-
             }
         );
 
     } catch (error) {
 
-        console.warn(
+        console.error(
             "TikTok Events API error:",
             error
         );
@@ -316,12 +313,13 @@ function initMobileMenu() {
 
     menuToggle.addEventListener(
         "click",
-        function () {
+        () => {
 
             const isOpen =
                 mainNav.classList.toggle(
                     "mobile-open"
                 );
+
 
             menuToggle.setAttribute(
                 "aria-expanded",
@@ -341,11 +339,11 @@ function initMobileMenu() {
 
 
     navLinks.forEach(
-        function (link) {
+        link => {
 
             link.addEventListener(
                 "click",
-                function () {
+                () => {
 
                     mainNav.classList.remove(
                         "mobile-open"
@@ -366,210 +364,7 @@ function initMobileMenu() {
 
 
 /* =========================================================
-   REVIEW SLIDER
-========================================================= */
-
-function initReviewSlider() {
-
-    const slider =
-        document.querySelector(
-            ".review-slider"
-        );
-
-    const track =
-        document.querySelector(
-            ".review-track"
-        );
-
-    const slides =
-        document.querySelectorAll(
-            ".review-slide"
-        );
-
-    const prevButton =
-        document.querySelector(
-            ".review-prev"
-        );
-
-    const nextButton =
-        document.querySelector(
-            ".review-next"
-        );
-
-    const dots =
-        document.querySelectorAll(
-            ".review-dot"
-        );
-
-
-    if (
-        !slider ||
-        !track ||
-        slides.length === 0
-    ) {
-
-        return;
-
-    }
-
-
-    let currentIndex = 0;
-
-    const totalSlides =
-        slides.length;
-
-
-    function updateSlider() {
-
-        track.style.transform =
-            "translateX(-" +
-            (currentIndex * 100) +
-            "%)";
-
-
-        dots.forEach(
-            function (dot, index) {
-
-                dot.classList.toggle(
-                    "active",
-                    index === currentIndex
-                );
-
-            }
-        );
-
-    }
-
-
-    function nextSlide() {
-
-        currentIndex =
-            (currentIndex + 1) %
-            totalSlides;
-
-        updateSlider();
-
-    }
-
-
-    function previousSlide() {
-
-        currentIndex =
-            (currentIndex - 1 +
-                totalSlides) %
-            totalSlides;
-
-        updateSlider();
-
-    }
-
-
-    if (nextButton) {
-
-        nextButton.addEventListener(
-            "click",
-            nextSlide
-        );
-
-    }
-
-
-    if (prevButton) {
-
-        prevButton.addEventListener(
-            "click",
-            previousSlide
-        );
-
-    }
-
-
-    dots.forEach(
-        function (dot, index) {
-
-            dot.addEventListener(
-                "click",
-                function () {
-
-                    currentIndex =
-                        index;
-
-                    updateSlider();
-
-                }
-            );
-
-        }
-    );
-
-
-    let touchStartX = 0;
-
-    let touchEndX = 0;
-
-
-    slider.addEventListener(
-        "touchstart",
-        function (event) {
-
-            touchStartX =
-                event.changedTouches[0]
-                    .screenX;
-
-        },
-        {
-            passive: true
-        }
-    );
-
-
-    slider.addEventListener(
-        "touchend",
-        function (event) {
-
-            touchEndX =
-                event.changedTouches[0]
-                    .screenX;
-
-
-            const distance =
-                touchStartX -
-                touchEndX;
-
-
-            if (
-                Math.abs(distance) < 50
-            ) {
-
-                return;
-
-            }
-
-
-            if (distance > 0) {
-
-                nextSlide();
-
-            } else {
-
-                previousSlide();
-
-            }
-
-        },
-        {
-            passive: true
-        }
-    );
-
-
-    updateSlider();
-
-}
-
-
-/* =========================================================
-   LIGHTBOX
+   IMAGE LIGHTBOX
 ========================================================= */
 
 function initLightbox() {
@@ -610,52 +405,19 @@ function initLightbox() {
     }
 
 
-    const imageSelectors = [
-
-        ".selection-image img",
-
-        ".product-image img",
-
-        ".review-slide:not(.slider-clone) img",
-
-        ".shipping-promotion-image img",
-
-        'img[data-lightbox="true"]'
-
-    ];
-
-
-    const images = [];
-
-
-    imageSelectors.forEach(
-        function (selector) {
-
-            const elements =
-                document.querySelectorAll(
-                    selector
-                );
-
-
-            elements.forEach(
-                function (img) {
-
-                    if (
-                        !images.includes(img)
-                    ) {
-
-                        images.push(img);
-
-                    }
-
-                }
-            );
-
-        }
+    const images = Array.from(
+        document.querySelectorAll(
+            `
+            .selection-image img,
+            .product-image img,
+            .shipping-promotion-image img,
+            img[data-lightbox="true"]
+            `
+        )
     );
 
 
-    if (images.length === 0) {
+    if (!images.length) {
 
         return;
 
@@ -667,26 +429,19 @@ function initLightbox() {
 
     function showImage(index) {
 
-        if (
-            index < 0
-        ) {
+        if (!images.length) {
 
-            index =
-                images.length - 1;
+            return;
 
         }
 
 
-        if (
-            index >= images.length
-        ) {
-
-            index = 0;
-
-        }
-
-
-        currentIndex = index;
+        currentIndex =
+            (
+                index +
+                images.length
+            ) %
+            images.length;
 
 
         const image =
@@ -697,12 +452,13 @@ function initLightbox() {
             image.src;
 
         lightboxImage.alt =
-            image.alt || "عرض الصورة";
+            image.alt || "";
 
 
         lightbox.classList.add(
             "active"
         );
+
 
         lightbox.setAttribute(
             "aria-hidden",
@@ -713,30 +469,6 @@ function initLightbox() {
         document.body.style.overflow =
             "hidden";
 
-
-        if (
-            prevButton
-        ) {
-
-            prevButton.style.display =
-                images.length > 1
-                    ? "flex"
-                    : "none";
-
-        }
-
-
-        if (
-            nextButton
-        ) {
-
-            nextButton.style.display =
-                images.length > 1
-                    ? "flex"
-                    : "none";
-
-        }
-
     }
 
 
@@ -746,12 +478,12 @@ function initLightbox() {
             "active"
         );
 
+
         lightbox.setAttribute(
             "aria-hidden",
             "true"
         );
 
-        lightboxImage.src = "";
 
         document.body.style.overflow =
             "";
@@ -759,12 +491,30 @@ function initLightbox() {
     }
 
 
-    images.forEach(
-        function (img, index) {
+    function showNext() {
 
-            img.addEventListener(
+        showImage(
+            currentIndex + 1
+        );
+
+    }
+
+
+    function showPrevious() {
+
+        showImage(
+            currentIndex - 1
+        );
+
+    }
+
+
+    images.forEach(
+        (image, index) => {
+
+            image.addEventListener(
                 "click",
-                function () {
+                () => {
 
                     showImage(index);
 
@@ -785,33 +535,21 @@ function initLightbox() {
     }
 
 
-    if (prevButton) {
+    if (nextButton) {
 
-        prevButton.addEventListener(
+        nextButton.addEventListener(
             "click",
-            function () {
-
-                showImage(
-                    currentIndex - 1
-                );
-
-            }
+            showNext
         );
 
     }
 
 
-    if (nextButton) {
+    if (prevButton) {
 
-        nextButton.addEventListener(
+        prevButton.addEventListener(
             "click",
-            function () {
-
-                showImage(
-                    currentIndex + 1
-                );
-
-            }
+            showPrevious
         );
 
     }
@@ -819,11 +557,10 @@ function initLightbox() {
 
     lightbox.addEventListener(
         "click",
-        function (event) {
+        event => {
 
             if (
-                event.target ===
-                lightbox
+                event.target === lightbox
             ) {
 
                 closeLightbox();
@@ -836,7 +573,7 @@ function initLightbox() {
 
     document.addEventListener(
         "keydown",
-        function (event) {
+        event => {
 
             if (
                 !lightbox.classList.contains(
@@ -859,23 +596,19 @@ function initLightbox() {
 
 
             if (
-                event.key === "ArrowRight"
+                event.key === "ArrowLeft"
             ) {
 
-                showImage(
-                    currentIndex - 1
-                );
+                showNext();
 
             }
 
 
             if (
-                event.key === "ArrowLeft"
+                event.key === "ArrowRight"
             ) {
 
-                showImage(
-                    currentIndex + 1
-                );
+                showPrevious();
 
             }
 
@@ -888,11 +621,10 @@ function initLightbox() {
 
     lightbox.addEventListener(
         "touchstart",
-        function (event) {
+        event => {
 
             touchStartX =
-                event.changedTouches[0]
-                    .screenX;
+                event.changedTouches[0].clientX;
 
         },
         {
@@ -903,19 +635,18 @@ function initLightbox() {
 
     lightbox.addEventListener(
         "touchend",
-        function (event) {
+        event => {
 
             const touchEndX =
-                event.changedTouches[0]
-                    .screenX;
+                event.changedTouches[0].clientX;
 
-            const distance =
-                touchStartX -
-                touchEndX;
+            const difference =
+                touchEndX -
+                touchStartX;
 
 
             if (
-                Math.abs(distance) < 50
+                Math.abs(difference) < 50
             ) {
 
                 return;
@@ -923,17 +654,15 @@ function initLightbox() {
             }
 
 
-            if (distance > 0) {
+            if (
+                difference > 0
+            ) {
 
-                showImage(
-                    currentIndex + 1
-                );
+                showPrevious();
 
             } else {
 
-                showImage(
-                    currentIndex - 1
-                );
+                showNext();
 
             }
 
@@ -947,7 +676,7 @@ function initLightbox() {
 
 
 /* =========================================================
-   VIDEO
+   VIDEOS
 ========================================================= */
 
 function initVideos() {
@@ -959,98 +688,13 @@ function initVideos() {
 
 
     videos.forEach(
-        function (video) {
+        video => {
 
-            video.playsInline = true;
-
-            /*
-             * 不强制播放，
-             * 避免移动端浏览器拦截。
-             */
+            video.playsInline =
+                true;
 
         }
     );
-
-}
-
-
-/* =========================================================
-   GET ONLINE WHATSAPP
-========================================================= */
-
-async function getNextWhatsAppNumber() {
-
-    const response =
-        await fetch(
-            SUPABASE_URL +
-            SUPABASE_RPC,
-            {
-
-                method: "POST",
-
-                headers: {
-
-                    "Content-Type":
-                        "application/json",
-
-                    "apikey":
-                        SUPABASE_KEY,
-
-                    "Authorization":
-                        "Bearer " +
-                        SUPABASE_KEY
-
-                },
-
-                body:
-                    JSON.stringify({})
-
-            }
-        );
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            "Supabase request failed: " +
-            response.status
-        );
-
-    }
-
-
-    const data =
-        await response.json();
-
-
-    let number = null;
-
-
-    if (
-        Array.isArray(data)
-    ) {
-
-        number =
-            data[0];
-
-    } else {
-
-        number =
-            data;
-
-    }
-
-
-    if (!number) {
-
-        throw new Error(
-            "No WhatsApp number returned"
-        );
-
-    }
-
-
-    return number;
 
 }
 
@@ -1068,102 +712,96 @@ function normalizePhone(phone) {
     }
 
 
-    return String(phone)
-        .replace(
-            /[^\d]/g,
+    let normalized =
+        String(phone)
+            .replace(
+                /[^0-9+]/g,
+                ""
+            );
+
+
+    normalized =
+        normalized.replace(
+            /^\+/,
             ""
         );
+
+
+    return normalized;
 
 }
 
 
 /* =========================================================
-   WHATSAPP
+   GET NEXT WHATSAPP NUMBER
 ========================================================= */
 
-async function openWhatsApp() {
-
-    const eventId =
-        generateEventId();
-
+async function getNextWhatsAppNumber() {
 
     try {
 
-        const number =
-            await getNextWhatsAppNumber();
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                SUPABASE_RPC,
+                {
+                    method: "POST",
 
+                    headers: {
 
-        const phone =
-            normalizePhone(
-                number.phone ||
-                number.mobile ||
-                number.number
+                        "Content-Type":
+                            "application/json",
+
+                        "apikey":
+                            SUPABASE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_KEY
+
+                    },
+
+                    body:
+                        JSON.stringify({})
+
+                }
             );
 
 
-        if (!phone) {
+        if (
+            !response.ok
+        ) {
 
             throw new Error(
-                "Invalid WhatsApp phone"
+                "Supabase request failed"
             );
 
         }
 
 
-        /*
-         * Tracking is only sent
-         * after a valid online number
-         * has been returned.
-         */
-
-        sendMetaContact(
-            eventId
-        );
-
-        sendMetaCAPI(
-            eventId
-        );
-
-        sendTikTokContact();
-
-        sendTikTokEventsAPI(
-            eventId
-        );
+        const data =
+            await response.json();
 
 
-        const message =
-            "السلام عليكم، أريد معرفة المزيد عن العود الطبيعي والأسعار.";
+        if (
+            Array.isArray(data)
+        ) {
+
+            return data[0] || null;
+
+        }
 
 
-        const whatsappUrl =
-            "https://wa.me/" +
-            phone +
-            "?text=" +
-            encodeURIComponent(
-                message
-            );
-
-
-        window.location.href =
-            whatsappUrl;
-
+        return data;
 
     } catch (error) {
 
         console.error(
-            "WhatsApp error:",
+            "WhatsApp number error:",
             error
         );
 
-
-        /*
-         * 如果号码池暂时无法返回号码，
-         * 不随机跳转到一个可能离线的号码。
-         */
-
-        alert(
-            "نعتذر، خدمة التواصل غير متاحة حالياً. يرجى المحاولة مرة أخرى لاحقاً."
-        );
+        return null;
 
     }
 
@@ -1171,7 +809,97 @@ async function openWhatsApp() {
 
 
 /* =========================================================
-   AUTO WHATSAPP LINKS
+   OPEN WHATSAPP
+========================================================= */
+
+async function openWhatsApp(event) {
+
+    if (event) {
+
+        event.preventDefault();
+
+    }
+
+
+    const number =
+        await getNextWhatsAppNumber();
+
+
+    if (!number) {
+
+        alert(
+            "عذراً، لا يتوفر موظف خدمة عملاء حالياً. يرجى المحاولة مرة أخرى لاحقاً."
+        );
+
+        return;
+
+    }
+
+
+    const phone =
+        normalizePhone(
+            number.phone ||
+            number.whatsapp ||
+            number.number
+        );
+
+
+    if (!phone) {
+
+        alert(
+            "عذراً، حدث خطأ في رقم WhatsApp. يرجى المحاولة مرة أخرى."
+        );
+
+        return;
+
+    }
+
+
+    const eventId =
+        generateEventId();
+
+
+    /*
+       Track only after a valid
+       WhatsApp number is returned.
+    */
+
+    sendMetaBrowserContact(
+        eventId
+    );
+
+    sendMetaCAPIContact(
+        eventId
+    );
+
+    sendTikTokBrowserContact();
+
+    sendTikTokEventsAPIContact(
+        eventId
+    );
+
+
+    const message =
+        encodeURIComponent(
+            "السلام عليكم، أريد معرفة تفاصيل العود الطبيعي والأسعار."
+        );
+
+
+    const whatsappUrl =
+        "https://wa.me/" +
+        phone +
+        "?text=" +
+        message;
+
+
+    window.location.href =
+        whatsappUrl;
+
+}
+
+
+/* =========================================================
+   WHATSAPP LINKS
 ========================================================= */
 
 function initWhatsAppLinks() {
@@ -1183,70 +911,73 @@ function initWhatsAppLinks() {
 
 
     elements.forEach(
-        function (element) {
+        element => {
 
             const text =
                 (
                     element.textContent ||
                     ""
-                )
-                .trim()
-                .toLowerCase();
+                ).toLowerCase();
 
 
             const href =
-                element.getAttribute(
-                    "href"
-                );
+                (
+                    element.getAttribute(
+                        "href"
+                    ) ||
+                    ""
+                ).toLowerCase();
 
 
-            const isWhatsAppText =
+            const isWhatsApp =
                 text.includes(
                     "whatsapp"
-                );
-
-
-            const isWhatsAppHref =
-                href &&
-                (
-                    href.includes(
-                        "wa.me"
-                    ) ||
-                    href.includes(
-                        "whatsapp.com"
-                    )
+                ) ||
+                href.includes(
+                    "wa.me"
+                ) ||
+                href.includes(
+                    "whatsapp.com"
                 );
 
 
             if (
-                isWhatsAppText ||
-                isWhatsAppHref
+                !isWhatsApp
             ) {
 
-                if (
-                    element.getAttribute(
-                        "onclick"
-                    ) ===
-                    "openWhatsApp()"
-                ) {
-
-                    return;
-
-                }
-
-
-                element.addEventListener(
-                    "click",
-                    function (event) {
-
-                        event.preventDefault();
-
-                        openWhatsApp();
-
-                    }
-                );
+                return;
 
             }
+
+
+            /*
+               Do not attach a second
+               handler if the element
+               already has inline openWhatsApp.
+            */
+
+            const inlineHandler =
+                element.getAttribute(
+                    "onclick"
+                );
+
+
+            if (
+                inlineHandler &&
+                inlineHandler.includes(
+                    "openWhatsApp"
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            element.addEventListener(
+                "click",
+                openWhatsApp
+            );
 
         }
     );
@@ -1255,16 +986,14 @@ function initWhatsAppLinks() {
 
 
 /* =========================================================
-   PAGE INIT
+   INITIALIZE
 ========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    () => {
 
         initMobileMenu();
-
-        initReviewSlider();
 
         initLightbox();
 

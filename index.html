@@ -13,52 +13,61 @@
         name="theme-color"
         content="#2f2a22">
 
-    <title>عود طبيعي فاخر من الصين | جودة مختارة</title>
+    <title>
+        عود طبيعي فاخر من الصين | جودة مختارة
+    </title>
 
     <meta
         name="description"
-        content="عود طبيعي فاخر، غني بالزيوت، يتميز برائحة عميقة وثابتة تدوم لفترة طويلة.">
+        content="عود طبيعي فاخر من الصين، مختار بعناية، غني بالزيوت الطبيعية، برائحة عميقة وثابتة. توريد مباشر من المصنع وأسعار أكثر تنافسية.">
 
 
     <!-- =====================================================
-         Meta Pixel
+         META PIXEL
     ====================================================== -->
 
     <script>
-    !function(f,b,e,v,n,t,s)
-    {
-        if(f.fbq)return;
+        !function(f,b,e,v,n,t,s)
+        {
+            if(f.fbq)return;
 
-        n=f.fbq=function(){
-            n.callMethod ?
-            n.callMethod.apply(n,arguments) :
-            n.queue.push(arguments)
-        };
+            n=f.fbq=function()
+            {
+                n.callMethod ?
+                n.callMethod.apply(n,arguments) :
+                n.queue.push(arguments)
+            };
 
-        if(!f._fbq)f._fbq=n;
+            if(!f._fbq)f._fbq=n;
 
-        n.push=n;
-        n.loaded=!0;
-        n.version='2.0';
-        n.queue=[];
+            n.push=n;
+            n.loaded=!0;
+            n.version='2.0';
+            n.queue=[];
 
-        t=b.createElement(e);
-        t.async=!0;
-        t.src=v;
+            t=b.createElement(e);
+            t.async=!0;
+            t.src=v;
 
-        s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s);
+            s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)
+        }
+        (
+            window,
+            document,
+            'script',
+            'https://connect.facebook.net/en_US/fbevents.js'
+        );
 
-    }(
-        window,
-        document,
-        'script',
-        'https://connect.facebook.net/en_US/fbevents.js'
-    );
+        fbq(
+            'init',
+            '882833290918835'
+        );
 
-    fbq('init','882833290918835');
-
-    fbq('track','PageView');
+        fbq(
+            'track',
+            'PageView'
+        );
     </script>
 
 
@@ -68,141 +77,111 @@
             height="1"
             width="1"
             style="display:none"
-            src="https://www.facebook.com/tr?id=882833290918835&ev=PageView&noscript=1"
-            alt="">
+            src="https://www.facebook.com/tr?id=882833290918835&ev=PageView&noscript=1">
 
     </noscript>
 
 
     <!-- =====================================================
-         TikTok Pixel
+         TIKTOK PIXEL
     ====================================================== -->
 
     <script>
+        !function (w,d,t)
+        {
+            w.TiktokAnalyticsObject=t;
 
-    !function (w,d,t) {
+            var ttq=w[t]=w[t]||[];
 
-        w.TiktokAnalyticsObject=t;
+            ttq.methods=[
+                "page",
+                "track",
+                "identify",
+                "instances",
+                "debug",
+                "on",
+                "off",
+                "once",
+                "ready",
+                "alias",
+                "group",
+                "enableCookie",
+                "disableCookie"
+            ];
 
-        var ttq=w[t]=w[t]||[];
-
-        ttq.methods=[
-            "page",
-            "track",
-            "identify",
-            "instances",
-            "debug",
-            "on",
-            "off",
-            "once",
-            "ready",
-            "alias",
-            "group",
-            "enableCookie",
-            "disableCookie",
-            "holdConsent",
-            "revokeConsent",
-            "grantConsent"
-        ];
-
-        ttq.setAndDefer=function(t,e){
-
-            t[e]=function(){
-
-                t.push(
-                    [e].concat(
-                        Array.prototype.slice.call(
-                            arguments,
-                            0
+            ttq.setAndDefer=function(t,e)
+            {
+                t[e]=function()
+                {
+                    t.push(
+                        [e].concat(
+                            Array.prototype.slice.call(arguments,0)
                         )
                     )
-                );
-
+                }
             };
 
-        };
-
-        for(
-            var i=0;
-            i<ttq.methods.length;
-            i++
-        ){
-
-            ttq.setAndDefer(
-                ttq,
-                ttq.methods[i]
-            );
-
-        }
-
-        ttq.instance=function(t){
-
             for(
-                var e=ttq._i[t]||[],
-                    n=0;
-                n<ttq.methods.length;
-                n++
-            ){
-
+                var i=0;
+                i<ttq.methods.length;
+                i++
+            )
+            {
                 ttq.setAndDefer(
-                    e,
-                    ttq.methods[n]
+                    ttq,
+                    ttq.methods[i]
                 );
-
             }
 
-            return e;
+            ttq.instance=function(t)
+            {
+                for(
+                    var e=ttq._i[t]||[],
+                    n=0;
+                    n<ttq.methods.length;
+                    n++
+                )
+                {
+                    ttq.setAndDefer(
+                        e,
+                        ttq.methods[n]
+                    );
+                }
 
-        };
+                return e;
+            };
 
-        ttq.load=function(e,n){
+            ttq.load=function(e,n)
+            {
+                var i="https://analytics.tiktok.com/i18n/pixel/events.js";
 
-            var r=
-                "https://analytics.tiktok.com/i18n/pixel/events.js";
+                ttq._i=ttq._i||{};
+                ttq._i[e]=[];
+                ttq._t=ttq._t||{};
+                ttq._t[e]=+new Date;
+                ttq._o=ttq._o||{};
+                ttq._o[e]=n||{};
 
-            ttq._i=ttq._i||{};
-            ttq._i[e]=[];
-            ttq._i[e]._u=r;
+                n=document.createElement("script");
+                n.type="text/javascript";
+                n.async=!0;
+                n.src=i+"?sdkid="+e+"&lib="+t;
 
-            ttq._t=ttq._t||{};
-            ttq._t[e]=+new Date;
+                e=document.getElementsByTagName("script")[0];
+                e.parentNode.insertBefore(n,e);
+            };
 
-            ttq._o=ttq._o||{};
-            ttq._o[e]=n||{};
-
-            n=document.createElement("script");
-
-            n.type="text/javascript";
-            n.async=true;
-            n.src=r+
-                "?sdkid="+
-                e+
-                "&lib="+
-                t;
-
-            e=document.getElementsByTagName(
-                "script"
-            )[0];
-
-            e.parentNode.insertBefore(
-                n,
-                e
+            ttq.load(
+                'DA4P6OBC77UES973S3SG'
             );
 
-        };
+            ttq.page();
 
-        ttq.load(
-            "DA4P6OBC77UES973S3SG"
+        }(
+            window,
+            document,
+            'ttq'
         );
-
-        ttq.page();
-
-    }(
-        window,
-        document,
-        "ttq"
-    );
-
     </script>
 
 
@@ -217,12 +196,12 @@
 </head>
 
 
-<body>
+<body id="jzsyon">
 
 
-<!-- =====================================================
+<!-- =========================================================
      HEADER
-====================================================== -->
+========================================================= -->
 
 <header class="header">
 
@@ -244,15 +223,15 @@
         </a>
 
         <a href="#trees">
-            مصنعنا
+            مصدر المصنع
         </a>
 
         <a href="#products">
-            منتجاتنا
+            المنتجات
         </a>
 
         <a href="#shipping">
-            خدمات الشحن
+            الشحن
         </a>
 
         <a href="#reviews">
@@ -260,10 +239,10 @@
         </a>
 
         <a
-            href="javascript:void(0)"
-            onclick="openWhatsApp()">
+            href="#"
+            class="nav-whatsapp">
 
-            تواصل معنا
+            WhatsApp
 
         </a>
 
@@ -271,11 +250,10 @@
 
 
     <a
-        href="javascript:void(0)"
-        class="header-button"
-        onclick="openWhatsApp()">
+        href="#"
+        class="header-button">
 
-        WhatsApp
+        تواصل معنا عبر WhatsApp
 
     </a>
 
@@ -285,8 +263,7 @@
         id="menuToggle"
         type="button"
         aria-label="فتح القائمة"
-        aria-expanded="false"
-        aria-controls="mainNav">
+        aria-expanded="false">
 
         <span></span>
         <span></span>
@@ -298,12 +275,9 @@
 
 
 
-<main>
-
-
-<!-- =====================================================
+<!-- =========================================================
      HERO
-====================================================== -->
+========================================================= -->
 
 <section
     id="home"
@@ -311,35 +285,34 @@
 
     <div class="hero-content">
 
-        <p class="eyebrow">
-            عود طبيعي فاخر · جودة مختارة
-        </p>
+        <div class="eyebrow">
+
+            عود طبيعي فاخر من الصين
+
+        </div>
 
 
         <h1>
 
-            اكتشف عبق العود
-
+            عود طبيعي فاخر
             <br>
-
-            الذي تمنحه الطبيعة عبر الزمن
+            · جودة مختارة
 
         </h1>
 
 
         <p class="hero-description">
 
-            عود طبيعي مختار بعناية،
-            غني بالزيوت الطبيعية،
-            برائحة عميقة وفاخرة تدوم لفترة طويلة.
+            اكتشف عبق العود الذي تمنحه الطبيعة عبر الزمن.
+            قطع مختارة بعناية، غنية بالزيوت الطبيعية،
+            برائحة عميقة وثابتة تمنحك تجربة تبخير فاخرة.
 
         </p>
 
 
         <a
-            href="javascript:void(0)"
-            class="hero-whatsapp-button"
-            onclick="openWhatsApp()">
+            href="#"
+            class="hero-whatsapp-button">
 
             احصل على سعر الجملة عبر WhatsApp
 
@@ -351,25 +324,26 @@
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      FEATURES
-====================================================== -->
+========================================================= -->
 
 <section class="features">
 
 
     <div class="feature">
 
-        <span class="feature-number">
+        <div class="feature-number">
             01
-        </span>
+        </div>
 
         <h3>
             طبيعي
         </h3>
 
         <p>
-            عود يتشكل بشكل طبيعي
+            عود طبيعي يتم اختياره بعناية
+            للحفاظ على جودة المنتج.
         </p>
 
     </div>
@@ -377,16 +351,17 @@
 
     <div class="feature">
 
-        <span class="feature-number">
+        <div class="feature-number">
             02
-        </span>
+        </div>
 
         <h3>
             غني بالزيوت
         </h3>
 
         <p>
-            يتميز بتركيبة غنية بالزيوت الطبيعية
+            يتميز بمحتوى جيد من الزيوت
+            الطبيعية ورائحة غنية.
         </p>
 
     </div>
@@ -394,16 +369,17 @@
 
     <div class="feature">
 
-        <span class="feature-number">
+        <div class="feature-number">
             03
-        </span>
+        </div>
 
         <h3>
             رائحة غنية
         </h3>
 
         <p>
-            عبير عميق ومميز
+            رائحة عميقة وفاخرة مناسبة
+            للمجالس والضيافة.
         </p>
 
     </div>
@@ -411,16 +387,17 @@
 
     <div class="feature">
 
-        <span class="feature-number">
+        <div class="feature-number">
             04
-        </span>
+        </div>
 
         <h3>
             ثبات طويل
         </h3>
 
         <p>
-            رائحة عود تدوم لفترة طويلة
+            رائحة مميزة تبقى في المكان
+            لفترة طويلة بعد التبخير.
         </p>
 
     </div>
@@ -430,14 +407,13 @@
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      FACTORY VIDEO
-====================================================== -->
+========================================================= -->
 
 <section
     id="trees"
     class="trees-section">
-
 
     <div class="section-heading">
 
@@ -445,28 +421,9 @@
             مصدر المصنع
         </h2>
 
-
         <p>
-
-            <strong>
-                توريد مباشر من المصنع · لا توجد طبقات متعددة من الوسطاء
-            </strong>
-
-            <br><br>
-
-            من اختيار المواد الخام إلى المعالجة،
-            نتحكم مباشرة في الجودة من المصدر،
-            ونقلل من الحلقات الوسيطة غير الضرورية.
-
-        </p>
-
-
-        <p>
-
-            <strong>
-                شراء من المصدر · معالجة في المصنع · توريد مباشر · أسعار أكثر تنافسية
-            </strong>
-
+            نعمل على توفير العود من مصدره
+            مع الاهتمام باختيار القطع وتجهيزها.
         </p>
 
     </div>
@@ -490,22 +447,43 @@
     </div>
 
 
+    <div class="section-heading">
+
+        <p>
+
+            <strong>
+                توريد مباشر من المصنع · لا توجد طبقات متعددة من الوسطاء
+            </strong>
+
+        </p>
+
+        <p>
+
+            <strong>
+                شراء من المصدر · معالجة في المصنع · توريد مباشر · أسعار أكثر تنافسية
+            </strong>
+
+        </p>
+
+    </div>
+
 </section>
 
 
 
-<!-- =====================================================
-     SELECTION
-     单张图片
-====================================================== -->
+<!-- =========================================================
+     SELECTION IMAGE
+========================================================= -->
 
 <section class="video-section">
 
-
     <div class="video-content">
 
-        <p class="video-eyebrow">
-        </p>
+        <div class="video-eyebrow">
+
+            جودة مختارة
+
+        </div>
 
 
         <h2>
@@ -515,9 +493,9 @@
 
         <p>
 
-            من المواد الخام الطبيعية إلى المنتجات المختارة،
-            نحرص على اختيار كل قطعة بعناية
-            لضمان جودة مميزة وتفاصيل طبيعية جميلة.
+            يتم اختيار القطع بعناية قبل تجهيزها،
+            بهدف تقديم عود يتميز بالمظهر الجيد
+            والرائحة الغنية وجودة التبخير.
 
         </p>
 
@@ -528,24 +506,22 @@
 
         <img
             src="images/select-01.jpg"
-            alt="اختيار قطع العود الطبيعي بعناية"
+            alt="عود طبيعي مختار بعناية"
             loading="eager">
 
     </div>
-
 
 </section>
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      PRODUCTS
-====================================================== -->
+========================================================= -->
 
 <section
     id="products"
     class="products-section">
-
 
     <div class="section-heading">
 
@@ -553,12 +529,9 @@
             منتجاتنا
         </h2>
 
-
         <p>
-
-            عود طبيعي مختار بعناية،
-            يتميز بتفاصيله الطبيعية وعبيره الفريد.
-
+            مجموعة مختارة من العود الطبيعي
+            بجودة مناسبة للاستخدام الشخصي والمجالس.
         </p>
 
     </div>
@@ -567,60 +540,60 @@
     <div class="product-grid">
 
 
-        <article class="product-card">
+        <div class="product-card">
 
             <div class="product-image">
 
                 <img
                     src="images/product-01.jpg"
-                    alt="قطع عود طبيعي"
+                    alt="عود طبيعي فاخر"
                     loading="lazy">
 
             </div>
 
-        </article>
+        </div>
 
 
-        <article class="product-card">
+        <div class="product-card">
 
             <div class="product-image">
 
                 <img
                     src="images/product-02.jpg"
-                    alt="عود طبيعي مختار"
+                    alt="قطع عود طبيعي"
                     loading="lazy">
 
             </div>
 
-        </article>
+        </div>
 
 
-        <article class="product-card">
+        <div class="product-card">
 
             <div class="product-image">
 
                 <img
                     src="images/product-03.jpg"
-                    alt="تفاصيل زيوت العود الطبيعية"
+                    alt="عود غني بالزيوت"
                     loading="lazy">
 
             </div>
 
-        </article>
+        </div>
 
 
-        <article class="product-card">
+        <div class="product-card">
 
             <div class="product-image">
 
                 <img
                     src="images/product-04.jpg"
-                    alt="منتجات العود المختارة"
+                    alt="عود طبيعي مختار"
                     loading="lazy">
 
             </div>
 
-        </article>
+        </div>
 
 
     </div>
@@ -629,9 +602,8 @@
     <div class="section-cta">
 
         <a
-            href="javascript:void(0)"
-            class="secondary-cta"
-            onclick="openWhatsApp()">
+            href="#"
+            class="secondary-cta">
 
             معرفة المزيد
 
@@ -639,32 +611,27 @@
 
     </div>
 
-
 </section>
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      SHIPPING
-====================================================== -->
+========================================================= -->
 
 <section
     id="shipping"
     class="shipping-section">
 
-
     <div class="section-heading">
 
         <h2>
-            خدمات الشحن
+            الشحن والتوصيل
         </h2>
 
-
         <p>
-
-            توريد مباشر من المصنع · شحن مباشر
-            بدون تعدد الوسطاء، لنمنحك سعراً أفضل من المصدر.
-
+            نوفر خدمة الشحن إلى عدد من دول الخليج
+            مع متابعة الطلب حتى وصوله.
         </p>
 
     </div>
@@ -678,24 +645,19 @@
 
             <div class="shipping-item">
 
-                <span class="shipping-number">
+                <div class="shipping-number">
                     01
-                </span>
-
+                </div>
 
                 <h3>
-                    مناطق الشحن
+                    دول الخليج
                 </h3>
-
 
                 <p>
 
                     المملكة العربية السعودية،
                     الإمارات العربية المتحدة،
-                    الكويت،
-                    قطر،
-                    البحرين،
-                    عُمان.
+                    الكويت، قطر، البحرين وسلطنة عُمان.
 
                 </p>
 
@@ -704,22 +666,19 @@
 
             <div class="shipping-item">
 
-                <span class="shipping-number">
+                <div class="shipping-number">
                     02
-                </span>
-
+                </div>
 
                 <h3>
-                    سياسة الشحن
+                    مدة الشحن
                 </h3>
-
 
                 <p>
 
-                    تستغرق مدة الشحن عادةً حوالي
-                    <strong>10–15 يوماً</strong>،
-                    مع متابعة الشحنة بشكل مستمر لضمان وصول الطلب بأمان.
-                    قد تختلف المدة قليلاً حسب ظروف الشحن المحلية.
+                    مدة التوصيل المتوقعة
+                    حوالي 10–15 يوماً،
+                    حسب الدولة وموقع التسليم.
 
                 </p>
 
@@ -736,7 +695,7 @@
 
                 <img
                     src="images/promotion.jpg"
-                    alt="عرض خاص للطلب الأول"
+                    alt="هدية الطلب الأول"
                     loading="lazy">
 
             </div>
@@ -745,43 +704,43 @@
             <div class="shipping-promotion-text">
 
                 <h3>
-                    هدية خاصة للطلب الأول
+                    هدية مع طلبك الأول
                 </h3>
 
 
                 <p>
 
                     عند إتمام طلبك الأول،
-                    ستحصل مجاناً على مجموعة من زيت العود الطبيعي
-                    بقيمة <strong>49 دولاراً أمريكياً</strong>.
+                    احصل على مجموعة من زيت العود الطبيعي
+                    كهدية بقيمة تصل إلى
+                    <strong>$49 USD</strong>.
 
                 </p>
 
 
                 <a
-                    href="javascript:void(0)"
-                    class="shipping-button"
-                    onclick="openWhatsApp()">
+                    href="#"
+                    class="shipping-button">
 
-                    استفسر عبر WhatsApp
+                    اطلب الآن عبر WhatsApp
 
                 </a>
 
             </div>
+
 
         </div>
 
 
     </div>
 
-
 </section>
 
 
 
-<!-- =====================================================
-     REVIEWS
-====================================================== -->
+<!-- =========================================================
+     CUSTOMER REVIEWS
+========================================================= -->
 
 <section
     id="reviews"
@@ -790,155 +749,349 @@
 
     <div class="section-heading">
 
+        <div class="eyebrow">
+
+            آراء عملائنا
+
+        </div>
+
+
         <h2>
-            آراء العملاء
+            ماذا يقول عملاؤنا؟
         </h2>
 
 
         <p>
-            تجارب وآراء حقيقية من عملائنا
+            تجارب وآراء عملائنا بعد تجربة العود الطبيعي
         </p>
 
     </div>
 
 
-    <div class="review-slider">
+    <!-- =====================================================
+         CUSTOMER REVIEW CARDS
+    ====================================================== -->
+
+    <div class="reviews-container">
 
 
-        <button
-            class="review-button review-prev"
-            type="button"
-            aria-label="المراجعة السابقة">
+        <!-- REVIEW 01 -->
 
-            ‹
+        <div class="review-card">
 
-        </button>
+            <div class="review-card-top">
 
-
-        <div class="review-track">
+                <div class="review-avatar">
+                    م
+                </div>
 
 
-            <div class="review-slide">
+                <div class="review-customer">
 
-                <img
-                    src="images/review-01.jpg"
-                    alt="تجربة عميل حقيقية"
-                    loading="lazy">
+                    <h3>
+                        محمد
+                    </h3>
 
-            </div>
+                    <span>
+                        عميل من السعودية
+                    </span>
 
-
-            <div class="review-slide">
-
-                <img
-                    src="images/review-02.jpg"
-                    alt="مراجعة عميل"
-                    loading="lazy">
-
-            </div>
+                </div>
 
 
-            <div class="review-slide">
-
-                <img
-                    src="images/review-03.jpg"
-                    alt="تقييم عميل"
-                    loading="lazy">
+                <div class="review-stars">
+                    ★★★★★
+                </div>
 
             </div>
 
+
+            <div class="review-message">
+
+                <p>
+                    ما شاء الله، العود ممتاز والرائحة فاخرة جداً.
+                    الجودة أفضل مما توقعت، والرائحة تبقى لفترة طويلة.
+                    بالتأكيد سأطلب مرة أخرى.
+                </p>
+
+            </div>
 
         </div>
 
 
-        <button
-            class="review-button review-next"
-            type="button"
-            aria-label="المراجعة التالية">
 
-            ›
+        <!-- REVIEW 02 -->
 
-        </button>
+        <div class="review-card">
+
+            <div class="review-card-top">
+
+                <div class="review-avatar">
+                    أ
+                </div>
+
+
+                <div class="review-customer">
+
+                    <h3>
+                        أحمد
+                    </h3>
+
+                    <span>
+                        عميل من الإمارات
+                    </span>
+
+                </div>
+
+
+                <div class="review-stars">
+                    ★★★★★
+                </div>
+
+            </div>
+
+
+            <div class="review-message">
+
+                <p>
+                    رائحة العود جميلة وقوية،
+                    والقطع مختارة بعناية.
+                    جربته في المجلس وكانت الرائحة رائعة.
+                    الجودة ممتازة بالنسبة للسعر.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- REVIEW 03 -->
+
+        <div class="review-card">
+
+            <div class="review-card-top">
+
+                <div class="review-avatar">
+                    ع
+                </div>
+
+
+                <div class="review-customer">
+
+                    <h3>
+                        عبدالله
+                    </h3>
+
+                    <span>
+                        عميل من الكويت
+                    </span>
+
+                </div>
+
+
+                <div class="review-stars">
+                    ★★★★★
+                </div>
+
+            </div>
+
+
+            <div class="review-message">
+
+                <p>
+                    عود طبيعي ورائحته مميزة جداً.
+                    أعجبني اهتمامهم باختيار القطع وجودة التغليف.
+                    وصلتني الطلبية بحالة ممتازة.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- REVIEW 04 -->
+
+        <div class="review-card">
+
+            <div class="review-card-top">
+
+                <div class="review-avatar">
+                    خ
+                </div>
+
+
+                <div class="review-customer">
+
+                    <h3>
+                        خالد
+                    </h3>
+
+                    <span>
+                        عميل من قطر
+                    </span>
+
+                </div>
+
+
+                <div class="review-stars">
+                    ★★★★★
+                </div>
+
+            </div>
+
+
+            <div class="review-message">
+
+                <p>
+                    تجربة ممتازة، العود غني بالزيوت
+                    ورائحته عميقة وثابتة.
+                    طلبت كمية للمجلس وكانت النتيجة رائعة.
+                    شكراً على التعامل المحترم.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- REVIEW 05 -->
+
+        <div class="review-card">
+
+            <div class="review-card-top">
+
+                <div class="review-avatar">
+                    س
+                </div>
+
+
+                <div class="review-customer">
+
+                    <h3>
+                        سعيد
+                    </h3>
+
+                    <span>
+                        عميل من البحرين
+                    </span>
+
+                </div>
+
+
+                <div class="review-stars">
+                    ★★★★★
+                </div>
+
+            </div>
+
+
+            <div class="review-message">
+
+                <p>
+                    من أجمل أنواع العود التي جربتها.
+                    الرائحة فخمة وتنتشر بسرعة في المكان.
+                    أنصح به لمن يبحث عن عود طبيعي بجودة جيدة.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- REVIEW 06 -->
+
+        <div class="review-card">
+
+            <div class="review-card-top">
+
+                <div class="review-avatar">
+                    م
+                </div>
+
+
+                <div class="review-customer">
+
+                    <h3>
+                        محمود
+                    </h3>
+
+                    <span>
+                        عميل من عُمان
+                    </span>
+
+                </div>
+
+
+                <div class="review-stars">
+                    ★★★★★
+                </div>
+
+            </div>
+
+
+            <div class="review-message">
+
+                <p>
+                    وصلتني الطلبية بشكل ممتاز،
+                    والعود رائحته قوية وفاخرة.
+                    أعجبني أن القطع مختارة بعناية.
+                    سأكرر الطلب بإذن الله.
+                </p>
+
+            </div>
+
+        </div>
 
 
     </div>
-
-
-    <div class="review-dots">
-
-        <button
-            class="review-dot active"
-            type="button"
-            aria-label="المراجعة الأولى">
-        </button>
-
-        <button
-            class="review-dot"
-            type="button"
-            aria-label="المراجعة الثانية">
-        </button>
-
-        <button
-            class="review-dot"
-            type="button"
-            aria-label="المراجعة الثالثة">
-        </button>
-
-    </div>
-
 
 </section>
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      CONTACT
-====================================================== -->
+========================================================= -->
 
-<section
-    id="contact"
-    class="contact-section">
-
+<section class="contact-section">
 
     <div class="contact-content">
 
-
         <h2>
-            هل تريد معرفة المزيد؟
+            هل تريد معرفة السعر؟
         </h2>
 
 
         <p>
 
-            تواصل معنا لمعرفة المزيد عن المنتجات،
-            الأسعار وخدمات الشحن.
+            تواصل معنا عبر WhatsApp
+            لمعرفة الأسعار والكميات المتوفرة
+            وتفاصيل الشحن.
 
         </p>
 
 
         <a
-            href="javascript:void(0)"
-            class="whatsapp-button"
-            onclick="openWhatsApp()">
+            href="#"
+            class="whatsapp-button">
 
-            استفسر عبر WhatsApp
+            تواصل معنا عبر WhatsApp
 
         </a>
 
-
     </div>
-
 
 </section>
 
 
-</main>
 
-
-
-<!-- =====================================================
+<!-- =========================================================
      LIGHTBOX
-====================================================== -->
+========================================================= -->
 
 <div
     class="image-lightbox"
@@ -973,7 +1126,7 @@
         <img
             id="lightboxImage"
             src=""
-            alt="عرض الصورة">
+            alt="">
 
     </div>
 
@@ -988,20 +1141,21 @@
 
     </button>
 
-
 </div>
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      FOOTER
-====================================================== -->
+========================================================= -->
 
 <footer class="footer">
 
 
     <div class="footer-logo">
-        عود طبيعي فاخر
+
+        عود الصين الفاخر
+
     </div>
 
 
@@ -1011,32 +1165,33 @@
             سياسة الخصوصية
         </a>
 
-
         <a href="terms.html">
             شروط الخدمة
         </a>
-
 
         <a href="shipping.html">
             سياسة الشحن
         </a>
 
-
         <a href="security.html">
-            أمان الموقع
+            الأمان
         </a>
 
     </div>
 
 
     <p>
-        © 2026 عود الصين الفاخر
+        © 2026 عود الصين الفاخر. جميع الحقوق محفوظة.
     </p>
 
 
 </footer>
 
 
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
 
 <script src="script.js"></script>
 
