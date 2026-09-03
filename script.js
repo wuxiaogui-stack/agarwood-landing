@@ -46,17 +46,16 @@ function generateEventId() {
 
 function getCookie(name) {
 
-    const match =
-        document.cookie.match(
-            new RegExp(
-                "(^| )" +
-                name +
-                "=([^;]+)"
-            )
-        );
+    const match = document.cookie.match(
+        new RegExp(
+            "(^|;\\s*)" +
+            name +
+            "=([^;]+)"
+        )
+    );
 
     return match
-        ? match[2]
+        ? decodeURIComponent(match[2])
         : null;
 
 }
@@ -89,7 +88,7 @@ function getUrlParams() {
 
 
 /* =========================================================
-   META BROWSER EVENT
+   META PIXEL
 ========================================================= */
 
 function sendMetaBrowserContact(eventId) {
@@ -97,16 +96,27 @@ function sendMetaBrowserContact(eventId) {
     try {
 
         if (
-            typeof fbq === "function"
+            typeof window.fbq === "function"
         ) {
 
-            fbq(
+            window.fbq(
                 "track",
                 "Contact",
                 {},
                 {
                     eventID: eventId
                 }
+            );
+
+            console.log(
+                "Meta Contact:",
+                eventId
+            );
+
+        } else {
+
+            console.warn(
+                "Meta Pixel fbq not available"
             );
 
         }
@@ -127,18 +137,17 @@ function sendMetaBrowserContact(eventId) {
    META CAPI
 ========================================================= */
 
-async function sendMetaCAPIContact(eventId) {
+function sendMetaCAPIContact(eventId) {
 
     try {
 
-        const params =
-            getUrlParams();
-
         const payload = {
 
-            event_name: "Contact",
+            event_name:
+                "Contact",
 
-            event_id: eventId,
+            event_id:
+                eventId,
 
             event_source_url:
                 window.location.href,
@@ -156,12 +165,12 @@ async function sendMetaCAPIContact(eventId) {
                 eventId,
 
             url_params:
-                params
+                getUrlParams()
 
         };
 
 
-        await fetch(
+        fetch(
             META_CAPI_URL,
             {
                 method: "POST",
@@ -175,6 +184,26 @@ async function sendMetaCAPIContact(eventId) {
                     JSON.stringify(payload),
 
                 keepalive: true
+
+            }
+        )
+        .then(
+            () => {
+
+                console.log(
+                    "Meta CAPI sent"
+                );
+
+            }
+        )
+        .catch(
+            error => {
+
+                console.error(
+                    "Meta CAPI error:",
+                    error
+                );
+
             }
         );
 
@@ -191,7 +220,7 @@ async function sendMetaCAPIContact(eventId) {
 
 
 /* =========================================================
-   TIKTOK BROWSER EVENT
+   TIKTOK PIXEL
 ========================================================= */
 
 function sendTikTokBrowserContact() {
@@ -205,6 +234,16 @@ function sendTikTokBrowserContact() {
 
             window.ttq.track(
                 "Contact"
+            );
+
+            console.log(
+                "TikTok Contact sent"
+            );
+
+        } else {
+
+            console.warn(
+                "TikTok Pixel ttq not available"
             );
 
         }
@@ -225,9 +264,13 @@ function sendTikTokBrowserContact() {
    TIKTOK EVENTS API
 ========================================================= */
 
-async function sendTikTokEventsAPIContact(eventId) {
+function sendTikTokEventsAPIContact(eventId) {
 
     try {
+
+        const params =
+            getUrlParams();
+
 
         const payload = {
 
@@ -244,10 +287,10 @@ async function sendTikTokEventsAPIContact(eventId) {
                 TIKTOK_PIXEL_ID,
 
             url_params:
-                getUrlParams(),
+                params,
 
             ttclid:
-                getUrlParams().ttclid,
+                params.ttclid || null,
 
             external_id:
                 eventId
@@ -255,7 +298,7 @@ async function sendTikTokEventsAPIContact(eventId) {
         };
 
 
-        await fetch(
+        fetch(
             TIKTOK_EVENTS_API_URL,
             {
                 method: "POST",
@@ -269,6 +312,26 @@ async function sendTikTokEventsAPIContact(eventId) {
                     JSON.stringify(payload),
 
                 keepalive: true
+
+            }
+        )
+        .then(
+            () => {
+
+                console.log(
+                    "TikTok Events API sent"
+                );
+
+            }
+        )
+        .catch(
+            error => {
+
+                console.error(
+                    "TikTok Events API error:",
+                    error
+                );
+
             }
         );
 
@@ -306,14 +369,37 @@ function initMobileMenu() {
         !mainNav
     ) {
 
+        console.warn(
+            "Mobile menu elements not found"
+        );
+
         return;
 
     }
 
 
+    if (
+        menuToggle.dataset.initialized ===
+        "true"
+    ) {
+
+        return;
+
+    }
+
+
+    menuToggle.dataset.initialized =
+        "true";
+
+
     menuToggle.addEventListener(
         "click",
-        () => {
+        function(event) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
 
             const isOpen =
                 mainNav.classList.toggle(
@@ -343,11 +429,12 @@ function initMobileMenu() {
 
             link.addEventListener(
                 "click",
-                () => {
+                function() {
 
                     mainNav.classList.remove(
                         "mobile-open"
                     );
+
 
                     menuToggle.setAttribute(
                         "aria-expanded",
@@ -355,6 +442,760 @@ function initMobileMenu() {
                     );
 
                 }
+            );
+
+        }
+    );
+
+
+    document.addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                !mainNav.contains(
+                    event.target
+                ) &&
+                !menuToggle.contains(
+                    event.target
+                )
+            ) {
+
+                mainNav.classList.remove(
+                    "mobile-open"
+                );
+
+                menuToggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   NORMALIZE PHONE
+========================================================= */
+
+function normalizePhone(phone) {
+
+    if (!phone) {
+
+        return "";
+
+    }
+
+
+    let normalized =
+        String(phone)
+            .trim()
+            .replace(
+                /[^0-9+]/g,
+                ""
+            );
+
+
+    /*
+     * +974...
+     * ↓
+     * 974...
+     */
+
+    normalized =
+        normalized.replace(
+            /^\+/,
+            ""
+        );
+
+
+    /*
+     * 00974...
+     * ↓
+     * 974...
+     */
+
+    normalized =
+        normalized.replace(
+            /^00/,
+            ""
+        );
+
+
+    return normalized;
+
+}
+
+
+/* =========================================================
+   GET NEXT WHATSAPP NUMBER
+========================================================= */
+
+async function getNextWhatsAppNumber() {
+
+    try {
+
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                SUPABASE_RPC,
+                {
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "apikey":
+                            SUPABASE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_KEY
+
+                    },
+
+                    body:
+                        JSON.stringify({})
+
+                }
+            );
+
+
+        if (
+            !response.ok
+        ) {
+
+            const errorText =
+                await response.text();
+
+            console.error(
+                "Supabase error:",
+                response.status,
+                errorText
+            );
+
+            return null;
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "Supabase result:",
+            data
+        );
+
+
+        if (
+            Array.isArray(data)
+        ) {
+
+            return data[0] || null;
+
+        }
+
+
+        return data || null;
+
+    } catch (error) {
+
+        console.error(
+            "Supabase WhatsApp error:",
+            error
+        );
+
+        return null;
+
+    }
+
+}
+
+
+/* =========================================================
+   SEND ALL CONVERSION EVENTS
+========================================================= */
+
+function sendWhatsAppConversionEvents() {
+
+    const eventId =
+        generateEventId();
+
+
+    /*
+     * Meta Browser
+     */
+
+    sendMetaBrowserContact(
+        eventId
+    );
+
+
+    /*
+     * Meta CAPI
+     */
+
+    sendMetaCAPIContact(
+        eventId
+    );
+
+
+    /*
+     * TikTok Browser
+     */
+
+    sendTikTokBrowserContact();
+
+
+    /*
+     * TikTok Events API
+     */
+
+    sendTikTokEventsAPIContact(
+        eventId
+    );
+
+
+    console.log(
+        "Conversion event ID:",
+        eventId
+    );
+
+}
+
+
+/* =========================================================
+   OPEN WHATSAPP
+========================================================= */
+
+async function openWhatsApp(event) {
+
+    /*
+     * -----------------------------------------------------
+     * 1. 阻止默认行为
+     * -----------------------------------------------------
+     */
+
+    if (event) {
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+    }
+
+
+    /*
+     * -----------------------------------------------------
+     * 2. 用户点击的同步阶段立即打开窗口
+     * -----------------------------------------------------
+     */
+
+    let whatsappWindow = null;
+
+
+    try {
+
+        whatsappWindow =
+            window.open(
+                "about:blank",
+                "_blank"
+            );
+
+    } catch (error) {
+
+        console.warn(
+            "Could not open WhatsApp window:",
+            error
+        );
+
+    }
+
+
+    /*
+     * -----------------------------------------------------
+     * 3. 获取在线客服
+     * -----------------------------------------------------
+     */
+
+    const number =
+        await getNextWhatsAppNumber();
+
+
+    /*
+     * -----------------------------------------------------
+     * 4. 没有客服
+     * -----------------------------------------------------
+     */
+
+    if (!number) {
+
+        if (
+            whatsappWindow &&
+            !whatsappWindow.closed
+        ) {
+
+            try {
+
+                whatsappWindow.close();
+
+            } catch (error) {
+
+                console.warn(
+                    "Could not close blank window:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        alert(
+            "عذراً، لا يتوفر موظف خدمة عملاء حالياً. يرجى المحاولة مرة أخرى لاحقاً."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * -----------------------------------------------------
+     * 5. 获取电话号码
+     * -----------------------------------------------------
+     */
+
+    const phone =
+        normalizePhone(
+            number.phone ||
+            number.whatsapp ||
+            number.number ||
+            number.mobile ||
+            number.mobile_number
+        );
+
+
+    console.log(
+        "Selected WhatsApp number:",
+        phone
+    );
+
+
+    /*
+     * -----------------------------------------------------
+     * 6. 检查电话号码
+     * -----------------------------------------------------
+     */
+
+    if (!phone) {
+
+        console.error(
+            "Invalid WhatsApp number:",
+            number
+        );
+
+
+        if (
+            whatsappWindow &&
+            !whatsappWindow.closed
+        ) {
+
+            try {
+
+                whatsappWindow.close();
+
+            } catch (error) {
+
+                console.warn(
+                    "Could not close window:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        alert(
+            "عذراً، حدث خطأ في رقم WhatsApp. يرجى المحاولة مرة أخرى."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * -----------------------------------------------------
+     * 7. 广告转化
+     * -----------------------------------------------------
+     */
+
+    sendWhatsAppConversionEvents();
+
+
+    /*
+     * -----------------------------------------------------
+     * 8. WhatsApp 消息
+     * -----------------------------------------------------
+     */
+
+    const message =
+        encodeURIComponent(
+            "السلام عليكم، أريد معرفة تفاصيل العود الطبيعي والأسعار."
+        );
+
+
+    /*
+     * -----------------------------------------------------
+     * 9. WhatsApp URL
+     * -----------------------------------------------------
+     */
+
+    const whatsappUrl =
+        "https://wa.me/" +
+        phone +
+        "?text=" +
+        message;
+
+
+    console.log(
+        "WhatsApp URL:",
+        whatsappUrl
+    );
+
+
+    /*
+     * -----------------------------------------------------
+     * 10. 优先使用已经创建的窗口
+     * -----------------------------------------------------
+     */
+
+    if (
+        whatsappWindow &&
+        !whatsappWindow.closed
+    ) {
+
+        try {
+
+            whatsappWindow.location.href =
+                whatsappUrl;
+
+
+            try {
+
+                whatsappWindow.focus();
+
+            } catch (error) {
+
+                console.warn(
+                    "Could not focus window:",
+                    error
+                );
+
+            }
+
+
+            return;
+
+        } catch (error) {
+
+            console.warn(
+                "Popup navigation failed:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /*
+     * -----------------------------------------------------
+     * 11. 如果浏览器阻止新窗口
+     *     使用当前页面跳转
+     * -----------------------------------------------------
+     */
+
+    try {
+
+        window.location.assign(
+            whatsappUrl
+        );
+
+    } catch (error) {
+
+        console.error(
+            "WhatsApp redirect failed:",
+            error
+        );
+
+        try {
+
+            window.location.href =
+                whatsappUrl;
+
+        } catch (finalError) {
+
+            console.error(
+                "Final WhatsApp redirect failed:",
+                finalError
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   WHATSAPP BUTTONS
+========================================================= */
+
+function initWhatsAppLinks() {
+
+    /*
+     * 这里不再只依赖按钮文字。
+     *
+     * 直接识别你当前 HTML 中的所有 WhatsApp CTA。
+     */
+
+    const whatsappElements =
+        document.querySelectorAll(
+            [
+                ".nav-whatsapp",
+                ".header-button",
+                ".hero-whatsapp-button",
+                ".secondary-cta",
+                ".shipping-button",
+                ".whatsapp-button",
+                'a[href*="wa.me"]',
+                'a[href*="whatsapp.com"]'
+            ].join(",")
+        );
+
+
+    console.log(
+        "WhatsApp buttons found:",
+        whatsappElements.length
+    );
+
+
+    whatsappElements.forEach(
+        element => {
+
+            /*
+             * 防止重复绑定
+             */
+
+            if (
+                element.dataset.whatsappInitialized ===
+                "true"
+            ) {
+
+                return;
+
+            }
+
+
+            element.dataset.whatsappInitialized =
+                "true";
+
+
+            /*
+             * 不修改 href。
+             *
+             * 只在点击时阻止默认行为，
+             * 然后交给 openWhatsApp。
+             */
+
+            element.addEventListener(
+                "click",
+                openWhatsApp,
+                false
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   NORMAL NAVIGATION
+========================================================= */
+
+function initNavigation() {
+
+    const navigationLinks =
+        document.querySelectorAll(
+            'a[href^="#"]'
+        );
+
+
+    console.log(
+        "Navigation links found:",
+        navigationLinks.length
+    );
+
+
+    navigationLinks.forEach(
+        link => {
+
+            /*
+             * WhatsApp 按钮交给 WhatsApp 处理。
+             */
+
+            if (
+                link.dataset.whatsappInitialized ===
+                "true"
+            ) {
+
+                return;
+
+            }
+
+
+            const href =
+                link.getAttribute(
+                    "href"
+                );
+
+
+            /*
+             * 单独的 # 不进行导航。
+             */
+
+            if (
+                !href ||
+                href === "#" ||
+                href === "#!"
+            ) {
+
+                return;
+
+            }
+
+
+            let target = null;
+
+
+            try {
+
+                target =
+                    document.querySelector(
+                        href
+                    );
+
+            } catch (error) {
+
+                console.warn(
+                    "Invalid navigation selector:",
+                    href
+                );
+
+                return;
+
+            }
+
+
+            if (!target) {
+
+                console.warn(
+                    "Navigation target not found:",
+                    href
+                );
+
+                return;
+
+            }
+
+
+            link.addEventListener(
+                "click",
+                function(event) {
+
+                    event.preventDefault();
+
+
+                    const header =
+                        document.querySelector(
+                            ".header"
+                        );
+
+
+                    const headerHeight =
+                        header
+                            ? header.offsetHeight
+                            : 0;
+
+
+                    const targetPosition =
+                        target.getBoundingClientRect()
+                            .top +
+                        window.pageYOffset -
+                        headerHeight;
+
+
+                    window.scrollTo(
+                        {
+                            top:
+                                Math.max(
+                                    0,
+                                    targetPosition
+                                ),
+
+                            behavior:
+                                "smooth"
+                        }
+                    );
+
+
+                    /*
+                     * 移动端点击导航后关闭菜单
+                     */
+
+                    const mainNav =
+                        document.getElementById(
+                            "mainNav"
+                        );
+
+                    const menuToggle =
+                        document.getElementById(
+                            "menuToggle"
+                        );
+
+
+                    if (mainNav) {
+
+                        mainNav.classList.remove(
+                            "mobile-open"
+                        );
+
+                    }
+
+
+                    if (menuToggle) {
+
+                        menuToggle.setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
+
+                    }
+
+                },
+                false
             );
 
         }
@@ -405,16 +1246,15 @@ function initLightbox() {
     }
 
 
-    const images = Array.from(
-        document.querySelectorAll(
-            `
-            .selection-image img,
-            .product-image img,
-            .shipping-promotion-image img,
-            img[data-lightbox="true"]
-            `
-        )
-    );
+    const images =
+        Array.from(
+            document.querySelectorAll(
+                ".selection-image img, " +
+                ".product-image img, " +
+                ".shipping-promotion-image img, " +
+                'img[data-lightbox="true"]'
+            )
+        );
 
 
     if (!images.length) {
@@ -429,13 +1269,6 @@ function initLightbox() {
 
     function showImage(index) {
 
-        if (!images.length) {
-
-            return;
-
-        }
-
-
         currentIndex =
             (
                 index +
@@ -449,7 +1282,9 @@ function initLightbox() {
 
 
         lightboxImage.src =
+            image.currentSrc ||
             image.src;
+
 
         lightboxImage.alt =
             image.alt || "";
@@ -514,7 +1349,9 @@ function initLightbox() {
 
             image.addEventListener(
                 "click",
-                () => {
+                function(event) {
+
+                    event.preventDefault();
 
                     showImage(index);
 
@@ -529,7 +1366,13 @@ function initLightbox() {
 
         closeButton.addEventListener(
             "click",
-            closeLightbox
+            function(event) {
+
+                event.preventDefault();
+
+                closeLightbox();
+
+            }
         );
 
     }
@@ -539,7 +1382,13 @@ function initLightbox() {
 
         nextButton.addEventListener(
             "click",
-            showNext
+            function(event) {
+
+                event.preventDefault();
+
+                showNext();
+
+            }
         );
 
     }
@@ -549,7 +1398,13 @@ function initLightbox() {
 
         prevButton.addEventListener(
             "click",
-            showPrevious
+            function(event) {
+
+                event.preventDefault();
+
+                showPrevious();
+
+            }
         );
 
     }
@@ -557,7 +1412,7 @@ function initLightbox() {
 
     lightbox.addEventListener(
         "click",
-        event => {
+        function(event) {
 
             if (
                 event.target === lightbox
@@ -573,7 +1428,7 @@ function initLightbox() {
 
     document.addEventListener(
         "keydown",
-        event => {
+        function(event) {
 
             if (
                 !lightbox.classList.contains(
@@ -599,7 +1454,7 @@ function initLightbox() {
                 event.key === "ArrowLeft"
             ) {
 
-                showNext();
+                showPrevious();
 
             }
 
@@ -608,7 +1463,7 @@ function initLightbox() {
                 event.key === "ArrowRight"
             ) {
 
-                showPrevious();
+                showNext();
 
             }
 
@@ -621,10 +1476,17 @@ function initLightbox() {
 
     lightbox.addEventListener(
         "touchstart",
-        event => {
+        function(event) {
 
-            touchStartX =
-                event.changedTouches[0].clientX;
+            if (
+                event.changedTouches &&
+                event.changedTouches.length
+            ) {
+
+                touchStartX =
+                    event.changedTouches[0].clientX;
+
+            }
 
         },
         {
@@ -635,10 +1497,21 @@ function initLightbox() {
 
     lightbox.addEventListener(
         "touchend",
-        event => {
+        function(event) {
+
+            if (
+                !event.changedTouches ||
+                !event.changedTouches.length
+            ) {
+
+                return;
+
+            }
+
 
             const touchEndX =
                 event.changedTouches[0].clientX;
+
 
             const difference =
                 touchEndX -
@@ -693,6 +1566,11 @@ function initVideos() {
             video.playsInline =
                 true;
 
+            video.setAttribute(
+                "playsinline",
+                ""
+            );
+
         }
     );
 
@@ -700,309 +1578,119 @@ function initVideos() {
 
 
 /* =========================================================
-   NORMALIZE PHONE
+   INITIALIZE WEBSITE
 ========================================================= */
 
-function normalizePhone(phone) {
+function initializeWebsite() {
 
-    if (!phone) {
+    console.log(
+        "================================="
+    );
 
-        return "";
+    console.log(
+        "Website JS initializing..."
+    );
 
-    }
+    console.log(
+        "================================="
+    );
 
-
-    let normalized =
-        String(phone)
-            .replace(
-                /[^0-9+]/g,
-                ""
-            );
-
-
-    normalized =
-        normalized.replace(
-            /^\+/,
-            ""
-        );
-
-
-    return normalized;
-
-}
-
-
-/* =========================================================
-   GET NEXT WHATSAPP NUMBER
-========================================================= */
-
-async function getNextWhatsAppNumber() {
 
     try {
 
-        const response =
-            await fetch(
-                SUPABASE_URL +
-                SUPABASE_RPC,
-                {
-                    method: "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json",
-
-                        "apikey":
-                            SUPABASE_KEY,
-
-                        "Authorization":
-                            "Bearer " +
-                            SUPABASE_KEY
-
-                    },
-
-                    body:
-                        JSON.stringify({})
-
-                }
-            );
-
-
-        if (
-            !response.ok
-        ) {
-
-            throw new Error(
-                "Supabase request failed"
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        if (
-            Array.isArray(data)
-        ) {
-
-            return data[0] || null;
-
-        }
-
-
-        return data;
+        initMobileMenu();
 
     } catch (error) {
 
         console.error(
-            "WhatsApp number error:",
+            "Mobile menu error:",
             error
         );
 
-        return null;
-
-    }
-
-}
-
-
-/* =========================================================
-   OPEN WHATSAPP
-========================================================= */
-
-async function openWhatsApp(event) {
-
-    if (event) {
-
-        event.preventDefault();
-
     }
 
 
-    const number =
-        await getNextWhatsAppNumber();
-
-
-    if (!number) {
-
-        alert(
-            "عذراً، لا يتوفر موظف خدمة عملاء حالياً. يرجى المحاولة مرة أخرى لاحقاً."
-        );
-
-        return;
-
-    }
-
-
-    const phone =
-        normalizePhone(
-            number.phone ||
-            number.whatsapp ||
-            number.number
-        );
-
-
-    if (!phone) {
-
-        alert(
-            "عذراً، حدث خطأ في رقم WhatsApp. يرجى المحاولة مرة أخرى."
-        );
-
-        return;
-
-    }
-
-
-    const eventId =
-        generateEventId();
-
-
-    /*
-       Track only after a valid
-       WhatsApp number is returned.
-    */
-
-    sendMetaBrowserContact(
-        eventId
-    );
-
-    sendMetaCAPIContact(
-        eventId
-    );
-
-    sendTikTokBrowserContact();
-
-    sendTikTokEventsAPIContact(
-        eventId
-    );
-
-
-    const message =
-        encodeURIComponent(
-            "السلام عليكم، أريد معرفة تفاصيل العود الطبيعي والأسعار."
-        );
-
-
-    const whatsappUrl =
-        "https://wa.me/" +
-        phone +
-        "?text=" +
-        message;
-
-
-    window.location.href =
-        whatsappUrl;
-
-}
-
-
-/* =========================================================
-   WHATSAPP LINKS
-========================================================= */
-
-function initWhatsAppLinks() {
-
-    const elements =
-        document.querySelectorAll(
-            "a, button"
-        );
-
-
-    elements.forEach(
-        element => {
-
-            const text =
-                (
-                    element.textContent ||
-                    ""
-                ).toLowerCase();
-
-
-            const href =
-                (
-                    element.getAttribute(
-                        "href"
-                    ) ||
-                    ""
-                ).toLowerCase();
-
-
-            const isWhatsApp =
-                text.includes(
-                    "whatsapp"
-                ) ||
-                href.includes(
-                    "wa.me"
-                ) ||
-                href.includes(
-                    "whatsapp.com"
-                );
-
-
-            if (
-                !isWhatsApp
-            ) {
-
-                return;
-
-            }
-
-
-            /*
-               Do not attach a second
-               handler if the element
-               already has inline openWhatsApp.
-            */
-
-            const inlineHandler =
-                element.getAttribute(
-                    "onclick"
-                );
-
-
-            if (
-                inlineHandler &&
-                inlineHandler.includes(
-                    "openWhatsApp"
-                )
-            ) {
-
-                return;
-
-            }
-
-
-            element.addEventListener(
-                "click",
-                openWhatsApp
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        initMobileMenu();
-
-        initLightbox();
-
-        initVideos();
+    try {
 
         initWhatsAppLinks();
 
+    } catch (error) {
+
+        console.error(
+            "WhatsApp initialization error:",
+            error
+        );
+
     }
-);
+
+
+    try {
+
+        initNavigation();
+
+    } catch (error) {
+
+        console.error(
+            "Navigation initialization error:",
+            error
+        );
+
+    }
+
+
+    try {
+
+        initLightbox();
+
+    } catch (error) {
+
+        console.error(
+            "Lightbox initialization error:",
+            error
+        );
+
+    }
+
+
+    try {
+
+        initVideos();
+
+    } catch (error) {
+
+        console.error(
+            "Video initialization error:",
+            error
+        );
+
+    }
+
+
+    console.log(
+        "Website JS initialized successfully."
+    );
+
+}
+
+
+/* =========================================================
+   DOM READY
+========================================================= */
+
+if (
+    document.readyState === "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initializeWebsite
+    );
+
+} else {
+
+    initializeWebsite();
+
+}
 
 
 /* =========================================================
